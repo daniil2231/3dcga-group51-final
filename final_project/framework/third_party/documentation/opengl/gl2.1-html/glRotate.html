@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glRotate</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glRotate"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>glRotate — multiply the current matrix by a rotation matrix</p></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glRotated</strong>(</code></td><td>GLdouble <var class="pdparam">angle</var>, </td></tr><tr><td> </td><td>GLdouble <var class="pdparam">x</var>, </td></tr><tr><td> </td><td>GLdouble <var class="pdparam">y</var>, </td></tr><tr><td> </td><td>GLdouble <var class="pdparam">z</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glRotatef</strong>(</code></td><td>GLfloat <var class="pdparam">angle</var>, </td></tr><tr><td> </td><td>GLfloat <var class="pdparam">x</var>, </td></tr><tr><td> </td><td>GLfloat <var class="pdparam">y</var>, </td></tr><tr><td> </td><td>GLfloat <var class="pdparam">z</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>angle</code></em></dt><dd><p>
+                    Specifies the angle of rotation, in degrees.
+                </p></dd><dt><span class="term"><em class="parameter"><code>x</code></em>, <span class="term"><em class="parameter"><code>y</code></em>, <span class="term"><em class="parameter"><code>z</code></em></dt><dd><p>
+                    Specify the <span class="emphasis"><em>x</em>, <span class="emphasis"><em>y</em>, and <span class="emphasis"><em>z</em> coordinates of a vector, respectively.
+                </p></dd></dl></div></div><div class="refsect1"><a id="description"></a><h2>Description</h2><p>
+            <code class="function">glRotate</code> produces a rotation of <em class="parameter"><code>angle</code></em> degrees around
+            the vector 
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mfenced xmlns:mml="http://www.w3.org/1998/Math/MathML" open="(" close=")">
+                    <mi mathvariant="italic">x</mi>
+                    <mi mathvariant="italic">y</mi>
+                    <mi mathvariant="italic">z</mi>
+                </mfenced>
+            </math>.
+            The current matrix (see <a class="citerefentry" href="glMatrixMode.html"><span class="citerefentry"><span class="refentrytitle">glMatrixMode</a>) is multiplied by a rotation
+            matrix with the product
+            replacing the current matrix, as if <a class="citerefentry" href="glMultMatrix.html"><span class="citerefentry"><span class="refentrytitle">glMultMatrix</a> were called
+            with the following matrix as its argument:
+        </p><p>
+            </p><div class="informalequation"><math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mfenced xmlns:mml="http://www.w3.org/1998/Math/MathML" open="(" close=")">
+                    <mtable>
+                        <mtr>
+                            <mtd>
+                                <mrow>
+                                    <mrow>
+                                        <msup><mi mathvariant="italic">x</mi>
+                                        <mn>2</mn>
+                                        </msup>
+                                        <mo>⁡</mo>
+                                        <mfenced open="(" close=")">
+                                            <mrow>
+                                                <mn>1</mn>
+                                                <mo>-</mo>
+                                                <mi mathvariant="italic">c</mi>
+                                            </mrow>
+                                        </mfenced>
+                                    </mrow>
+                                    <mo>+</mo>
+                                    <mi mathvariant="italic">c</mi>
+                                </mrow>
+                            </mtd>
+                            <mtd>
+                                <mrow>
+                                    <mi mathvariant="italic">x</mi>
+                                    <mo>⁢</mo>
+                                    <mrow>
+                                        <mi mathvariant="italic">y</mi>
+                                        <mo>⁡</mo>
+                                        <mfenced open="(" close=")">
+                                            <mrow>
+                                                <mn>1</mn>
+                                                <mo>-</mo>
+                                                <mi mathvariant="italic">c</mi>
+                                            </mrow>
+                                        </mfenced>
+                                    </mrow>
+                                    <mo>-</mo>
+                                    <mi mathvariant="italic">z</mi>
+                                    <mo>⁢</mo>
+                                    <mi mathvariant="italic">s</mi>
+                                </mrow>
+                            </mtd>
+                            <mtd>
+                                <mrow>
+                                    <mi mathvariant="italic">x</mi>
+                                    <mo>⁢</mo>
+                                    <mrow>
+                                        <mi mathvariant="italic">z</mi>
+                                        <mo>⁡</mo>
+                                        <mfenced open="(" close=")">
+                                            <mrow>
+                                                <mn>1</mn>
+                                                <mo>-</mo>
+                                                <mi mathvariant="italic">c</mi>
+                                            </mrow>
+                                        </mfenced>
+                                    </mrow>
+                                    <mo>+</mo>
+                                    <mi mathvariant="italic">y</mi>
+                                    <mo>⁢</mo>
+                                    <mi mathvariant="italic">s</mi>
+                                </mrow>
+                            </mtd>
+                            <mtd>
+                                <mn>0</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mrow>
+                                    <mi mathvariant="italic">y</mi>
+                                    <mo>⁢</mo>
+                                    <mrow>
+                                        <mi mathvariant="italic">x</mi>
+                                        <mo>⁡</mo>
+                                        <mfenced open="(" close=")">
+                                            <mrow>
+                                                <mn>1</mn>
+                                                <mo>-</mo>
+                                                <mi mathvariant="italic">c</mi>
+                                            </mrow>
+                                        </mfenced>
+                                    </mrow>
+                                    <mo>+</mo>
+                                    <mi mathvariant="italic">z</mi>
+                                    <mo>⁢</mo>
+                                    <mi mathvariant="italic">s</mi>
+                                </mrow>
+                            </mtd>
+                            <mtd>
+                                <mrow>
+                                    <mrow>
+                                        <msup><mi mathvariant="italic">y</mi>
+                                        <mn>2</mn>
+                                        </msup>
+                                        <mo>⁡</mo>
+                                        <mfenced open="(" close=")">
+                                            <mrow>
+                                                <mn>1</mn>
+                                                <mo>-</mo>
+                                                <mi mathvariant="italic">c</mi>
+                                            </mrow>
+                                        </mfenced>
+                                    </mrow>
+                                    <mo>+</mo>
+                                    <mi mathvariant="italic">c</mi>
+                                </mrow>
+                            </mtd>
+                            <mtd>
+                                <mrow>
+                                    <mi mathvariant="italic">y</mi>
+                                    <mo>⁢</mo>
+                                    <mrow>
+                                        <mi mathvariant="italic">z</mi>
+                                        <mo>⁡</mo>
+                                        <mfenced open="(" close=")">
+                                            <mrow>
+                                                <mn>1</mn>
+                                                <mo>-</mo>
+                                                <mi mathvariant="italic">c</mi>
+                                            </mrow>
+                                        </mfenced>
+                                    </mrow>
+                                    <mo>-</mo>
+                                    <mi mathvariant="italic">x</mi>
+                                    <mo>⁢</mo>
+                                    <mi mathvariant="italic">s</mi>
+                                </mrow>
+                            </mtd>
+                            <mtd>
+                                <mn>0</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mrow>
+                                    <mi mathvariant="italic">x</mi>
+                                    <mo>⁢</mo>
+                                    <mrow>
+                                        <mi mathvariant="italic">z</mi>
+                                        <mo>⁡</mo>
+                                        <mfenced open="(" close=")">
+                                            <mrow>
+                                                <mn>1</mn>
+                                                <mo>-</mo>
+                                                <mi mathvariant="italic">c</mi>
+                                            </mrow>
+                                        </mfenced>
+                                    </mrow>
+                                    <mo>-</mo>
+                                    <mi mathvariant="italic">y</mi>
+                                    <mo>⁢</mo>
+                                    <mi mathvariant="italic">s</mi>
+                                </mrow>
+                            </mtd>
+                            <mtd>
+                                <mrow>
+                                    <mi mathvariant="italic">y</mi>
+                                    <mo>⁢</mo>
+                                    <mrow>
+                                        <mi mathvariant="italic">z</mi>
+                                        <mo>⁡</mo>
+                                        <mfenced open="(" close=")">
+                                            <mrow>
+                                                <mn>1</mn>
+                                                <mo>-</mo>
+                                                <mi mathvariant="italic">c</mi>
+                                            </mrow>
+                                        </mfenced>
+                                    </mrow>
+                                    <mo>+</mo>
+                                    <mi mathvariant="italic">x</mi>
+                                    <mo>⁢</mo>
+                                    <mi mathvariant="italic">s</mi>
+                                </mrow>
+                            </mtd>
+                            <mtd>
+                                <mrow>
+                                    <mrow>
+                                        <msup><mi mathvariant="italic">z</mi>
+                                        <mn>2</mn>
+                                        </msup>
+                                        <mo>⁡</mo>
+                                        <mfenced open="(" close=")">
+                                            <mrow>
+                                                <mn>1</mn>
+                                                <mo>-</mo>
+                                                <mi mathvariant="italic">c</mi>
+                                            </mrow>
+                                        </mfenced>
+                                    </mrow>
+                                    <mo>+</mo>
+                                    <mi mathvariant="italic">c</mi>
+                                </mrow>
+                            </mtd>
+                            <mtd>
+                                <mn>0</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mn>0</mn>
+                            </mtd>
+                            <mtd>
+                                <mn>0</mn>
+                            </mtd>
+                            <mtd>
+                                <mn>0</mn>
+                            </mtd>
+                            <mtd>
+                                <mn>1</mn>
+                            </mtd>
+                        </mtr>
+                    </mtable>
+                </mfenced>
+            </math></div><p>
+        </p><p>
+        </p><p>
+            Where 
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mrow xmlns:mml="http://www.w3.org/1998/Math/MathML">
+                    <mi mathvariant="italic">c</mi>
+                    <mo>=</mo>
+                    <mrow>
+                        <mi mathvariant="italic">cos</mi>
+                        <mo>⁡</mo>
+                        <mfenced open="(" close=")">
+                            <mi mathvariant="italic">angle</mi>
+                        </mfenced>
+                    </mrow>
+                </mrow>
+            </math>, 
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mrow xmlns:mml="http://www.w3.org/1998/Math/MathML">
+                    <mi mathvariant="italic">s</mi>
+                    <mo>=</mo>
+                    <mrow>
+                        <mi mathvariant="italic">sin</mi>
+                        <mo>⁡</mo>
+                        <mfenced open="(" close=")">
+                            <mi mathvariant="italic">angle</mi>
+                        </mfenced>
+                    </mrow>
+                </mrow>
+            </math>,
+            and
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mrow xmlns:mml="http://www.w3.org/1998/Math/MathML">
+                    <mfenced open="" close="">
+                        <mfenced open="(" close=")">
+                            <mi mathvariant="italic">x</mi>
+                            <mi mathvariant="italic">y</mi>
+                            <mi mathvariant="italic">z</mi>
+                        </mfenced>
+                    </mfenced>
+                    <mo>=</mo>
+                    <mn>1</mn>
+                </mrow>
+            </math>
+            (if not, the GL
+            will normalize this vector).
+        </p><p>
+        </p><p>
+        </p><p>
+            If the matrix mode is either <code class="constant">GL_MODELVIEW</code> or <code class="constant">GL_PROJECTION</code>,
+            all objects drawn after <code class="function">glRotate</code> is called are rotated.
+            Use <a class="citerefentry" href="glPushMatrix.html"><span class="citerefentry"><span class="refentrytitle">glPushMatrix</a> and <a class="citerefentry" href="glPopMatrix.html"><span class="citerefentry"><span class="refentrytitle">glPopMatrix</a> to save and restore
+            the unrotated coordinate system.
+        </p></div><div class="refsect1"><a id="notes"></a><h2>Notes</h2><p>
+            This rotation follows the right-hand rule, so
+            if the vector 
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mfenced xmlns:mml="http://www.w3.org/1998/Math/MathML" open="(" close=")">
+                    <mi mathvariant="italic">x</mi>
+                    <mi mathvariant="italic">y</mi>
+                    <mi mathvariant="italic">z</mi>
+                </mfenced>
+            </math>
+            points toward the
+            user, the rotation will be counterclockwise.
+        </p></div><div class="refsect1"><a id="errors"></a><h2>Errors</h2><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if <code class="function">glRotate</code>
+            is executed between the execution of <a class="citerefentry" href="glBegin.html"><span class="citerefentry"><span class="refentrytitle">glBegin</a>
+            and the corresponding execution of <a class="citerefentry" href="glEnd.html"><span class="citerefentry"><span class="refentrytitle">glEnd</a>.
+        </p></div><div class="refsect1"><a id="associatedgets"></a><h2>Associated Gets</h2><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_MATRIX_MODE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_COLOR_MATRIX</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_MODELVIEW_MATRIX</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PROJECTION_MATRIX</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_TEXTURE_MATRIX</code>
+        </p></div><div class="refsect1"><a id="seealso"></a><h2>See Also</h2><p>
+            <a class="citerefentry" href="glMatrixMode.html"><span class="citerefentry"><span class="refentrytitle">glMatrixMode</a>,
+            <a class="citerefentry" href="glMultMatrix.html"><span class="citerefentry"><span class="refentrytitle">glMultMatrix</a>,
+            <a class="citerefentry" href="glPushMatrix.html"><span class="citerefentry"><span class="refentrytitle">glPushMatrix</a>,
+            <a class="citerefentry" href="glScale.html"><span class="citerefentry"><span class="refentrytitle">glScale</a>,
+            <a class="citerefentry" href="glTranslate.html"><span class="citerefentry"><span class="refentrytitle">glTranslate</a>
+        </p></div><div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2><p>
+            Copyright <span class="trademark">© 1991-2006
+            Silicon Graphics, Inc. This document is licensed under the SGI
+            Free Software B License. For details, see
+            <a class="ulink" href="https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt" target="_top">https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt</a>.
+        </p></div></div></body></html>

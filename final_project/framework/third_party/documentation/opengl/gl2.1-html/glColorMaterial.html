@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glColorMaterial</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glColorMaterial"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>glColorMaterial — cause a material color to track the current color</p></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glColorMaterial</strong>(</code></td><td>GLenum <var class="pdparam">face</var>, </td></tr><tr><td> </td><td>GLenum <var class="pdparam">mode</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>face</code></em></dt><dd><p>
+                    Specifies whether front,
+                    back,
+                    or both front and back material parameters should track the current color.
+                    Accepted values are
+                    <code class="constant">GL_FRONT</code>,
+                    <code class="constant">GL_BACK</code>,
+                    and <code class="constant">GL_FRONT_AND_BACK</code>.
+                    The initial value is <code class="constant">GL_FRONT_AND_BACK</code>.
+                </p></dd><dt><span class="term"><em class="parameter"><code>mode</code></em></dt><dd><p>
+                    Specifies which of several material parameters track the current color.
+                    Accepted values are
+                    <code class="constant">GL_EMISSION</code>,
+                    <code class="constant">GL_AMBIENT</code>,
+                    <code class="constant">GL_DIFFUSE</code>,
+                    <code class="constant">GL_SPECULAR</code>,
+                    and <code class="constant">GL_AMBIENT_AND_DIFFUSE</code>.
+                    The initial value is <code class="constant">GL_AMBIENT_AND_DIFFUSE</code>.
+                </p></dd></dl></div></div><div class="refsect1"><a id="description"></a><h2>Description</h2><p>
+            <code class="function">glColorMaterial</code> specifies which material parameters track the current color.
+            When <code class="constant">GL_COLOR_MATERIAL</code> is enabled,
+            the material parameter or parameters specified by <em class="parameter"><code>mode</code></em>,
+            of the material or materials specified by <em class="parameter"><code>face</code></em>,
+            track the current color at all times.
+        </p><p>
+            To enable and disable <code class="constant">GL_COLOR_MATERIAL</code>, call
+            <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a> and <a class="citerefentry" href="glDisable.html"><span class="citerefentry"><span class="refentrytitle">glDisable</a> with argument <code class="constant">GL_COLOR_MATERIAL</code>.
+            <code class="constant">GL_COLOR_MATERIAL</code> is initially disabled.
+        </p></div><div class="refsect1"><a id="notes"></a><h2>Notes</h2><p>
+            <code class="function">glColorMaterial</code> makes it possible to change a subset of material parameters for each
+            vertex using only the <a class="citerefentry" href="glColor.html"><span class="citerefentry"><span class="refentrytitle">glColor</a> command,
+            without calling <a class="citerefentry" href="glMaterial.html"><span class="citerefentry"><span class="refentrytitle">glMaterial</a>.
+            If only such a subset of parameters is to be specified for each
+            vertex, calling <code class="function">glColorMaterial</code> is preferable to calling <a class="citerefentry" href="glMaterial.html"><span class="citerefentry"><span class="refentrytitle">glMaterial</a>.
+        </p><p>
+            Call <code class="function">glColorMaterial</code> before enabling <code class="constant">GL_COLOR_MATERIAL</code>.
+        </p><p>
+            Calling <a class="citerefentry" href="glDrawElements.html"><span class="citerefentry"><span class="refentrytitle">glDrawElements</a>, <a class="citerefentry" href="glDrawArrays.html"><span class="citerefentry"><span class="refentrytitle">glDrawArrays</a>, or <a class="citerefentry" href="glDrawRangeElements.html"><span class="citerefentry"><span class="refentrytitle">glDrawRangeElements</a>
+            may leave the current color indeterminate, if the color array is enabled.
+            If
+            <code class="function">glColorMaterial</code> is enabled while the current color is indeterminate, the
+            lighting material state specified by <em class="parameter"><code>face</code></em> and <em class="parameter"><code>mode</code></em> is also indeterminate.
+        </p><p>
+            If the GL version is 1.1 or greater, and <code class="constant">GL_COLOR_MATERIAL</code> is
+            enabled, evaluated color values affect the results of the lighting
+            equation as if the current color were being modified, but no change is
+            made to the tracking lighting parameter of the current color.
+        </p></div><div class="refsect1"><a id="errors"></a><h2>Errors</h2><p>
+            <code class="constant">GL_INVALID_ENUM</code> is generated if <em class="parameter"><code>face</code></em> or <em class="parameter"><code>mode</code></em> is not an
+            accepted value.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if <code class="function">glColorMaterial</code> is executed between
+            the execution of <a class="citerefentry" href="glBegin.html"><span class="citerefentry"><span class="refentrytitle">glBegin</a> and the corresponding execution of <a class="citerefentry" href="glEnd.html"><span class="citerefentry"><span class="refentrytitle">glEnd</a>.
+        </p></div><div class="refsect1"><a id="associatedgets"></a><h2>Associated Gets</h2><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_COLOR_MATERIAL</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_COLOR_MATERIAL_PARAMETER</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_COLOR_MATERIAL_FACE</code>
+        </p></div><div class="refsect1"><a id="seealso"></a><h2>See Also</h2><p>
+            <a class="citerefentry" href="glColor.html"><span class="citerefentry"><span class="refentrytitle">glColor</a>,
+            <a class="citerefentry" href="glColorPointer.html"><span class="citerefentry"><span class="refentrytitle">glColorPointer</a>,
+            <a class="citerefentry" href="glDrawArrays.html"><span class="citerefentry"><span class="refentrytitle">glDrawArrays</a>,
+            <a class="citerefentry" href="glDrawElements.html"><span class="citerefentry"><span class="refentrytitle">glDrawElements</a>,
+            <a class="citerefentry" href="glDrawRangeElements.html"><span class="citerefentry"><span class="refentrytitle">glDrawRangeElements</a>,
+            <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a>,
+            <a class="citerefentry" href="glLight.html"><span class="citerefentry"><span class="refentrytitle">glLight</a>,
+            <a class="citerefentry" href="glLightModel.html"><span class="citerefentry"><span class="refentrytitle">glLightModel</a>,
+            <a class="citerefentry" href="glMaterial.html"><span class="citerefentry"><span class="refentrytitle">glMaterial</a>
+        </p></div><div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2><p>
+            Copyright <span class="trademark">© 1991-2006
+            Silicon Graphics, Inc. This document is licensed under the SGI
+            Free Software B License. For details, see
+            <a class="ulink" href="https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt" target="_top">https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt</a>.
+        </p></div></div></body></html>

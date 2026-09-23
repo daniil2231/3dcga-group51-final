@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glInvalidateSubFramebuffer</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glInvalidateSubFramebuffer"></a><div class="titlepage"></div>
+    
+    
+    <div class="refnamediv"><h2>Name</h2><p>
+        glInvalidateSubFramebuffer, 
+        glInvalidateNamedFramebufferSubData
+         — invalidate the content of a region of some or all of a framebuffer's attachments
+    </p></div>
+    <div class="refsynopsisdiv"><h2>C Specification</h2>
+        <div class="funcsynopsis">
+            <table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glInvalidateSubFramebuffer</strong>(</code></td><td>GLenum <var class="pdparam">target</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">numAttachments</var>, </td></tr><tr><td> </td><td>const GLenum * <var class="pdparam">attachments</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">x</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">y</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">width</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">height</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div>
+            <table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glInvalidateNamedFramebufferSubData</strong>(</code></td><td>GLuint <var class="pdparam">framebuffer</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">numAttachments</var>, </td></tr><tr><td> </td><td>const GLenum *<var class="pdparam">attachments</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">x</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">y</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">width</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">height</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div>
+        </div>
+    </div>
+    <div class="refsect1"><a id="parameters"></a><h2>Parameters</h2>
+        <div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>target</code></em></dt><dd>
+                <p>
+                    Specifies the target to which the framebuffer object is
+                    attached for
+                    <code class="function">glInvalidateSubFramebuffer</code>.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>framebuffer</code></em></dt><dd>
+                <p>
+                    Specifies the name of the framebuffer object for
+                    <code class="function">glInvalidateNamedFramebufferSubData</code>.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>numAttachments</code></em></dt><dd>
+                <p>
+                    Specifies the number of entries in the
+                    <em class="parameter"><code>attachments</code></em> array.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>attachments</code></em></dt><dd>
+                <p>
+                    Specifies a pointer to an array identifying the
+                    attachments to be invalidated.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>x</code></em></dt><dd>
+                <p>
+                    Specifies the X offset of the region to be invalidated.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>y</code></em></dt><dd>
+                <p>
+                    Specifies the Y offset of the region to be invalidated.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>width</code></em></dt><dd>
+                <p>
+                    Specifies the width of the region to be invalidated.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>height</code></em></dt><dd>
+                <p>
+                    Specifies the height of the region to be invalidated.
+                </p>
+            </dd></dl></div>
+    </div>
+    <div class="refsect1"><a id="description"></a><h2>Description</h2>
+        <p>
+            <code class="function">glInvalidateSubFramebuffer</code> and
+            <code class="function">glInvalidateNamedFramebufferSubData</code>
+            invalidate the contents of a specified region of a specified set
+            of attachments of a framebuffer.
+        </p>
+        <p>
+            For <code class="function">glInvalidateSubFramebuffer</code>, the
+            framebuffer object is that bound to
+            <em class="parameter"><code>target</code></em>, which must be one of
+            <code class="constant">GL_FRAMEBUFFER</code>,
+            <code class="constant">GL_READ_FRAMEBUFFER</code> or
+            <code class="constant">GL_DRAW_FRAMEBUFFER</code>.
+            <code class="constant">GL_FRAMEBUFFER</code> is equivalent to
+            <code class="constant">GL_DRAW_FRAMEBUFFER</code>. Default framebuffers
+            may also be invalidated if bound to
+            <em class="parameter"><code>target</code></em>.
+        </p>
+        <p>
+            For <code class="function">glInvalidateNamedFramebufferSubData</code>,
+            <em class="parameter"><code>framebuffer</code></em> is the name of the
+            framebuffer object. If <em class="parameter"><code>framebuffer</code></em> is
+            zero, the default draw framebuffer is affected.
+        </p>
+        <p>
+            The set of attachments of which a region is to be invalidated
+            are specified in the <em class="parameter"><code>attachments</code></em> array,
+            which contains <em class="parameter"><code>numAttachments</code></em> elements.
+        </p>
+        <p>
+            If the specified framebuffer is a framebuffer object, each
+            element of <em class="parameter"><code>attachments</code></em> must be one of
+            <code class="constant">GL_DEPTH_ATTACHMENT</code>,
+            <code class="constant">GL_STENCIL_ATTACHMENT</code>
+            <code class="constant">GL_DEPTH_STENCIL_ATTACHMENT</code>, or
+            <code class="constant">GL_COLOR_ATTACHMENT</code><span class="emphasis"><em>i</em>,
+            where <span class="emphasis"><em>i</em> is between zero and the value of
+            <code class="constant">GL_MAX_FRAMEBUFFER_ATTACHMENTS</code> minus one.
+        </p>
+        <p>
+            If the specified framebuffer is a default framebuffer, each
+            element of <em class="parameter"><code>attachments</code></em> must be one of
+            <code class="constant">GL_FRONT_LEFT</code>,
+            <code class="constant">GL_FRONT_RIGHT</code>,
+            <code class="constant">GL_BACK_LEFT</code>,
+            <code class="constant">GL_BACK_RIGHT</code>,
+            <code class="constant">GL_AUX</code><span class="emphasis"><em>i</em>,
+            <code class="constant">GL_ACCUM</code>, <code class="constant">GL_COLOR</code>,
+            <code class="constant">GL_DEPTH</code>, or
+            <code class="constant">GL_STENCIL</code>. <code class="constant">GL_COLOR</code>,
+            is treated as <code class="constant">GL_BACK_LEFT</code> for a
+            double-buffered context and <code class="constant">GL_FRONT_LEFT</code>
+            for a single-buffered context. The other attachments identify
+            the corresponding specific buffer.
+        </p>
+        <p>
+            The contents of the specified region of each specified
+            attachment become undefined after execution of
+            <code class="function">glInvalidateSubFramebuffer</code> or
+            <code class="function">glInvalidateNamedFramebufferSubData</code>. The
+            region to be invalidated is specified by
+            <em class="parameter"><code>x</code></em>, <em class="parameter"><code>y</code></em>,
+            <em class="parameter"><code>width</code></em> and <em class="parameter"><code>height</code></em>
+            where <em class="parameter"><code>x</code></em> and <em class="parameter"><code>y</code></em> give
+            the offset from the origin (with lower-left corner at $(0,0)$)
+            and <em class="parameter"><code>width</code></em> and
+            <em class="parameter"><code>height</code></em> are the width and height,
+            respectively, of the region. Any pixels lying outside of the
+            window allocated to the current GL context (for the default
+            framebuffer), or outside of the attachments of the framebuffer
+            object, are ignored. If the framebuffer object is not complete,
+            these commands may be ignored.
+        </p>
+        <p>
+            If the framebuffer object is not complete,
+            <code class="function">glInvalidateSubFramebuffer</code> and
+            <code class="function">glInvalidateNamedFramebufferSubData</code> may be
+            ignored. This is not an error.
+        </p>
+    </div>
+    <div class="refsect1"><a id="errors"></a><h2>Errors</h2>
+        <p>
+            <code class="constant">GL_INVALID_ENUM</code> by
+            <code class="function">glInvalidateSubFramebuffer</code> if
+            <em class="parameter"><code>target</code></em> is not one of the accepted
+            framebuffer targets.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_OPERATION</code> by
+            <code class="function">glInvalidateNamedFramebufferSubData</code> if
+            <em class="parameter"><code>framebuffer</code></em> is not zero of the name of an
+            existing framebuffer object.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if
+            <em class="parameter"><code>numAttachments</code></em>,
+            <em class="parameter"><code>width</code></em> or <em class="parameter"><code>height</code></em> is
+            negative.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_ENUM</code> is generated if any element
+            of <em class="parameter"><code>attachments</code></em> is not one of the accepted
+            framebuffer attachment points, as described above.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if
+            element of <em class="parameter"><code>attachments</code></em> is
+            <code class="constant">GL_COLOR_ATTACHMENT</code><span class="emphasis"><em>m</em>
+            where <span class="emphasis"><em>m</em> is greater than or equal to the
+            value of <code class="constant">GL_MAX_COLOR_ATTACHMENTS</code>.
+        </p>
+    </div>
+    <div class="refsect1"><a id="associatedgets"></a><h2>Associated Gets</h2>
+        <p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_MAX_COLOR_ATTACHMENTS</code>
+        </p>
+    </div>
+    <div class="refsect1"><a id="versions"></a><h2>Version Support</h2>
+        <div class="informaltable">
+            <table class="informaltable" border="1"><colgroup><col align="left" /><col align="center" class="firstvers" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" class="lastvers" /></colgroup><thead><tr><th align="left">
+                
+            </th><th colspan="12" align="center">
+                <span class="bold"><strong>OpenGL Version</strong>
+            </th></tr><tr><th align="left">
+                <span class="bold"><strong>Function / Feature Name</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.4</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.5</strong>
+            </th></tr></thead><tbody><tr><td align="left"><code class="function">glInvalidateNamedFramebufferSubData</code></td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">✔</td></tr><tr><td align="left"><code class="function">glInvalidateSubFramebuffer</code></td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">✔</td><td align="center">✔</td><td align="center">✔</td></tr></tbody></table>
+        </div>
+    </div>
+    <div class="refsect1"><a id="seealso"></a><h2>See Also</h2>
+        <p>
+            <a class="citerefentry" href="glInvalidateTexSubImage.html"><span class="citerefentry"><span class="refentrytitle">glInvalidateTexSubImage</a>,
+            <a class="citerefentry" href="glInvalidateTexImage.html"><span class="citerefentry"><span class="refentrytitle">glInvalidateTexImage</a>,
+            <a class="citerefentry" href="glInvalidateBufferSubData.html"><span class="citerefentry"><span class="refentrytitle">glInvalidateBufferSubData</a>,
+            <a class="citerefentry" href="glInvalidateBufferData.html"><span class="citerefentry"><span class="refentrytitle">glInvalidateBufferData</a>,
+            <a class="citerefentry" href="glInvalidateFramebuffer.html"><span class="citerefentry"><span class="refentrytitle">glInvalidateFramebuffer</a>.
+        </p>
+    </div>
+    <div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2>
+        <p>
+            Copyright <span class="trademark">© 2014 Khronos Group.
+            This material may be distributed subject to the terms and conditions set forth in
+            the Open Publication License, v 1.0, 8 June 1999.
+            <a class="ulink" href="https://opencontent.org/openpub/" target="_top">https://opencontent.org/openpub/</a>.
+        </p>
+    </div>
+</div></body></html>

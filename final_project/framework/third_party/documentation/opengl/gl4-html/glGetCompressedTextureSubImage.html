@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glGetCompressedTextureSubImage</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glGetCompressedTextureSubImage"></a><div class="titlepage"></div>
+  
+  
+  <div class="refnamediv"><h2>Name</h2><p>
+    glGetCompressedTextureSubImage
+     — retrieve a sub-region of a compressed texture image from a
+    compressed texture object
+  </p></div>
+  <div class="refsynopsisdiv"><h2>C Specification</h2>
+    
+    <div class="funcsynopsis">
+      <table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glGetCompressedTextureSubImage</strong>(</code></td><td>GLuint <var class="pdparam">texture</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">level</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">xoffset</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">yoffset</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">zoffset</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">width</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">height</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">depth</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">bufSize</var>, </td></tr><tr><td> </td><td>void *<var class="pdparam">pixels</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div>
+    </div>
+  </div>
+
+  <div class="refsect1"><a id="parameters"></a><h2>Parameters</h2>
+    
+
+    <div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>texture</code></em></dt><dd>
+          <p>Specifies the name of the source texture object. Must be
+          <code class="constant">GL_TEXTURE_1D</code>,
+          <code class="constant">GL_TEXTURE_1D_ARRAY</code>,
+          <code class="constant">GL_TEXTURE_2D</code>,
+          <code class="constant">GL_TEXTURE_2D_ARRAY</code>,
+          <code class="constant">GL_TEXTURE_3D</code>,
+          <code class="constant">GL_TEXTURE_CUBE_MAP</code>,
+          <code class="constant">GL_TEXTURE_CUBE_MAP_ARRAY</code> or
+          <code class="constant">GL_TEXTURE_RECTANGLE</code>. In specific, buffer and
+          multisample textures are not permitted.</p>
+        </dd><dt><span class="term"><em class="parameter"><code>level</code></em></dt><dd>
+          <p>Specifies the level-of-detail number. Level 0 is the base
+          image level. Level $n$ is the $n$th
+          mipmap reduction image.</p>
+        </dd><dt><span class="term"><em class="parameter"><code>xoffset</code></em></dt><dd>
+          <p>Specifies a texel offset in the x direction within the texture
+          array.</p>
+        </dd><dt><span class="term"><em class="parameter"><code>yoffset</code></em></dt><dd>
+          <p>Specifies a texel offset in the y direction within the texture
+          array.</p>
+        </dd><dt><span class="term"><em class="parameter"><code>zoffset</code></em></dt><dd>
+          <p>Specifies a texel offset in the z direction within the texture
+          array.</p>
+        </dd><dt><span class="term"><em class="parameter"><code>width</code></em></dt><dd>
+          <p>Specifies the width of the texture subimage. Must be a
+          multiple of the compressed block's width, unless the
+          <em class="parameter"><code>offset</code></em> is zero and the size equals the texture
+          image size.</p>
+        </dd><dt><span class="term"><em class="parameter"><code>height</code></em></dt><dd>
+          <p>Specifies the height of the texture subimage. Must be a
+          multiple of the compressed block's height, unless the
+          <em class="parameter"><code>offset</code></em> is zero and the size equals the texture
+          image size.</p>
+        </dd><dt><span class="term"><em class="parameter"><code>depth</code></em></dt><dd>
+          <p>Specifies the depth of the texture subimage. Must be a
+          multiple of the compressed block's depth, unless the
+          <em class="parameter"><code>offset</code></em> is zero and the size equals the texture
+          image size.</p>
+        </dd><dt><span class="term"><em class="parameter"><code>bufSize</code></em></dt><dd>
+          <p>Specifies the size of the buffer to receive the retrieved
+          pixel data.</p>
+        </dd><dt><span class="term"><em class="parameter"><code>pixels</code></em></dt><dd>
+          <p>Returns the texture subimage. Should be a pointer to an array
+          of the type specified by type.</p>
+        </dd></dl></div>
+  </div>
+
+  <div class="refsect1"><a id="description"></a><h2>Description</h2>
+    
+
+    <p><code class="function">glGetCompressedTextureSubImage</code> can be used to
+    obtain a sub-region of a compressed texture image instead of the whole
+    image, as long as the compressed data are arranged into fixed-size blocks
+    of texels. <em class="parameter"><code>texture</code></em> is the name of the texture
+    object, and must not be a buffer or multisample texture. The effective
+    <em class="parameter"><code>target</code></em> is the value of
+    <code class="constant">GL_TEXTURE_TARGET</code> for texture.
+    <em class="parameter"><code>level</code></em> and <em class="parameter"><code>pixels</code></em> have the
+    same meaning as the corresponding arguments of
+    <code class="function">glCompressedTexSubImage3D</code>.
+    <em class="parameter"><code>bufSize</code></em> indicates the size of the buffer to receive
+    the retrieved pixel data.</p>
+
+    <p>For cube map textures, the behavior is as though
+    <code class="function">glGetCompressedTexImage</code> were called once for each
+    requested face (selected by <em class="parameter"><code>zoffset</code></em> and
+    <em class="parameter"><code>depth</code></em>, as described below) with target
+    corresponding to the requested texture cube map face as indicated by the
+    table presented below. <em class="parameter"><code>pixels</code></em> is offset
+    appropriately for each successive image.</p>
+
+    <div class="informaltable">
+      <table class="informaltable" border="1"><colgroup><col /><col /></colgroup><tbody><tr><td>Layer number</td><td>Cube Map Face</td></tr><tr><td>0</td><td><code class="constant">GL_TEXTURE_CUBE_MAP_POSITIVE_X</code></td></tr><tr><td>1</td><td><code class="constant">GL_TEXTURE_CUBE_MAP_NEGATIVE_X</code></td></tr><tr><td>2</td><td><code class="constant">GL_TEXTURE_CUBE_MAP_POSITIVE_Y</code></td></tr><tr><td>3</td><td><code class="constant">GL_TEXTURE_CUBE_MAP_NEGATIVE_Y</code></td></tr><tr><td>4</td><td><code class="constant">GL_TEXTURE_CUBE_MAP_POSITIVE_Z</code></td></tr><tr><td>5</td><td><code class="constant">GL_TEXTURE_CUBE_MAP_NEGATIVE_Z</code></td></tr></tbody></table>
+    </div>
+
+    <p><em class="parameter"><code>xoffset</code></em>, <em class="parameter"><code>yoffset</code></em> and
+    <em class="parameter"><code>zoffset</code></em> indicate the position of the subregion to
+    return. <em class="parameter"><code>width</code></em>, <em class="parameter"><code>height</code></em> and
+    <em class="parameter"><code>depth</code></em> indicate the size of the region to return.
+    These arguments have the same meaning as for
+    <code class="function">glCompressedTexSubImage3D</code>, though there are extra
+    restrictions, described in the errors section below.</p>
+
+    <p>The mapping between the <em class="parameter"><code>xoffset</code></em>,
+    <em class="parameter"><code>yoffset</code></em>, <em class="parameter"><code>zoffset</code></em>,
+    <em class="parameter"><code>width</code></em>, <em class="parameter"><code>height</code></em> and
+    <em class="parameter"><code>depth</code></em> parameters and the faces, layers, and
+    layer-faces for cube map, array, and cube map array textures is the same
+    as for glGetTextureSubImage.</p>
+
+    <p>The <em class="parameter"><code>xoffset</code></em>, <em class="parameter"><code>yoffset</code></em>,
+    <em class="parameter"><code>zoffset</code></em> offsets and <em class="parameter"><code>width</code></em>,
+    <em class="parameter"><code>height</code></em> and <em class="parameter"><code>depth</code></em> sizes must
+    be multiples of the values of
+    <code class="constant">GL_PACK_COMPRESSED_BLOCK_WIDTH</code>,
+    <code class="constant">GL_PACK_COMPRESSED_BLOCK_HEIGHT</code>, and
+    <code class="constant">GL_PACK_COMPRESSED_BLOCK_DEPTH</code> respectively, unless
+    <em class="parameter"><code>offset</code></em> is zero and the corresponding
+    <em class="parameter"><code>size</code></em> is the same as the texture size in that
+    dimension.</p>
+
+    <p>Pixel storage modes are treated as for
+    <code class="function">glGetCompressedTexSubImage</code>. The texel at
+    (<em class="parameter"><code>xoffset</code></em>, <em class="parameter"><code>yoffset</code></em>,
+    <em class="parameter"><code>zoffset</code></em>) will be stored at the location indicated
+    by <em class="parameter"><code>pixels</code></em> and the current pixel packing parameters.</p>
+  </div>
+
+  <div class="refsect1"><a id="errors"></a><h2>Errors</h2>
+    
+
+    <p><code class="constant">GL_INVALID_OPERATION</code> error is generated if
+    <em class="parameter"><code>texture</code></em> is the name of a buffer or multisample
+    texture.</p>
+
+    <p><code class="constant">GL_INVALID_OPERATION</code> error is generated if the
+    buffer size required to store the requested data is greater than
+    <em class="parameter"><code>bufSize</code></em>.</p>
+
+    <p><code class="constant">GL_INVALID_OPERATION</code> error is generated if the
+    texture compression format is not based on fixed-size blocks.</p>
+
+    <p><code class="constant">GL_INVALID_VALUE</code> error is generated if
+    <em class="parameter"><code>texture</code></em> is not the name of an existing texture
+    object.</p>
+
+    <p><code class="constant">GL_INVALID_VALUE</code> is generated if
+    <em class="parameter"><code>xoffset</code></em>, <em class="parameter"><code>yoffset</code></em> or
+    <em class="parameter"><code>zoffset</code></em> are negative.</p>
+
+    <p><code class="constant">GL_INVALID_VALUE</code> is generated if
+    <em class="parameter"><code>xoffset</code></em> + <em class="parameter"><code>width</code></em> is greater
+    than the texture's width, <em class="parameter"><code>yoffset</code></em> +
+    <em class="parameter"><code>height</code></em> is greater than the texture's height, or
+    <em class="parameter"><code>zoffset</code></em> + <em class="parameter"><code>depth</code></em> is greater
+    than the texture's depth.</p>
+
+    <p><code class="constant">GL_INVALID_VALUE</code> error is generated if the
+    effective target is <code class="constant">GL_TEXTURE_1D</code> and either
+    <em class="parameter"><code>yoffset</code></em> is not zero, or
+    <em class="parameter"><code>height</code></em> is not one.</p>
+
+    <p><code class="constant">GL_INVALID_VALUE</code> error is generated if the
+    effective target is <code class="constant">GL_TEXTURE_1D</code>,
+    <code class="constant">GL_TEXTURE_1D_ARRAY</code>,
+    <code class="constant">GL_TEXTURE_2D</code> or
+    <code class="constant">GL_TEXTURE_RECTANGLE</code> and either
+    <em class="parameter"><code>zoffset</code></em> is not zero, or
+    <em class="parameter"><code>depth</code></em> is not one.</p>
+
+    <p><code class="constant">GL_INVALID_VALUE</code> error is generated if
+    <em class="parameter"><code>xoffset</code></em>, <em class="parameter"><code>yoffset</code></em> or
+    <em class="parameter"><code>zoffset</code></em> is not a multiple of the compressed block
+    width, height or depth respectively.</p>
+
+    <p><code class="constant">GL_INVALID_VALUE</code> error is generated if
+    <em class="parameter"><code>width</code></em>, <em class="parameter"><code>height</code></em> or
+    <em class="parameter"><code>depth</code></em> is not a multiple of the compressed block
+    width, height or depth respectively, unless the
+    <em class="parameter"><code>offset</code></em> is zero and the <em class="parameter"><code>size</code></em>
+    equals the texture image size.</p>
+  </div>
+
+    <div class="refsect1"><a id="versions"></a><h2>Version Support</h2>
+        <div class="informaltable">
+            <table class="informaltable" border="1"><colgroup><col align="left" /><col align="center" class="firstvers" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" class="lastvers" /></colgroup><thead><tr><th align="left">
+                
+            </th><th colspan="12" align="center">
+                <span class="bold"><strong>OpenGL Version</strong>
+            </th></tr><tr><th align="left">
+                <span class="bold"><strong>Function / Feature Name</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.4</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.5</strong>
+            </th></tr></thead><tbody><tr><td align="left"><code class="function">glGetCompressedTextureSubImage</code></td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">✔</td></tr></tbody></table>
+        </div>
+    </div>
+
+  <div class="refsect1"><a id="seealso"></a><h2>See Also</h2>
+    
+
+    <p>
+        <a class="citerefentry" href="glCompressedTexImage1D.html"><span class="citerefentry"><span class="refentrytitle">glCompressedTexImage1D</a>,
+        <a class="citerefentry" href="glCompressedTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glCompressedTexImage2D</a>,
+        <a class="citerefentry" href="glCompressedTexImage3D.html"><span class="citerefentry"><span class="refentrytitle">glCompressedTexImage3D</a>,
+        <a class="citerefentry" href="glCompressedTexSubImage1D.html"><span class="citerefentry"><span class="refentrytitle">glCompressedTexSubImage1D</a>,
+        <a class="citerefentry" href="glCompressedTexSubImage2D.html"><span class="citerefentry"><span class="refentrytitle">glCompressedTexSubImage2D</a>,
+        <a class="citerefentry" href="glCompressedTexSubImage3D.html"><span class="citerefentry"><span class="refentrytitle">glCompressedTexSubImage3D</a>,
+        <a class="citerefentry" href="glGetCompressedTexImage.html"><span class="citerefentry"><span class="refentrytitle">glGetCompressedTexImage</a>,
+         <code class="function">glGetCompressedTextureImage</code>,
+        <a class="citerefentry" href="glReadPixels.html"><span class="citerefentry"><span class="refentrytitle">glReadPixels</a>
+    </p>
+  </div>
+
+    <div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2>
+        <p>
+            Copyright <span class="trademark">© 2014 Khronos Group.
+            This material may be distributed subject to the terms and conditions set forth in
+            the Open Publication License, v 1.0, 8 June 1999.
+            <a class="ulink" href="https://opencontent.org/openpub/" target="_top">https://opencontent.org/openpub/</a>.
+        </p>
+    </div>
+</div></body></html>

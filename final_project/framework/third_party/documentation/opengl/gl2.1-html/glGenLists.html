@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glGenLists</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glGenLists"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>glGenLists — generate a contiguous set of empty display lists</p></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">GLuint <strong class="fsfunc">glGenLists</strong>(</code></td><td>GLsizei <var class="pdparam">range</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>range</code></em></dt><dd><p>
+                    Specifies the number of contiguous empty display lists
+                    to be generated.
+                </p></dd></dl></div></div><div class="refsect1"><a id="description"></a><h2>Description</h2><p>
+            <code class="function">glGenLists</code> has one argument, <em class="parameter"><code>range</code></em>.
+            It returns an integer <span class="emphasis"><em>n</em> such that <em class="parameter"><code>range</code></em> contiguous
+            empty display lists,
+            named 
+            <math xmlns="http://www.w3.org/1998/Math/MathML"><mi xmlns:mml="http://www.w3.org/1998/Math/MathML" mathvariant="italic">n</mi></math>, 
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mrow xmlns:mml="http://www.w3.org/1998/Math/MathML">
+                    <mi mathvariant="italic">n</mi>
+                    <mo>+</mo>
+                    <mn>1</mn>
+                </mrow>
+            </math>, 
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mi xmlns:mml="http://www.w3.org/1998/Math/MathML" mathvariant="italic">...</mi>
+            </math>, 
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mrow xmlns:mml="http://www.w3.org/1998/Math/MathML">
+                    <mi mathvariant="italic">n</mi>
+                    <mo>+</mo>
+                    <mi mathvariant="italic">range</mi>
+                    <mo>-</mo>
+                    <mn>1</mn>
+                </mrow>
+            </math>,
+            are created.
+            If <em class="parameter"><code>range</code></em> is 0,
+            if there is no group of <em class="parameter"><code>range</code></em> contiguous names available,
+            or if any error is generated,
+            no display lists are generated,
+            and 0 is returned.
+        </p></div><div class="refsect1"><a id="errors"></a><h2>Errors</h2><p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if <em class="parameter"><code>range</code></em> is negative.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if <code class="function">glGenLists</code>
+            is executed between the execution of <a class="citerefentry" href="glBegin.html"><span class="citerefentry"><span class="refentrytitle">glBegin</a>
+            and the corresponding execution of <a class="citerefentry" href="glEnd.html"><span class="citerefentry"><span class="refentrytitle">glEnd</a>.
+        </p></div><div class="refsect1"><a id="associatedgets"></a><h2>Associated Gets</h2><p>
+            <a class="citerefentry" href="glIsList.html"><span class="citerefentry"><span class="refentrytitle">glIsList</a>
+        </p></div><div class="refsect1"><a id="seealso"></a><h2>See Also</h2><p>
+            <a class="citerefentry" href="glCallList.html"><span class="citerefentry"><span class="refentrytitle">glCallList</a>,
+            <a class="citerefentry" href="glCallLists.html"><span class="citerefentry"><span class="refentrytitle">glCallLists</a>,
+            <a class="citerefentry" href="glDeleteLists.html"><span class="citerefentry"><span class="refentrytitle">glDeleteLists</a>,
+            <a class="citerefentry" href="glNewList.html"><span class="citerefentry"><span class="refentrytitle">glNewList</a>
+        </p></div><div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2><p>
+            Copyright <span class="trademark">© 1991-2006
+            Silicon Graphics, Inc. This document is licensed under the SGI
+            Free Software B License. For details, see
+            <a class="ulink" href="https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt" target="_top">https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt</a>.
+        </p></div></div></body></html>

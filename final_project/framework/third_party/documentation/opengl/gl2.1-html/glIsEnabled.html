@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glIsEnabled</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glIsEnabled"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>glIsEnabled — test whether a capability is enabled</p></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">GLboolean <strong class="fsfunc">glIsEnabled</strong>(</code></td><td>GLenum <var class="pdparam">cap</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>cap</code></em></dt><dd><p>
+                    Specifies a symbolic constant indicating a GL capability.
+                </p></dd></dl></div></div><div class="refsect1"><a id="description"></a><h2>Description</h2><p>
+            <code class="function">glIsEnabled</code> returns <code class="constant">GL_TRUE</code> if <em class="parameter"><code>cap</code></em> is an enabled capability
+            and returns <code class="constant">GL_FALSE</code> otherwise.
+            Initially all capabilities except <code class="constant">GL_DITHER</code> are disabled;
+            <code class="constant">GL_DITHER</code> is initially enabled.
+        </p><p>
+            The following capabilities are accepted for <em class="parameter"><code>cap</code></em>:
+        </p><p>
+        </p><div class="informaltable"><table class="informaltable" border="1"><colgroup><col align="left" /><col align="left" /></colgroup><thead><tr><th align="left"><span class="bold"><strong>
+                        Constant
+                        </strong></th><th align="left"><span class="bold"><strong>
+                        See
+                        </strong></th></tr></thead><tbody><tr><td align="left">
+                        <code class="constant">GL_ALPHA_TEST</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glAlphaFunc.html"><span class="citerefentry"><span class="refentrytitle">glAlphaFunc</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_AUTO_NORMAL</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glEvalCoord.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_BLEND</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glBlendFunc.html"><span class="citerefentry"><span class="refentrytitle">glBlendFunc</a>, <a class="citerefentry" href="glLogicOp.html"><span class="citerefentry"><span class="refentrytitle">glLogicOp</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_CLIP_PLANE</code><span class="emphasis"><em>i</em>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glClipPlane.html"><span class="citerefentry"><span class="refentrytitle">glClipPlane</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_COLOR_ARRAY</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glColorPointer.html"><span class="citerefentry"><span class="refentrytitle">glColorPointer</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_COLOR_LOGIC_OP</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glLogicOp.html"><span class="citerefentry"><span class="refentrytitle">glLogicOp</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_COLOR_MATERIAL</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glColorMaterial.html"><span class="citerefentry"><span class="refentrytitle">glColorMaterial</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_COLOR_SUM</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glSecondaryColor.html"><span class="citerefentry"><span class="refentrytitle">glSecondaryColor</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_COLOR_TABLE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glColorTable.html"><span class="citerefentry"><span class="refentrytitle">glColorTable</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_CONVOLUTION_1D</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glConvolutionFilter1D.html"><span class="citerefentry"><span class="refentrytitle">glConvolutionFilter1D</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_CONVOLUTION_2D</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glConvolutionFilter2D.html"><span class="citerefentry"><span class="refentrytitle">glConvolutionFilter2D</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_CULL_FACE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glCullFace.html"><span class="citerefentry"><span class="refentrytitle">glCullFace</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_DEPTH_TEST</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glDepthFunc.html"><span class="citerefentry"><span class="refentrytitle">glDepthFunc</a>, <a class="citerefentry" href="glDepthRange.html"><span class="citerefentry"><span class="refentrytitle">glDepthRange</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_DITHER</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_EDGE_FLAG_ARRAY</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glEdgeFlagPointer.html"><span class="citerefentry"><span class="refentrytitle">glEdgeFlagPointer</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_FOG</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glFog.html"><span class="citerefentry"><span class="refentrytitle">glFog</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_FOG_COORD_ARRAY</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glFogCoordPointer.html"><span class="citerefentry"><span class="refentrytitle">glFogCoordPointer</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_HISTOGRAM</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glHistogram.html"><span class="citerefentry"><span class="refentrytitle">glHistogram</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_INDEX_ARRAY</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glIndexPointer.html"><span class="citerefentry"><span class="refentrytitle">glIndexPointer</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_INDEX_LOGIC_OP</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glLogicOp.html"><span class="citerefentry"><span class="refentrytitle">glLogicOp</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_LIGHT</code><span class="emphasis"><em>i</em>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glLightModel.html"><span class="citerefentry"><span class="refentrytitle">glLightModel</a>, <a class="citerefentry" href="glLight.html"><span class="citerefentry"><span class="refentrytitle">glLight</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_LIGHTING</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMaterial.html"><span class="citerefentry"><span class="refentrytitle">glMaterial</a>, <a class="citerefentry" href="glLightModel.html"><span class="citerefentry"><span class="refentrytitle">glLightModel</a>, <a class="citerefentry" href="glLight.html"><span class="citerefentry"><span class="refentrytitle">glLight</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_LINE_SMOOTH</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glLineWidth.html"><span class="citerefentry"><span class="refentrytitle">glLineWidth</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_LINE_STIPPLE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glLineStipple.html"><span class="citerefentry"><span class="refentrytitle">glLineStipple</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP1_COLOR_4</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP1_INDEX</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP1_NORMAL</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP1_TEXTURE_COORD_1</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP1_TEXTURE_COORD_2</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP1_TEXTURE_COORD_3</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP1_TEXTURE_COORD_4</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP2_COLOR_4</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP2_INDEX</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP2_NORMAL</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP2_TEXTURE_COORD_1</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP2_TEXTURE_COORD_2</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP2_TEXTURE_COORD_3</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP2_TEXTURE_COORD_4</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP2_VERTEX_3</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MAP2_VERTEX_4</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MINMAX</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glMinmax.html"><span class="citerefentry"><span class="refentrytitle">glMinmax</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_MULTISAMPLE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glSampleCoverage.html"><span class="citerefentry"><span class="refentrytitle">glSampleCoverage</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_NORMAL_ARRAY</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glNormalPointer.html"><span class="citerefentry"><span class="refentrytitle">glNormalPointer</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_NORMALIZE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glNormal.html"><span class="citerefentry"><span class="refentrytitle">glNormal</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_POINT_SMOOTH</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glPointSize.html"><span class="citerefentry"><span class="refentrytitle">glPointSize</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_POINT_SPRITE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_POLYGON_SMOOTH</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glPolygonMode.html"><span class="citerefentry"><span class="refentrytitle">glPolygonMode</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_POLYGON_OFFSET_FILL</code> 
+                        </td><td align="left">
+                        <a class="citerefentry" href="glPolygonOffset.html"><span class="citerefentry"><span class="refentrytitle">glPolygonOffset</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_POLYGON_OFFSET_LINE</code> 
+                        </td><td align="left">
+                        <a class="citerefentry" href="glPolygonOffset.html"><span class="citerefentry"><span class="refentrytitle">glPolygonOffset</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_POLYGON_OFFSET_POINT</code> 
+                        </td><td align="left">
+                        <a class="citerefentry" href="glPolygonOffset.html"><span class="citerefentry"><span class="refentrytitle">glPolygonOffset</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_POLYGON_STIPPLE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glPolygonStipple.html"><span class="citerefentry"><span class="refentrytitle">glPolygonStipple</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_POST_COLOR_MATRIX_COLOR_TABLE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glColorTable.html"><span class="citerefentry"><span class="refentrytitle">glColorTable</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_POST_CONVOLUTION_COLOR_TABLE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glColorTable.html"><span class="citerefentry"><span class="refentrytitle">glColorTable</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_RESCALE_NORMAL</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glNormal.html"><span class="citerefentry"><span class="refentrytitle">glNormal</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_SAMPLE_ALPHA_TO_COVERAGE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glSampleCoverage.html"><span class="citerefentry"><span class="refentrytitle">glSampleCoverage</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_SAMPLE_ALPHA_TO_ONE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glSampleCoverage.html"><span class="citerefentry"><span class="refentrytitle">glSampleCoverage</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_SAMPLE_COVERAGE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glSampleCoverage.html"><span class="citerefentry"><span class="refentrytitle">glSampleCoverage</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_SCISSOR_TEST</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glScissor.html"><span class="citerefentry"><span class="refentrytitle">glScissor</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_SECONDARY_COLOR_ARRAY</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glSecondaryColorPointer.html"><span class="citerefentry"><span class="refentrytitle">glSecondaryColorPointer</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_SEPARABLE_2D</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glSeparableFilter2D.html"><span class="citerefentry"><span class="refentrytitle">glSeparableFilter2D</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_STENCIL_TEST</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glStencilFunc.html"><span class="citerefentry"><span class="refentrytitle">glStencilFunc</a>, <a class="citerefentry" href="glStencilOp.html"><span class="citerefentry"><span class="refentrytitle">glStencilOp</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_TEXTURE_1D</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glTexImage1D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage1D</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_TEXTURE_2D</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage2D</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_TEXTURE_3D</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glTexImage3D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage3D</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_TEXTURE_COORD_ARRAY</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glTexCoordPointer.html"><span class="citerefentry"><span class="refentrytitle">glTexCoordPointer</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_TEXTURE_CUBE_MAP</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage2D</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_TEXTURE_GEN_Q</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_TEXTURE_GEN_R</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_TEXTURE_GEN_S</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_TEXTURE_GEN_T</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_VERTEX_ARRAY</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glVertexPointer.html"><span class="citerefentry"><span class="refentrytitle">glVertexPointer</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_VERTEX_PROGRAM_POINT_SIZE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a>
+                        </td></tr><tr><td align="left">
+                        <code class="constant">GL_VERTEX_PROGRAM_TWO_SIDE</code>
+                        </td><td align="left">
+                        <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a>
+                        </td></tr></tbody></table></div><p>
+        </p></div><div class="refsect1"><a id="notes"></a><h2>Notes</h2><p>
+            If an error is generated,
+            <code class="function">glIsEnabled</code> returns 0.
+        </p><p>
+            <code class="constant">GL_COLOR_LOGIC_OP</code>,
+            <code class="constant">GL_COLOR_ARRAY</code>,
+            <code class="constant">GL_EDGE_FLAG_ARRAY</code>,
+            <code class="constant">GL_INDEX_ARRAY</code>,
+            <code class="constant">GL_INDEX_LOGIC_OP</code>,
+            <code class="constant">GL_NORMAL_ARRAY</code>,
+            <code class="constant">GL_POLYGON_OFFSET_FILL</code>,
+            <code class="constant">GL_POLYGON_OFFSET_LINE</code>,
+            <code class="constant">GL_POLYGON_OFFSET_POINT</code>,
+            <code class="constant">GL_TEXTURE_COORD_ARRAY</code>, and
+            <code class="constant">GL_VERTEX_ARRAY</code>
+            are available only
+            if the GL version is 1.1 or greater.
+        </p><p>
+            <code class="constant">GL_RESCALE_NORMAL</code>, and <code class="constant">GL_TEXTURE_3D</code> are available only if the GL
+            version is 1.2 or greater.
+        </p><p>
+            <code class="constant">GL_MULTISAMPLE</code>,
+            <code class="constant">GL_SAMPLE_ALPHA_TO_COVERAGE</code>,
+            <code class="constant">GL_SAMPLE_ALPHA_TO_ONE</code>,
+            <code class="constant">GL_SAMPLE_COVERAGE</code>,
+            <code class="constant">GL_TEXTURE_CUBE_MAP</code>
+            are available only if the GL version is 1.3 or greater.
+        </p><p>
+            <code class="constant">GL_FOG_COORD_ARRAY</code> and <code class="constant">GL_SECONDARY_COLOR_ARRAY</code>
+            are available only if the GL version is 1.4 or greater.
+        </p><p>
+            <code class="constant">GL_POINT_SPRITE</code>,
+            <code class="constant">GL_VERTEX_PROGRAM_POINT_SIZE</code>, and
+            <code class="constant">GL_VERTEX_PROGRAM_TWO_SIDE</code>
+            are available only if the GL version is 2.0 or greater.
+        </p><p>
+            <code class="constant">GL_COLOR_TABLE</code>, <code class="constant">GL_CONVOLUTION_1D</code>, <code class="constant">GL_CONVOLUTION_2D</code>,
+            <code class="constant">GL_HISTOGRAM</code>, <code class="constant">GL_MINMAX</code>,
+            <code class="constant">GL_POST_COLOR_MATRIX_COLOR_TABLE</code>,
+            <code class="constant">GL_POST_CONVOLUTION_COLOR_TABLE</code>, and
+            <code class="constant">GL_SEPARABLE_2D</code> are available only if <code class="code">ARB_imaging</code> is
+            returned when <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> is called with <code class="constant">GL_EXTENSIONS</code>.
+        </p><p>
+            For OpenGL versions 1.3 and greater, or when the <code class="code">ARB_multitexture</code> extension is supported, the following
+            parameters return the associated value for the active texture unit:
+            <code class="constant">GL_TEXTURE_1D</code>,
+            <code class="constant">GL_TEXTURE_2D</code>,
+            <code class="constant">GL_TEXTURE_3D</code>,
+            <code class="constant">GL_TEXTURE_CUBE_MAP</code>,
+            <code class="constant">GL_TEXTURE_GEN_S</code>,
+            <code class="constant">GL_TEXTURE_GEN_T</code>,
+            <code class="constant">GL_TEXTURE_GEN_R</code>,
+            <code class="constant">GL_TEXTURE_GEN_Q</code>,
+            <code class="constant">GL_TEXTURE_MATRIX</code>, and
+            <code class="constant">GL_TEXTURE_STACK_DEPTH</code>.
+            Likewise, the following parameters return the associated value for the
+            active client texture unit:
+            <code class="constant">GL_TEXTURE_COORD_ARRAY</code>,
+            <code class="constant">GL_TEXTURE_COORD_ARRAY_SIZE</code>,
+            <code class="constant">GL_TEXTURE_COORD_ARRAY_STRIDE</code>,
+            <code class="constant">GL_TEXTURE_COORD_ARRAY_TYPE</code>.
+        </p></div><div class="refsect1"><a id="errors"></a><h2>Errors</h2><p>
+            <code class="constant">GL_INVALID_ENUM</code> is generated if <em class="parameter"><code>cap</code></em> is not an accepted value.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if <code class="function">glIsEnabled</code>
+            is executed between the execution of <a class="citerefentry" href="glBegin.html"><span class="citerefentry"><span class="refentrytitle">glBegin</a>
+            and the corresponding execution of <a class="citerefentry" href="glEnd.html"><span class="citerefentry"><span class="refentrytitle">glEnd</a>.
+        </p></div><div class="refsect1"><a id="seealso"></a><h2>See Also</h2><p>
+            <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a>,
+            <a class="citerefentry" href="glEnableClientState.html"><span class="citerefentry"><span class="refentrytitle">glEnableClientState</a>,
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a>
+        </p></div><div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2><p>
+            Copyright <span class="trademark">© 1991-2006
+            Silicon Graphics, Inc. This document is licensed under the SGI
+            Free Software B License. For details, see
+            <a class="ulink" href="https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt" target="_top">https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt</a>.
+        </p></div></div></body></html>

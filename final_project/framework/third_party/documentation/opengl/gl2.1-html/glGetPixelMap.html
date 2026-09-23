@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glGetPixelMap</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glGetPixelMap"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>glGetPixelMap — return the specified pixel map</p></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glGetPixelMapfv</strong>(</code></td><td>GLenum <var class="pdparam">map</var>, </td></tr><tr><td> </td><td>GLfloat * <var class="pdparam">data</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glGetPixelMapuiv</strong>(</code></td><td>GLenum <var class="pdparam">map</var>, </td></tr><tr><td> </td><td>GLuint * <var class="pdparam">data</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glGetPixelMapusv</strong>(</code></td><td>GLenum <var class="pdparam">map</var>, </td></tr><tr><td> </td><td>GLushort * <var class="pdparam">data</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>map</code></em></dt><dd><p>
+                    Specifies the name of the pixel map to return.
+                    Accepted values are
+                    <code class="constant">GL_PIXEL_MAP_I_TO_I</code>,
+                    <code class="constant">GL_PIXEL_MAP_S_TO_S</code>,
+                    <code class="constant">GL_PIXEL_MAP_I_TO_R</code>,
+                    <code class="constant">GL_PIXEL_MAP_I_TO_G</code>,
+                    <code class="constant">GL_PIXEL_MAP_I_TO_B</code>,
+                    <code class="constant">GL_PIXEL_MAP_I_TO_A</code>,
+                    <code class="constant">GL_PIXEL_MAP_R_TO_R</code>,
+                    <code class="constant">GL_PIXEL_MAP_G_TO_G</code>,
+                    <code class="constant">GL_PIXEL_MAP_B_TO_B</code>, and
+                    <code class="constant">GL_PIXEL_MAP_A_TO_A</code>.
+                </p></dd><dt><span class="term"><em class="parameter"><code>data</code></em></dt><dd><p>
+                    Returns the pixel map contents.
+                </p></dd></dl></div></div><div class="refsect1"><a id="description"></a><h2>Description</h2><p>
+            See the <a class="citerefentry" href="glPixelMap.html"><span class="citerefentry"><span class="refentrytitle">glPixelMap</a> reference page for a description of the acceptable
+            values for the <em class="parameter"><code>map</code></em> parameter.
+            <code class="function">glGetPixelMap</code> returns in <em class="parameter"><code>data</code></em> the contents of the pixel map
+            specified in <em class="parameter"><code>map</code></em>.
+            Pixel maps are used during the execution of
+            <a class="citerefentry" href="glReadPixels.html"><span class="citerefentry"><span class="refentrytitle">glReadPixels</a>,
+            <a class="citerefentry" href="glDrawPixels.html"><span class="citerefentry"><span class="refentrytitle">glDrawPixels</a>,
+            <a class="citerefentry" href="glCopyPixels.html"><span class="citerefentry"><span class="refentrytitle">glCopyPixels</a>,
+            <a class="citerefentry" href="glTexImage1D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage1D</a>,
+            <a class="citerefentry" href="glTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage2D</a>,
+            <a class="citerefentry" href="glTexImage3D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage3D</a>,
+            <a class="citerefentry" href="glTexSubImage1D.html"><span class="citerefentry"><span class="refentrytitle">glTexSubImage1D</a>,
+            <a class="citerefentry" href="glTexSubImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexSubImage2D</a>,
+            <a class="citerefentry" href="glTexSubImage3D.html"><span class="citerefentry"><span class="refentrytitle">glTexSubImage3D</a>,
+            <a class="citerefentry" href="glCopyTexImage1D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexImage1D</a>,
+            <a class="citerefentry" href="glCopyTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexImage2D</a>,
+            <a class="citerefentry" href="glCopyTexSubImage1D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexSubImage1D</a>,
+            <a class="citerefentry" href="glCopyTexSubImage2D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexSubImage2D</a>, and
+            <a class="citerefentry" href="glCopyTexSubImage3D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexSubImage3D</a>.
+            to map color indices,
+            stencil indices,
+            color components,
+            and depth components to other values.
+        </p><p>
+            If a non-zero named buffer object is bound to the <code class="constant">GL_PIXEL_PACK_BUFFER</code> target 
+            (see <a class="citerefentry" href="glBindBuffer.html"><span class="citerefentry"><span class="refentrytitle">glBindBuffer</a>) while a pixel map is
+            requested, <em class="parameter"><code>data</code></em> is treated as a byte offset into the buffer object's data store.
+        </p><p>
+            Unsigned integer values,
+            if requested,
+            are linearly mapped from the internal fixed or floating-point representation
+            such that 1.0 maps to the largest representable integer value,
+            and 0.0 maps to 0.
+            Return unsigned integer values are undefined if the map value was
+            not in the range [0,1].
+        </p><p>
+            To determine the required size of <em class="parameter"><code>map</code></em>,
+            call <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with the appropriate symbolic
+            constant.
+        </p></div><div class="refsect1"><a id="notes"></a><h2>Notes</h2><p>
+            If an error is generated,
+            no change is made to the contents of <em class="parameter"><code>data</code></em>.
+        </p></div><div class="refsect1"><a id="errors"></a><h2>Errors</h2><p>
+            <code class="constant">GL_INVALID_ENUM</code> is generated if <em class="parameter"><code>map</code></em> is not an accepted value.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if a non-zero buffer object name is bound to the
+            <code class="constant">GL_PIXEL_PACK_BUFFER</code> target and the buffer object's data store is currently mapped.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if a non-zero buffer object name is bound to the
+            <code class="constant">GL_PIXEL_PACK_BUFFER</code> target and the data would be packed to the buffer 
+            object such that the memory writes required would exceed the data store size.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated by <code class="function">glGetPixelMapfv</code> if a non-zero buffer object name is bound to the
+            <code class="constant">GL_PIXEL_PACK_BUFFER</code> target and <em class="parameter"><code>data</code></em> is not evenly divisible 
+            into the number of bytes needed to store in memory a GLfloat datum.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated by <code class="function">glGetPixelMapuiv</code> if a non-zero buffer object name is bound to the
+            <code class="constant">GL_PIXEL_PACK_BUFFER</code> target and <em class="parameter"><code>data</code></em> is not evenly divisible 
+            into the number of bytes needed to store in memory a GLuint datum.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated by <code class="function">glGetPixelMapusv</code> if a non-zero buffer object name is bound to the
+            <code class="constant">GL_PIXEL_PACK_BUFFER</code> target and <em class="parameter"><code>data</code></em> is not evenly divisible 
+            into the number of bytes needed to store in memory a GLushort datum.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if <code class="function">glGetPixelMap</code>
+            is executed between the execution of <a class="citerefentry" href="glBegin.html"><span class="citerefentry"><span class="refentrytitle">glBegin</a>
+            and the corresponding execution of <a class="citerefentry" href="glEnd.html"><span class="citerefentry"><span class="refentrytitle">glEnd</a>.
+        </p></div><div class="refsect1"><a id="associatedgets"></a><h2>Associated Gets</h2><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_I_TO_I_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_S_TO_S_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_I_TO_R_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_I_TO_G_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_I_TO_B_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_I_TO_A_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_R_TO_R_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_G_TO_G_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_B_TO_B_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_MAP_A_TO_A_SIZE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_MAX_PIXEL_MAP_TABLE</code>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with argument <code class="constant">GL_PIXEL_PACK_BUFFER_BINDING</code>
+        </p></div><div class="refsect1"><a id="seealso"></a><h2>See Also</h2><p>
+            <a class="citerefentry" href="glColorSubTable.html"><span class="citerefentry"><span class="refentrytitle">glColorSubTable</a>,
+            <a class="citerefentry" href="glColorTable.html"><span class="citerefentry"><span class="refentrytitle">glColorTable</a>,
+            <a class="citerefentry" href="glConvolutionFilter1D.html"><span class="citerefentry"><span class="refentrytitle">glConvolutionFilter1D</a>,
+            <a class="citerefentry" href="glConvolutionFilter2D.html"><span class="citerefentry"><span class="refentrytitle">glConvolutionFilter2D</a>,
+            <a class="citerefentry" href="glCopyColorSubTable.html"><span class="citerefentry"><span class="refentrytitle">glCopyColorSubTable</a>,
+            <a class="citerefentry" href="glCopyColorTable.html"><span class="citerefentry"><span class="refentrytitle">glCopyColorTable</a>,
+            <a class="citerefentry" href="glCopyPixels.html"><span class="citerefentry"><span class="refentrytitle">glCopyPixels</a>,
+            <a class="citerefentry" href="glCopyTexImage1D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexImage1D</a>,
+            <a class="citerefentry" href="glCopyTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexImage2D</a>,
+            <a class="citerefentry" href="glCopyTexSubImage1D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexSubImage1D</a>,
+            <a class="citerefentry" href="glCopyTexSubImage2D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexSubImage2D</a>,
+            <a class="citerefentry" href="glCopyTexSubImage3D.html"><span class="citerefentry"><span class="refentrytitle">glCopyTexSubImage3D</a>,
+            <a class="citerefentry" href="glDrawPixels.html"><span class="citerefentry"><span class="refentrytitle">glDrawPixels</a>,
+            <a class="citerefentry" href="glGetHistogram.html"><span class="citerefentry"><span class="refentrytitle">glGetHistogram</a>,
+            <a class="citerefentry" href="glGetMinmax.html"><span class="citerefentry"><span class="refentrytitle">glGetMinmax</a>,
+            <a class="citerefentry" href="glGetTexImage.html"><span class="citerefentry"><span class="refentrytitle">glGetTexImage</a>,
+            <a class="citerefentry" href="glPixelMap.html"><span class="citerefentry"><span class="refentrytitle">glPixelMap</a>,
+            <a class="citerefentry" href="glPixelTransfer.html"><span class="citerefentry"><span class="refentrytitle">glPixelTransfer</a>,
+            <a class="citerefentry" href="glReadPixels.html"><span class="citerefentry"><span class="refentrytitle">glReadPixels</a>,
+            <a class="citerefentry" href="glSeparableFilter2D.html"><span class="citerefentry"><span class="refentrytitle">glSeparableFilter2D</a>,
+            <a class="citerefentry" href="glTexImage1D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage1D</a>,
+            <a class="citerefentry" href="glTexImage1D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage1D</a>,
+            <a class="citerefentry" href="glTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage2D</a>
+            <a class="citerefentry" href="glTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage2D</a>,
+            <a class="citerefentry" href="glTexImage3D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage3D</a>,
+            <a class="citerefentry" href="glTexSubImage1D.html"><span class="citerefentry"><span class="refentrytitle">glTexSubImage1D</a>,
+            <a class="citerefentry" href="glTexSubImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexSubImage2D</a>,
+            <a class="citerefentry" href="glTexSubImage3D.html"><span class="citerefentry"><span class="refentrytitle">glTexSubImage3D</a>
+        </p></div><div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2><p>
+            Copyright <span class="trademark">© 1991-2006
+            Silicon Graphics, Inc. This document is licensed under the SGI
+            Free Software B License. For details, see
+            <a class="ulink" href="https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt" target="_top">https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt</a>.
+        </p></div></div></body></html>

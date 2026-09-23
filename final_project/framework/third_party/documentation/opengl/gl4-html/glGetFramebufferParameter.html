@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glGetFramebufferParameter</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glGetFramebufferParameter"></a><div class="titlepage"></div>
+    
+    
+    <div class="refnamediv"><h2>Name</h2><p>
+        glGetFramebufferParameteriv, 
+        glGetNamedFramebufferParameteriv
+         — query a named parameter of a framebuffer object
+    </p></div>
+    <div class="refsynopsisdiv"><h2>C Specification</h2>
+        <div class="funcsynopsis">
+            <table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glGetFramebufferParameteriv</strong>(</code></td><td>GLenum <var class="pdparam">target</var>, </td></tr><tr><td> </td><td>GLenum <var class="pdparam">pname</var>, </td></tr><tr><td> </td><td>GLint *<var class="pdparam">params</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div>
+            <table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glGetNamedFramebufferParameteriv</strong>(</code></td><td>GLuint <var class="pdparam">framebuffer</var>, </td></tr><tr><td> </td><td>GLenum <var class="pdparam">pname</var>, </td></tr><tr><td> </td><td>GLint *<var class="pdparam">param</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div>
+        </div>
+    </div>
+    <div class="refsect1"><a id="parameters"></a><h2>Parameters</h2>
+        <div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>target</code></em></dt><dd>
+                <p>
+                    Specifies the target to which the framebuffer object is
+                    bound for
+                    <code class="function">glGetFramebufferParameteriv</code>.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>framebuffer</code></em></dt><dd>
+                <p>
+                    Specifies the name of the framebuffer object for
+                    <code class="function">glGetNamedFramebufferParameteriv</code>.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>pname</code></em></dt><dd>
+                <p>
+                    Specifies the parameter of the framebuffer object to
+                    query.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>params</code></em></dt><dd>
+                <p>
+                    Returns the value of parameter
+                    <em class="parameter"><code>pname</code></em> for the framebuffer object.
+                </p>
+            </dd></dl></div>
+    </div>
+    <div class="refsect1"><a id="description"></a><h2>Description</h2>
+        <p>
+            <code class="function">glGetFramebufferParameteriv</code> and
+            <code class="function">glGetNamedFramebufferParameteriv</code> query
+            parameters of a specified framebuffer object.
+        </p>
+        <p>
+            For <code class="function">glGetFramebufferParameteriv</code>,
+            the framebuffer object is that bound to
+            <em class="parameter"><code>target</code></em>, which must be one of
+            <code class="constant">GL_DRAW_FRAMEBUFFER</code>,
+            <code class="constant">GL_READ_FRAMEBUFFER</code> or
+            <code class="constant">GL_FRAMEBUFFER</code>.
+            <code class="constant">GL_FRAMEBUFFER</code> is equivalent to
+            <code class="constant">GL_DRAW_FRAMEBUFFER</code>. Default framebuffers
+            may also be queried if bound to <em class="parameter"><code>target</code></em>.
+        </p>
+        <p>
+            For <code class="function">glGetNamedFramebufferParameteriv</code>,
+            <em class="parameter"><code>framebuffer</code></em> is the name of the
+            framebuffer object. If <em class="parameter"><code>framebuffer</code></em> is
+            zero, the default draw framebuffer is queried.
+        </p>
+        <p>
+            Upon successful return, <em class="parameter"><code>param</code></em> will
+            contain the value of the framebuffer parameter specified by
+            <em class="parameter"><code>pname</code></em>, as described below.
+        </p>
+        <p>
+            The following parameters can only be queried for framebuffer objects:
+        </p>
+        <div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="constant">GL_FRAMEBUFFER_DEFAULT_WIDTH</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>params</code></em> returns the value of
+                        <code class="constant">GL_FRAMEBUFFER_DEFAULT_WIDTH</code>
+                        for the framebuffer object.
+                    </p>
+                </dd><dt><span class="term"><code class="constant">GL_FRAMEBUFFER_DEFAULT_HEIGHT</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>params</code></em> returns the value of
+                        <code class="constant">GL_FRAMEBUFFER_DEFAULT_HEIGHT</code>
+                        for the framebuffer object.
+                    </p>
+                </dd><dt><span class="term"><code class="constant">GL_FRAMEBUFFER_DEFAULT_LAYERS</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>params</code></em> returns the value of
+                        <code class="constant">GL_FRAMEBUFFER_DEFAULT_LAYERS</code>
+                        for the framebuffer object.
+                    </p>
+                </dd><dt><span class="term"><code class="constant">GL_FRAMEBUFFER_DEFAULT_SAMPLES</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>params</code></em> returns the value of
+                        <code class="constant">GL_FRAMEBUFFER_DEFAULT_SAMPLES</code>
+                        for the framebuffer object.
+                    </p>
+                </dd><dt><span class="term"><code class="constant">GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>params</code></em> returns the boolean
+                        value of
+                        <code class="constant">GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS</code>.
+                    </p>
+                </dd></dl></div>
+        <p>
+            The following parameters can be queried for both default framebuffers
+            and framebuffer objects:
+        </p>
+        <div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="constant">GL_DOUBLEBUFFER</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>param</code></em> returns a boolean value
+                        indicating whether double buffering is supported for
+                        the framebuffer object.
+                    </p>
+                </dd><dt><span class="term"><code class="constant">GL_IMPLEMENTATION_COLOR_READ_FORMAT</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>param</code></em> returns a GLenum value
+                        indicating the preferred pixel data format for the
+                        framebuffer object. See
+                        <a class="citerefentry" href="glReadPixels.html"><span class="citerefentry"><span class="refentrytitle">glReadPixels</a>.
+                    </p>
+                </dd><dt><span class="term"><code class="constant">GL_IMPLEMENTATION_COLOR_READ_TYPE</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>param</code></em> returns a GLenum value
+                        indicating the implementation's preferred pixel data
+                        type for the framebuffer object. See
+                        <a class="citerefentry" href="glReadPixels.html"><span class="citerefentry"><span class="refentrytitle">glReadPixels</a>.
+                    </p>
+                </dd><dt><span class="term"><code class="constant">GL_SAMPLES</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>param</code></em> returns an integer
+                        value indicating the coverage mask size for the
+                        framebuffer object. See
+                        <a class="citerefentry" href="glSampleCoverage.html"><span class="citerefentry"><span class="refentrytitle">glSampleCoverage</a>.
+                    </p>
+                </dd><dt><span class="term"><code class="constant">GL_SAMPLE_BUFFERS</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>param</code></em> returns an integer
+                        value indicating the number of sample buffers
+                        associated with the framebuffer object. See
+                        <a class="citerefentry" href="glSampleCoverage.html"><span class="citerefentry"><span class="refentrytitle">glSampleCoverage</a>.
+                    </p>
+                </dd><dt><span class="term"><code class="constant">GL_STEREO</code></dt><dd>
+                    <p>
+                        <em class="parameter"><code>param</code></em> returns a boolean value
+                        indicating whether stereo buffers (left and right)
+                        are supported for the framebuffer object.
+                    </p>
+                </dd></dl></div>
+    </div>
+    <div class="refsect1"><a id="notes"></a><h2>Notes</h2>
+        <p>
+            Queries of default framebuffers are supported only if the GL
+            version is 4.5 or higher. Otherwise, an
+            <code class="constant">GL_INVALID_OPERATION</code> error is generated.
+        </p>
+        <p>
+            Queries of the framebuffer-dependent parameters
+            <code class="constant">GL_DOUBLEBUFFER</code>,
+            <code class="constant">GL_IMPLEMENTATION_COLOR_READ_FORMAT</code>,
+            <code class="constant">GL_IMPLEMENTATION_COLOR_READ_TYPE</code>,
+            <code class="constant">GL_SAMPLES</code>,
+            <code class="constant">GL_SAMPLE_BUFFERS</code> and
+            <code class="constant">GL_STEREO</code> are supported only if the GL
+            version is 4.5 or higher.
+        </p>
+        <p>
+            The framebuffer-dependent state
+            <code class="constant">GL_SAMPLE_POSITION</code> cannot be queried
+            with these commands.
+        </p>
+    </div>
+    <div class="refsect1"><a id="errors"></a><h2>Errors</h2>
+        <p>
+            <code class="constant">GL_INVALID_ENUM</code> is generated by
+            <code class="function">glGetFramebufferParameteriv</code> if
+            <em class="parameter"><code>target</code></em> is not one of the accepted
+            framebuffer targets.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated by
+            <code class="function">glGetNamedFramebufferAttachmentParameteriv</code>
+            if <em class="parameter"><code>framebuffer</code></em> is not zero or the name of
+            an existing framebuffer object.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_ENUM</code> is generated if
+            <em class="parameter"><code>pname</code></em> is not one of the accepted
+            parameter names.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if a
+            default framebuffer is queried, and <em class="parameter"><code>pname</code></em>
+            is not one of <code class="constant">GL_DOUBLEBUFFER</code>,
+            <code class="constant">GL_IMPLEMENTATION_COLOR_READ_FORMAT</code>,
+            <code class="constant">GL_IMPLEMENTATION_COLOR_READ_TYPE</code>,
+            <code class="constant">GL_SAMPLES</code>,
+            <code class="constant">GL_SAMPLE_BUFFERS</code> or
+            <code class="constant">GL_STEREO</code>.
+        </p>
+    </div>
+    <div class="refsect1"><a id="associatedgets"></a><h2>Associated Gets</h2>
+        <p>
+            <a class="citerefentry" href="glGetFramebufferAttachmentParameter.html"><span class="citerefentry"><span class="refentrytitle">glGetFramebufferAttachmentParameter</a>
+        </p>
+    </div>
+    <div class="refsect1"><a id="versions"></a><h2>Version Support</h2>
+        <div class="informaltable">
+            <table class="informaltable" border="1"><colgroup><col align="left" /><col align="center" class="firstvers" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" class="lastvers" /></colgroup><thead><tr><th align="left">
+                
+            </th><th colspan="12" align="center">
+                <span class="bold"><strong>OpenGL Version</strong>
+            </th></tr><tr><th align="left">
+                <span class="bold"><strong>Function / Feature Name</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.4</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.5</strong>
+            </th></tr></thead><tbody><tr><td align="left"><code class="function">glGetFramebufferParameteriv</code></td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">✔</td><td align="center">✔</td><td align="center">✔</td></tr><tr><td align="left"><code class="function">glGetNamedFramebufferParameteriv</code></td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">✔</td></tr></tbody></table>
+        </div>
+    </div>
+    <div class="refsect1"><a id="seealso"></a><h2>See Also</h2>
+        <p>
+            <a class="citerefentry" href="glFramebufferParameteri.html"><span class="citerefentry"><span class="refentrytitle">glFramebufferParameteri</a>,
+            <a class="citerefentry" href="glGetFramebufferAttachmentParameter.html"><span class="citerefentry"><span class="refentrytitle">glGetFramebufferAttachmentParameter</a>
+        </p>
+    </div>
+    <div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2>
+        <p>
+            Copyright <span class="trademark">© 2014 Khronos Group.
+            This material may be distributed subject to the terms and conditions set forth in
+            the Open Publication License, v 1.0, 8 June 1999.
+            <a class="ulink" href="https://opencontent.org/openpub/" target="_top">https://opencontent.org/openpub/</a>.
+        </p>
+    </div>
+</div></body></html>

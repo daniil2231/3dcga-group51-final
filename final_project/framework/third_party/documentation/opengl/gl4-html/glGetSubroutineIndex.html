@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glGetSubroutineIndex</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glGetSubroutineIndex"></a><div class="titlepage"></div>
+    
+    
+    <div class="refnamediv"><h2>Name</h2><p>
+        glGetSubroutineIndex
+         — retrieve the index of a subroutine uniform of a given shader stage within a program
+    </p></div>
+    <div class="refsynopsisdiv"><h2>C Specification</h2>
+        <div class="funcsynopsis">
+            <table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">GLuint <strong class="fsfunc">glGetSubroutineIndex</strong>(</code></td><td>GLuint <var class="pdparam">program</var>, </td></tr><tr><td> </td><td>GLenum <var class="pdparam">shadertype</var>, </td></tr><tr><td> </td><td>const GLchar *<var class="pdparam">name</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div>
+        </div>
+    </div>
+    <div class="refsect1"><a id="parameters"></a><h2>Parameters</h2>
+        <div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>program</code></em></dt><dd>
+                <p>
+                    Specifies the name of the program containing shader stage.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>shadertype</code></em></dt><dd>
+                <p>
+                    Specifies the shader stage from which to query for subroutine uniform index.
+                    <em class="parameter"><code>shadertype</code></em>
+                    must be one of <code class="constant">GL_VERTEX_SHADER</code>, <code class="constant">GL_TESS_CONTROL_SHADER</code>,
+                    <code class="constant">GL_TESS_EVALUATION_SHADER</code>, <code class="constant">GL_GEOMETRY_SHADER</code> or
+                    <code class="constant">GL_FRAGMENT_SHADER</code>.
+                </p>
+            </dd><dt><span class="term"><em class="parameter"><code>name</code></em></dt><dd>
+                <p>
+                    Specifies the name of the subroutine uniform whose index to query.
+                </p>
+            </dd></dl></div>
+    </div>
+    <div class="refsect1"><a id="description"></a><h2>Description</h2>
+        <p>
+            <code class="function">glGetSubroutineIndex</code> returns the index of a subroutine uniform within a shader stage attached to a program object.
+            <em class="parameter"><code>program</code></em> contains the name of the program to which the shader is attached. <em class="parameter"><code>shadertype</code></em>
+            specifies the stage from which to query shader subroutine index. <em class="parameter"><code>name</code></em> contains the null-terminated
+            name of the subroutine uniform whose name to query.
+        </p>
+        <p>
+            If <em class="parameter"><code>name</code></em> is not the name of a subroutine uniform in the shader stage, <code class="constant">GL_INVALID_INDEX</code>
+            is returned, but no error is generated. If <em class="parameter"><code>name</code></em> is the name of a subroutine uniform in the shader stage,
+            a value between zero and the value of <code class="constant">GL_ACTIVE_SUBROUTINES</code> minus one will be returned. Subroutine indices
+            are assigned using consecutive integers in the range from zero to the value of <code class="constant">GL_ACTIVE_SUBROUTINES</code> minus
+            one for the shader stage.
+        </p>
+    </div>
+    <div class="refsect1"><a id="errors"></a><h2>Errors</h2>
+        <p>
+            <code class="constant">GL_INVALID_ENUM</code> is generated if <em class="parameter"><code>shadertype</code></em> or <em class="parameter"><code>pname</code></em>
+            is not one of the accepted values.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if <em class="parameter"><code>program</code></em> is not the name of an
+            existing program object.
+        </p>
+    </div>
+    <div class="refsect1"><a id="versions"></a><h2>Version Support</h2>
+        <div class="informaltable">
+            <table class="informaltable" border="1"><colgroup><col align="left" /><col align="center" class="firstvers" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" class="lastvers" /></colgroup><thead><tr><th align="left">
+                
+            </th><th colspan="12" align="center">
+                <span class="bold"><strong>OpenGL Version</strong>
+            </th></tr><tr><th align="left">
+                <span class="bold"><strong>Function / Feature Name</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.4</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.5</strong>
+            </th></tr></thead><tbody><tr><td align="left"><code class="function">glGetSubroutineIndex</code></td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">✔</td><td align="center">✔</td><td align="center">✔</td><td align="center">✔</td><td align="center">✔</td><td align="center">✔</td></tr></tbody></table>
+        </div>
+    </div>
+    <div class="refsect1"><a id="seealso"></a><h2>See Also</h2>
+        <p>
+            <a class="citerefentry" href="glGetProgram.html"><span class="citerefentry"><span class="refentrytitle">glGetProgram</a>,
+            <a class="citerefentry" href="glGetActiveSubroutineUniform.html"><span class="citerefentry"><span class="refentrytitle">glGetActiveSubroutineUniform</a>,
+            <a class="citerefentry" href="glGetActiveSubroutineUniformName.html"><span class="citerefentry"><span class="refentrytitle">glGetActiveSubroutineUniformName</a>
+        </p>
+    </div>
+    <div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2>
+        <p>
+            Copyright <span class="trademark">© 2010-2014 Khronos Group.
+            This material may be distributed subject to the terms and conditions set forth in
+            the Open Publication License, v 1.0, 8 June 1999.
+            <a class="ulink" href="https://opencontent.org/openpub/" target="_top">https://opencontent.org/openpub/</a>.
+        </p>
+    </div>
+</div></body></html>

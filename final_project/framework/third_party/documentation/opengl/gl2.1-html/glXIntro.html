@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glXIntro</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glXIntro"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>glXIntro — Introduction to OpenGL in the X window system</p></div><div class="refsect1"><a id="overview"></a><h2>Overview</h2><p>
+        </p><p>
+            OpenGL (called GL in other pages) is a high-performance 3D-oriented
+            renderer.  It is available in the X window system through the GLX extension.
+            To determine whether the GLX extension is supported by an X server, and if
+            so, what version is supported, call <a class="citerefentry" href="glXQueryExtension.html"><span class="citerefentry"><span class="refentrytitle">glXQueryExtension</a> and
+            <a class="citerefentry" href="glXQueryVersion.html"><span class="citerefentry"><span class="refentrytitle">glXQueryVersion</a>.
+        </p><p>
+            GLX extended X servers make a subset of their visuals available for OpenGL
+            rendering.  Drawables created with these visual can also be rendered into
+            using the core X renderer and or any other X extension that is compatible
+            with all core X visuals.
+        </p><p>
+            GLX extends a drawable's standard color buffer with additional buffers.
+            These buffers include back and auxiliary color buffers, a depth buffer, a
+            stencil buffer, and a color accumulation buffer.  Some or all of the buffers
+            listed are included in each X visual that supports OpenGL.
+        </p><p>
+            GLX supports rendering into three types of drawables: windows, pixmaps, and
+            pbuffers (pixel buffers). GLX windows and pixmaps are X resources, and
+            capable of accepting core X rendering as well as OpenGL rendering.  
+            GLX-pbuffers are GLX only resources and might not accept core X rendering.
+        </p><p>
+            To render using OpenGL into a GLX drawable, you must determine the
+            appropriate GLXFBConfig that supports the rendering features your
+            application requires. <a class="citerefentry" href="glXChooseFBConfig.html"><span class="citerefentry"><span class="refentrytitle">glXChooseFBConfig</a> returns a GLXFBConfig matching
+            the required attributes or <code class="constant">NULL</code> if no match is found.  A complete
+            list of GLXFBConfigs supported by a server can be obtained by calling
+            <a class="citerefentry" href="glXGetFBConfigs.html"><span class="citerefentry"><span class="refentrytitle">glXGetFBConfigs</a>.  Attributes of a particular GLXFBConfig can be
+            queried by calling <a class="citerefentry" href="glXGetFBConfigAttrib.html"><span class="citerefentry"><span class="refentrytitle">glXGetFBConfigAttrib</a>.
+        </p><p>
+            For GLX windows and pixmaps, a suitable X drawable (using either
+            <code class="function">XCreateWindow</code> or <code class="function">XCreatePixmap</code>, respectively) with a matching
+            visual must be created first.  Call <a class="citerefentry" href="glXGetVisualFromFBConfig.html"><span class="citerefentry"><span class="refentrytitle">glXGetVisualFromFBConfig</a> to obtain
+            the necessary XVisualInfo structure for creating the X drawable.  For
+            pbuffers, no underlying X drawable is required.
+        </p><p>
+            To create a GLX window from an X window, call <a class="citerefentry" href="glXCreateWindow.html"><span class="citerefentry"><span class="refentrytitle">glXCreateWindow</a>.
+            Likewise, to create a GLX pixmap, call <a class="citerefentry" href="glXCreatePixmap.html"><span class="citerefentry"><span class="refentrytitle">glXCreatePixmap</a>. Pbuffers are
+            created by calling <a class="citerefentry" href="glXCreatePbuffer.html"><span class="citerefentry"><span class="refentrytitle">glXCreatePbuffer</a>.  Use <a class="citerefentry" href="glXDestroyWindow.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyWindow</a>,
+            <a class="citerefentry" href="glXDestroyPixmap.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyPixmap</a>, and <a class="citerefentry" href="glXDestroyPbuffer.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyPbuffer</a> to release previously
+            allocated resources.
+        </p><p>
+            A GLX context is required to bind OpenGL rendering to a GLX resource.  A GLX
+            resource and rendering context must have compatible GLXFBConfigs.  To create
+            a GLX context, call <a class="citerefentry" href="glXCreateNewContext.html"><span class="citerefentry"><span class="refentrytitle">glXCreateNewContext</a>.  A context may be bound to a
+            GLX drawable by using <a class="citerefentry" href="glXMakeContextCurrent.html"><span class="citerefentry"><span class="refentrytitle">glXMakeContextCurrent</a>.  This context/drawable
+            pair becomes the current context and current drawable, and is used by all
+            OpenGL rendering commands until <a class="citerefentry" href="glXMakeContextCurrent.html"><span class="citerefentry"><span class="refentrytitle">glXMakeContextCurrent</a> is called with
+            different arguments.
+        </p><p>
+            Both core X and OpenGL commands can be used to operate on drawables;
+            however, the X and OpenGL command streams are not synchronized.
+            Synchronization can be explicitly specified using by calling <a class="citerefentry" href="glXWaitGL.html"><span class="citerefentry"><span class="refentrytitle">glXWaitGL</a>,
+            <a class="citerefentry" href="glXWaitX.html"><span class="citerefentry"><span class="refentrytitle">glXWaitX</a>, <code class="function">XSync</code>, and <code class="function">XFlush</code>.
+        </p><p>
+        </p></div><div class="refsect1"><a id="examples"></a><h2>Examples</h2><p>
+            Below is a minimal example of creating an RGBA-format X window that's
+            compatible with OpenGL using GLX 1.3 commands.  The window is cleared to
+            yellow when the program runs.  The program does minimal error checking; all
+            return values should be checked.
+        </p><p>
+            </p><pre class="programlisting">
+#include <stdio.h>
+#include <stdlib.h>
+#include <GL/gl.h>
+#include <GL/glx.h>
+
+int singleBufferAttributess[] = {
+    GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+    GLX_RENDER_TYPE,   GLX_RGBA_BIT,
+    GLX_RED_SIZE,      1,   /* Request a single buffered color buffer */
+    GLX_GREEN_SIZE,    1,   /* with the maximum number of color bits  */
+    GLX_BLUE_SIZE,     1,   /* for each component                     */
+    None
+};
+
+int doubleBufferAttributes[] = {
+    GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+    GLX_RENDER_TYPE,   GLX_RGBA_BIT,
+    GLX_DOUBLEBUFFER,  True,  /* Request a double-buffered color buffer with */
+    GLX_RED_SIZE,      1,     /* the maximum number of bits per component    */
+    GLX_GREEN_SIZE,    1, 
+    GLX_BLUE_SIZE,     1,
+    None
+};
+
+
+static Bool WaitForNotify( Display *dpy, XEvent *event, XPointer arg ) {
+    return (event->type == MapNotify) &amp;&amp; (event->xmap.window == (Window) arg);
+}
+int main( int argc, char *argv[] )
+{
+    Display              *dpy;
+    Window                xWin;
+    XEvent                event;
+    XVisualInfo          *vInfo;
+    XSetWindowAttributes  swa;
+    GLXFBConfig          *fbConfigs;
+    GLXContext            context;
+    GLXWindow             glxWin;
+    int                   swaMask;
+    int                   numReturned;
+    int                   swapFlag = True;
+
+    /* Open a connection to the X server */
+    dpy = XOpenDisplay( NULL );
+    if ( dpy == NULL ) {
+        printf( "Unable to open a connection to the X server\n" );
+        exit( EXIT_FAILURE );
+    }
+
+    /* Request a suitable framebuffer configuration - try for a double 
+    ** buffered configuration first */
+    fbConfigs = glXChooseFBConfig( dpy, DefaultScreen(dpy),
+                                   doubleBufferAttributes, &amp;numReturned );
+
+    if ( fbConfigs == NULL ) {  /* no double buffered configs available */
+      fbConfigs = glXChooseFBConfig( dpy, DefaultScreen(dpy),
+                                     singleBufferAttributess, &amp;numReturned );
+      swapFlag = False;
+    }
+
+    /* Create an X colormap and window with a visual matching the first
+    ** returned framebuffer config */
+    vInfo = glXGetVisualFromFBConfig( dpy, fbConfigs[0] );
+
+    swa.border_pixel = 0;
+    swa.event_mask = StructureNotifyMask;
+    swa.colormap = XCreateColormap( dpy, RootWindow(dpy, vInfo->screen),
+                                    vInfo->visual, AllocNone );
+
+    swaMask = CWBorderPixel | CWColormap | CWEventMask;
+
+    xWin = XCreateWindow( dpy, RootWindow(dpy, vInfo->screen), 0, 0, 256, 256,
+                          0, vInfo->depth, InputOutput, vInfo->visual,
+                          swaMask, &amp;swa );
+
+    /* Create a GLX context for OpenGL rendering */
+    context = glXCreateNewContext( dpy, fbConfigs[0], GLX_RGBA_TYPE,
+				 NULL, True );
+
+    /* Create a GLX window to associate the frame buffer configuration
+    ** with the created X window */
+    glxWin = glXCreateWindow( dpy, fbConfigs[0], xWin, NULL );
+    
+    /* Map the window to the screen, and wait for it to appear */
+    XMapWindow( dpy, xWin );
+    XIfEvent( dpy, &amp;event, WaitForNotify, (XPointer) xWin );
+
+    /* Bind the GLX context to the Window */
+    glXMakeContextCurrent( dpy, glxWin, glxWin, context );
+
+    /* OpenGL rendering ... */
+    glClearColor( 1.0, 1.0, 0.0, 1.0 );
+    glClear( GL_COLOR_BUFFER_BIT );
+
+    glFlush();
+    
+    if ( swapFlag )
+        glXSwapBuffers( dpy, glxWin );
+
+    sleep( 10 );
+    exit( EXIT_SUCCESS );
+}
+            </pre><p>
+        </p><p>
+        </p></div><div class="refsect1"><a id="notes"></a><h2>Notes</h2><p>
+            An X color map must be created and passed to <code class="function">XCreateWindow</code>.
+        </p><p>
+            A GLX context must be created and bound to a GLX drawable before OpenGL
+            commands can be executed.  OpenGL commands executed while no
+            context/drawable pair is current result in undefined behavior.
+        </p><p>
+            Exposure events indicate that <span class="emphasis"><em>all</em> buffers associated with the
+            specified window may be damaged and should be repainted. Although certain
+            buffers of some visuals on some systems may never require repainting (the
+            depth buffer, for example), it is incorrect to write a program assuming that
+            these buffers will not be damaged.
+        </p><p>
+            GLX commands utilize XVisualInfo structures rather than pointers to visuals
+            or visualIDs directly.  XVisualInfo structures contain <span class="emphasis"><em>visual</em>,
+            <span class="emphasis"><em>visualID</em>, <span class="emphasis"><em>screen</em>, and <span class="emphasis"><em>depth</em> elements, as well as other
+            X-specific information.
+        </p><p>
+        </p></div><div class="refsect1"><a id="usingglxextensions"></a><h2>Using GLX Extensions</h2><p>
+            All supported GLX extensions will have a corresponding definition in glx.h
+            and a token in the extension string returned by
+            <a class="citerefentry" href="glXQueryExtensionsString.html"><span class="citerefentry"><span class="refentrytitle">glXQueryExtensionsString</a>.  For example, if the
+            <code class="code">EXT_visual_info</code> extension is supported, then this token will be
+            defined in glx.h and <code class="code">EXT_visual_info</code> will appear in the extension
+            string returned by <a class="citerefentry" href="glXQueryExtensionsString.html"><span class="citerefentry"><span class="refentrytitle">glXQueryExtensionsString</a>. The definitions in glx.h
+            can be used at compile time to determine if procedure calls corresponding to
+            an extension exist in the library.
+        </p><p>
+            OpenGL itself is capable of being extended.
+        </p><p>
+        </p></div><div class="refsect1"><a id="glx11glx12andglx13"></a><h2>GLX 1.1, GLX 1.2, and GLX 1.3</h2><p>
+            GLX 1.3 is now supported and is backward compatible with GLX 1.1 and GLX
+            1.2.  It introduces new functionality (namely GLXFBConfigs) that supersedes
+            the GLX 1.2 functionality.  GLX 1.2 commands are supported, but their use in
+            new application development is not recommended.
+        </p><p>
+            GLX 1.3 corresponds to OpenGL versions 1.2 and introduces the following new
+            calls: <a class="citerefentry" href="glXGetFBConfigs.html"><span class="citerefentry"><span class="refentrytitle">glXGetFBConfigs</a>, <a class="citerefentry" href="glXGetFBConfigAttrib.html"><span class="citerefentry"><span class="refentrytitle">glXGetFBConfigAttrib</a>,
+            <a class="citerefentry" href="glXGetVisualFromFBConfig.html"><span class="citerefentry"><span class="refentrytitle">glXGetVisualFromFBConfig</a>, <a class="citerefentry" href="glXCreateWindow.html"><span class="citerefentry"><span class="refentrytitle">glXCreateWindow</a>, <a class="citerefentry" href="glXDestroyWindow.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyWindow</a>,
+            <a class="citerefentry" href="glXCreatePixmap.html"><span class="citerefentry"><span class="refentrytitle">glXCreatePixmap</a>, <a class="citerefentry" href="glXDestroyPixmap.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyPixmap</a>, <a class="citerefentry" href="glXCreatePbuffer.html"><span class="citerefentry"><span class="refentrytitle">glXCreatePbuffer</a>,
+            <a class="citerefentry" href="glXDestroyPbuffer.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyPbuffer</a>, <a class="citerefentry" href="glXQueryDrawable.html"><span class="citerefentry"><span class="refentrytitle">glXQueryDrawable</a>, <a class="citerefentry" href="glXCreateNewContext.html"><span class="citerefentry"><span class="refentrytitle">glXCreateNewContext</a>,
+            <a class="citerefentry" href="glXMakeContextCurrent.html"><span class="citerefentry"><span class="refentrytitle">glXMakeContextCurrent</a>, <a class="citerefentry" href="glXGetCurrentReadDrawable.html"><span class="citerefentry"><span class="refentrytitle">glXGetCurrentReadDrawable</a>,
+            <a class="citerefentry" href="glXGetCurrentDisplay.html"><span class="citerefentry"><span class="refentrytitle">glXGetCurrentDisplay</a>, <a class="citerefentry" href="glXQueryContext.html"><span class="citerefentry"><span class="refentrytitle">glXQueryContext</a>, and <a class="citerefentry" href="glXSelectEvent.html"><span class="citerefentry"><span class="refentrytitle">glXSelectEvent</a>,
+            <a class="citerefentry" href="glXGetSelectedEvent.html"><span class="citerefentry"><span class="refentrytitle">glXGetSelectedEvent</a>.
+        </p><p>
+            GLX 1.2 corresponds to OpenGL version 1.1 and introduces the following new
+            call: <a class="citerefentry" href="glXGetCurrentDisplay.html"><span class="citerefentry"><span class="refentrytitle">glXGetCurrentDisplay</a>.
+        </p><p>
+            GLX 1.1 corresponds to OpenGL version 1.0 and introduces the following new
+            calls: <a class="citerefentry" href="glXQueryExtensionsString.html"><span class="citerefentry"><span class="refentrytitle">glXQueryExtensionsString</a>, <a class="citerefentry" href="glXQueryServerString.html"><span class="citerefentry"><span class="refentrytitle">glXQueryServerString</a>, and
+            <a class="citerefentry" href="glXGetClientString.html"><span class="citerefentry"><span class="refentrytitle">glXGetClientString</a>.
+        </p><p>
+            Call <a class="citerefentry" href="glXQueryVersion.html"><span class="citerefentry"><span class="refentrytitle">glXQueryVersion</a> to determine at runtime what version of GLX is
+            available. <a class="citerefentry" href="glXQueryVersion.html"><span class="citerefentry"><span class="refentrytitle">glXQueryVersion</a> returns the version that is supported on the
+            connection. Thus, if 1.3 is returned, both the client and server support GLX
+            1.3.  You can also check the GLX version at compile time: GLX_VERSION_1_1
+            will be defined in glx.h if GLX 1.1 calls are supported, GLX_VERSION_1_2
+            will be defined if GLX 1.2 calls are supported, and GLX_VERSION_1_3 will be
+            defined if GLX 1.3 calls are supported.
+        </p><p>
+        </p></div><div class="refsect1"><a id="seealso"></a><h2>See Also</h2><p>
+            <a class="citerefentry" href="glFinish.html"><span class="citerefentry"><span class="refentrytitle">glFinish</a>,
+            <a class="citerefentry" href="glFlush.html"><span class="citerefentry"><span class="refentrytitle">glFlush</a>,
+            <a class="citerefentry" href="glXChooseVisual.html"><span class="citerefentry"><span class="refentrytitle">glXChooseVisual</a>,
+            <a class="citerefentry" href="glXCopyContext.html"><span class="citerefentry"><span class="refentrytitle">glXCopyContext</a>,
+            <a class="citerefentry" href="glXCreateContext.html"><span class="citerefentry"><span class="refentrytitle">glXCreateContext</a>,
+            <a class="citerefentry" href="glXCreateGLXPixmap.html"><span class="citerefentry"><span class="refentrytitle">glXCreateGLXPixmap</a>,
+            <a class="citerefentry" href="glXCreateNewContext.html"><span class="citerefentry"><span class="refentrytitle">glXCreateNewContext</a>,
+            <a class="citerefentry" href="glXCreatePbuffer.html"><span class="citerefentry"><span class="refentrytitle">glXCreatePbuffer</a>,
+            <a class="citerefentry" href="glXCreatePixmap.html"><span class="citerefentry"><span class="refentrytitle">glXCreatePixmap</a>,
+            <a class="citerefentry" href="glXCreateWindow.html"><span class="citerefentry"><span class="refentrytitle">glXCreateWindow</a>,
+            <a class="citerefentry" href="glXDestroyContext.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyContext</a>,
+            <a class="citerefentry" href="glXDestroyPbuffer.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyPbuffer</a>,
+            <a class="citerefentry" href="glXDestroyPixmap.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyPixmap</a>,
+            <a class="citerefentry" href="glXDestroyWindow.html"><span class="citerefentry"><span class="refentrytitle">glXDestroyWindow</a>,
+            <a class="citerefentry" href="glXGetClientString.html"><span class="citerefentry"><span class="refentrytitle">glXGetClientString</a>,
+            <a class="citerefentry" href="glXGetConfig.html"><span class="citerefentry"><span class="refentrytitle">glXGetConfig</a>,
+            <a class="citerefentry" href="glXGetCurrentDisplay.html"><span class="citerefentry"><span class="refentrytitle">glXGetCurrentDisplay</a>,
+            <a class="citerefentry" href="glXGetCurrentReadDrawable.html"><span class="citerefentry"><span class="refentrytitle">glXGetCurrentReadDrawable</a>,
+            <a class="citerefentry" href="glXGetFBConfigAttrib.html"><span class="citerefentry"><span class="refentrytitle">glXGetFBConfigAttrib</a>,
+            <a class="citerefentry" href="glXGetFBConfigs.html"><span class="citerefentry"><span class="refentrytitle">glXGetFBConfigs</a>,
+            <a class="citerefentry" href="glXGetProcAddress.html"><span class="citerefentry"><span class="refentrytitle">glXGetProcAddress</a>,
+            <a class="citerefentry" href="glXGetSelectedEvent.html"><span class="citerefentry"><span class="refentrytitle">glXGetSelectedEvent</a>,
+            <a class="citerefentry" href="glXGetVisualFromFBConfig.html"><span class="citerefentry"><span class="refentrytitle">glXGetVisualFromFBConfig</a>,
+            <a class="citerefentry" href="glXIsDirect.html"><span class="citerefentry"><span class="refentrytitle">glXIsDirect</a>,
+            <a class="citerefentry" href="glXMakeContextCurrent.html"><span class="citerefentry"><span class="refentrytitle">glXMakeContextCurrent</a>,
+            <a class="citerefentry" href="glXMakeCurrent.html"><span class="citerefentry"><span class="refentrytitle">glXMakeCurrent</a>,
+            <a class="citerefentry" href="glXQueryContext.html"><span class="citerefentry"><span class="refentrytitle">glXQueryContext</a>,
+            <a class="citerefentry" href="glXQueryDrawable.html"><span class="citerefentry"><span class="refentrytitle">glXQueryDrawable</a>,
+            <a class="citerefentry" href="glXQueryExtension.html"><span class="citerefentry"><span class="refentrytitle">glXQueryExtension</a>,
+            <a class="citerefentry" href="glXQueryExtensionsString.html"><span class="citerefentry"><span class="refentrytitle">glXQueryExtensionsString</a>,
+            <a class="citerefentry" href="glXQueryServerString.html"><span class="citerefentry"><span class="refentrytitle">glXQueryServerString</a>,
+            <a class="citerefentry" href="glXQueryVersion.html"><span class="citerefentry"><span class="refentrytitle">glXQueryVersion</a>,
+            <a class="citerefentry" href="glXSelectEvent.html"><span class="citerefentry"><span class="refentrytitle">glXSelectEvent</a>,
+            <a class="citerefentry" href="glXSwapBuffers.html"><span class="citerefentry"><span class="refentrytitle">glXSwapBuffers</a>,
+            <a class="citerefentry" href="glXUseXFont.html"><span class="citerefentry"><span class="refentrytitle">glXUseXFont</a>,
+            <a class="citerefentry" href="glXWaitGL.html"><span class="citerefentry"><span class="refentrytitle">glXWaitGL</a>,
+            <a class="citerefentry" href="glXWaitX.html"><span class="citerefentry"><span class="refentrytitle">glXWaitX</a>.
+            <code class="function">XCreateColormap</code>,
+            <code class="function">XCreateWindow</code>,
+            <code class="function">XSync</code>
+        </p></div><div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2><p>
+            Copyright <span class="trademark">© 1991-2006
+            Silicon Graphics, Inc. This document is licensed under the SGI
+            Free Software B License. For details, see
+            <a class="ulink" href="https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt" target="_top">https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt</a>.
+        </p></div></div></body></html>

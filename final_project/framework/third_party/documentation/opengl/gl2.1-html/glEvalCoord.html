@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glEvalCoord</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glEvalCoord"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>glEvalCoord — evaluate enabled one- and two-dimensional maps</p></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glEvalCoord1f</strong>(</code></td><td>GLfloat <var class="pdparam">u</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glEvalCoord1d</strong>(</code></td><td>GLdouble <var class="pdparam">u</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glEvalCoord2f</strong>(</code></td><td>GLfloat <var class="pdparam">u</var>, </td></tr><tr><td> </td><td>GLfloat <var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glEvalCoord2d</strong>(</code></td><td>GLdouble <var class="pdparam">u</var>, </td></tr><tr><td> </td><td>GLdouble <var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>u</code></em></dt><dd><p>
+                    Specifies a value that is the domain coordinate 
+                    <math xmlns="http://www.w3.org/1998/Math/MathML"><mi xmlns:mml="http://www.w3.org/1998/Math/MathML" mathvariant="italic">u</mi></math>
+                    to the basis function
+                    defined in a previous <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a> or <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a> command.
+                </p></dd><dt><span class="term"><em class="parameter"><code>v</code></em></dt><dd><p>
+                    Specifies a value that is the domain coordinate 
+                    <math xmlns="http://www.w3.org/1998/Math/MathML"><mi xmlns:mml="http://www.w3.org/1998/Math/MathML" mathvariant="italic">v</mi></math>
+                    to the basis function
+                    defined in a previous <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a> command.
+                    This argument is not present in a <code class="function">glEvalCoord1</code> command.
+                </p></dd></dl></div></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glEvalCoord1fv</strong>(</code></td><td>const GLfloat * <var class="pdparam">u</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glEvalCoord1dv</strong>(</code></td><td>const GLdouble * <var class="pdparam">u</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glEvalCoord2fv</strong>(</code></td><td>const GLfloat * <var class="pdparam">u</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glEvalCoord2dv</strong>(</code></td><td>const GLdouble * <var class="pdparam">u</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters2"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>u</code></em></dt><dd><p>
+                    Specifies a pointer to an array containing
+                    either one or two domain coordinates.
+                    The first coordinate is 
+                    <math xmlns="http://www.w3.org/1998/Math/MathML"><mi xmlns:mml="http://www.w3.org/1998/Math/MathML" mathvariant="italic">u</mi></math>.
+                    The second coordinate is 
+                    <math xmlns="http://www.w3.org/1998/Math/MathML"><mi xmlns:mml="http://www.w3.org/1998/Math/MathML" mathvariant="italic">v</mi></math>,
+                    which is present only in <code class="function">glEvalCoord2</code> versions.
+                </p></dd></dl></div></div><div class="refsect1"><a id="description"></a><h2>Description</h2><p>
+            <code class="function">glEvalCoord1</code> evaluates enabled one-dimensional maps at argument
+            <em class="parameter"><code>u</code></em>.
+            <code class="function">glEvalCoord2</code> does the same for two-dimensional maps using
+            two domain values,
+            <em class="parameter"><code>u</code></em> and <em class="parameter"><code>v</code></em>.
+            To define a map, call <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a> and <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>; to enable and
+            disable it, call <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a> and <a class="citerefentry" href="glDisable.html"><span class="citerefentry"><span class="refentrytitle">glDisable</a>.
+        </p><p>
+            When one of the <code class="function">glEvalCoord</code> commands is issued,
+            all currently enabled maps of the indicated dimension are evaluated.
+            Then,
+            for each enabled map,
+            it is as if the corresponding GL command had been issued with the
+            computed value.
+            That is,
+            if <code class="constant">GL_MAP1_INDEX</code> or
+            <code class="constant">GL_MAP2_INDEX</code> is enabled,
+            a <a class="citerefentry" href="glIndex.html"><span class="citerefentry"><span class="refentrytitle">glIndex</a> command is simulated.
+            If <code class="constant">GL_MAP1_COLOR_4</code> or
+            <code class="constant">GL_MAP2_COLOR_4</code> is enabled,
+            a <a class="citerefentry" href="glColor.html"><span class="citerefentry"><span class="refentrytitle">glColor</a> command is simulated.
+            If <code class="constant">GL_MAP1_NORMAL</code> or <code class="constant">GL_MAP2_NORMAL</code> is enabled,
+            a normal vector is produced,
+            and if any of
+            <code class="constant">GL_MAP1_TEXTURE_COORD_1</code>,
+            <code class="constant">GL_MAP1_TEXTURE_COORD_2</code>,
+            <code class="constant">GL_MAP1_TEXTURE_COORD_3</code>,
+            <code class="constant">GL_MAP1_TEXTURE_COORD_4</code>,
+            <code class="constant">GL_MAP2_TEXTURE_COORD_1</code>,
+            <code class="constant">GL_MAP2_TEXTURE_COORD_2</code>,
+            <code class="constant">GL_MAP2_TEXTURE_COORD_3</code>, or
+            <code class="constant">GL_MAP2_TEXTURE_COORD_4</code> is enabled, then an appropriate <a class="citerefentry" href="glTexCoord.html"><span class="citerefentry"><span class="refentrytitle">glTexCoord</a> command is simulated.
+        </p><p>
+            For color,
+            color index,
+            normal,
+            and texture coordinates the GL uses evaluated values instead of current values for those evaluations
+            that are enabled,
+            and current values otherwise,
+            However,
+            the evaluated values do not update the current values.
+            Thus, if <a class="citerefentry" href="glVertex.html"><span class="citerefentry"><span class="refentrytitle">glVertex</a> commands are interspersed with <code class="function">glEvalCoord</code>
+            commands, the color,
+            normal,
+            and texture coordinates associated with the <a class="citerefentry" href="glVertex.html"><span class="citerefentry"><span class="refentrytitle">glVertex</a> commands are not
+            affected by the values generated by the <code class="function">glEvalCoord</code> commands,
+            but only by the most recent
+            <a class="citerefentry" href="glColor.html"><span class="citerefentry"><span class="refentrytitle">glColor</a>,
+            <a class="citerefentry" href="glIndex.html"><span class="citerefentry"><span class="refentrytitle">glIndex</a>,
+            <a class="citerefentry" href="glNormal.html"><span class="citerefentry"><span class="refentrytitle">glNormal</a>, and
+            <a class="citerefentry" href="glTexCoord.html"><span class="citerefentry"><span class="refentrytitle">glTexCoord</a> commands.
+        </p><p>
+            No commands are issued for maps that are not enabled.
+            If more than one texture evaluation is enabled for a particular dimension
+            (for example, <code class="constant">GL_MAP2_TEXTURE_COORD_1</code> and
+            <code class="constant">GL_MAP2_TEXTURE_COORD_2</code>),
+            then only the evaluation of the map that produces the larger
+            number of coordinates
+            (in this case, <code class="constant">GL_MAP2_TEXTURE_COORD_2</code>)
+            is carried out.
+            <code class="constant">GL_MAP1_VERTEX_4</code> overrides <code class="constant">GL_MAP1_VERTEX_3</code>,
+            and
+            <code class="constant">GL_MAP2_VERTEX_4</code> overrides <code class="constant">GL_MAP2_VERTEX_3</code>,
+            in the same manner.
+            If neither a three- nor a four-component vertex map is enabled for the
+            specified dimension,
+            the <code class="function">glEvalCoord</code> command is ignored.
+        </p><p>
+            If you have enabled automatic normal generation,
+            by calling <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a> with argument <code class="constant">GL_AUTO_NORMAL</code>,
+            <code class="function">glEvalCoord2</code> generates surface normals analytically,
+            regardless of the contents or enabling of the <code class="constant">GL_MAP2_NORMAL</code> map.
+            Let
+        </p><p>
+            </p><div class="informalequation"><math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mrow xmlns:mml="http://www.w3.org/1998/Math/MathML">
+                    <mi mathvariant="bold">m</mi>
+                    <mo>=</mo>
+                    <mrow>
+                        <mfenced open="" close="">
+                            <mfrac>
+                                <mfenced open="" close="">
+                                    <mrow>
+                                        <mo></mo>
+                                        <mi mathvariant="bold">p</mi>
+                                    </mrow>
+                                </mfenced>
+                                <mfenced open="" close="">
+                                    <mrow>
+                                        <mo></mo>
+                                        <mi mathvariant="italic">u</mi>
+                                    </mrow>
+                                </mfenced>
+                            </mfrac>
+                        </mfenced>
+                        <mo></mo>
+                        <mfenced open="" close="">
+                            <mfrac>
+                                <mfenced open="" close="">
+                                    <mrow>
+                                        <mo></mo>
+                                        <mi mathvariant="bold">p</mi>
+                                    </mrow>
+                                </mfenced>
+                                <mfenced open="" close="">
+                                    <mrow>
+                                        <mo></mo>
+                                        <mi mathvariant="italic">v</mi>
+                                    </mrow>
+                                </mfenced>
+                            </mfrac>
+                        </mfenced>
+                    </mrow>
+                </mrow>
+            </math></div><p>
+        </p><p>
+            Then the generated normal 
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mi xmlns:mml="http://www.w3.org/1998/Math/MathML" mathvariant="bold">n</mi>
+            </math>
+            is
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mrow xmlns:mml="http://www.w3.org/1998/Math/MathML">
+                    <mi mathvariant="bold">n</mi>
+                    <mo>=</mo>
+                    <mfrac>
+                        <mi mathvariant="bold">m</mi>
+                        <mfenced open="" close="">
+                            <mfenced open="" close="">
+                                <mi mathvariant="bold">m</mi>
+                            </mfenced>
+                        </mfenced>
+                    </mfrac>
+                </mrow>
+            </math>
+        </p><p>
+            If automatic normal generation is disabled,
+            the corresponding normal map <code class="constant">GL_MAP2_NORMAL</code>,
+            if enabled,
+            is used to produce a normal.
+            If neither automatic normal generation nor a normal map is enabled,
+            no normal is generated for
+            <code class="function">glEvalCoord2</code> commands.
+        </p></div><div class="refsect1"><a id="associatedgets"></a><h2>Associated Gets</h2><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP1_VERTEX_3</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP1_VERTEX_4</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP1_INDEX</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP1_COLOR_4</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP1_NORMAL</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP1_TEXTURE_COORD_1</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP1_TEXTURE_COORD_2</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP1_TEXTURE_COORD_3</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP1_TEXTURE_COORD_4</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP2_VERTEX_3</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP2_VERTEX_4</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP2_INDEX</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP2_COLOR_4</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP2_NORMAL</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP2_TEXTURE_COORD_1</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP2_TEXTURE_COORD_2</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP2_TEXTURE_COORD_3</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_MAP2_TEXTURE_COORD_4</code>
+        </p><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> with argument <code class="constant">GL_AUTO_NORMAL</code>
+        </p><p>
+            <a class="citerefentry" href="glGetMap.html"><span class="citerefentry"><span class="refentrytitle">glGetMap</a>
+        </p></div><div class="refsect1"><a id="seealso"></a><h2>See Also</h2><p>
+            <a class="citerefentry" href="glBegin.html"><span class="citerefentry"><span class="refentrytitle">glBegin</a>,
+            <a class="citerefentry" href="glColor.html"><span class="citerefentry"><span class="refentrytitle">glColor</a>,
+            <a class="citerefentry" href="glEnable.html"><span class="citerefentry"><span class="refentrytitle">glEnable</a>,
+            <a class="citerefentry" href="glEvalMesh.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh</a>,
+            <a class="citerefentry" href="glEvalPoint.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint</a>,
+            <a class="citerefentry" href="glIndex.html"><span class="citerefentry"><span class="refentrytitle">glIndex</a>,
+            <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>,
+            <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>,
+            <a class="citerefentry" href="glMapGrid.html"><span class="citerefentry"><span class="refentrytitle">glMapGrid</a>,
+            <a class="citerefentry" href="glNormal.html"><span class="citerefentry"><span class="refentrytitle">glNormal</a>,
+            <a class="citerefentry" href="glTexCoord.html"><span class="citerefentry"><span class="refentrytitle">glTexCoord</a>,
+            <a class="citerefentry" href="glVertex.html"><span class="citerefentry"><span class="refentrytitle">glVertex</a>
+        </p></div><div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2><p>
+            Copyright <span class="trademark">© 1991-2006
+            Silicon Graphics, Inc. This document is licensed under the SGI
+            Free Software B License. For details, see
+            <a class="ulink" href="https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt" target="_top">https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt</a>.
+        </p></div></div></body></html>

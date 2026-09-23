@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glEnable</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glEnable"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>glEnable — enable or disable server-side GL capabilities</p></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glEnable</strong>(</code></td><td>GLenum <var class="pdparam">cap</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>cap</code></em></dt><dd><p>
+                    Specifies a symbolic constant indicating a GL capability.
+                </p></dd></dl></div></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glDisable</strong>(</code></td><td>GLenum <var class="pdparam">cap</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters2"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>cap</code></em></dt><dd><p>
+                    Specifies a symbolic constant indicating a GL capability.
+                </p></dd></dl></div></div><div class="refsect1"><a id="description"></a><h2>Description</h2><p>
+            <code class="function">glEnable</code> and <a class="citerefentry" href="glDisable.html"><span class="citerefentry"><span class="refentrytitle">glDisable</a> enable and disable various capabilities.
+            Use <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a> or <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> to determine the current setting
+            of any capability. The initial value for each capability with the
+            exception of <code class="constant">GL_DITHER</code> and <code class="constant">GL_MULTISAMPLE</code> is <code class="constant">GL_FALSE</code>. The initial value for
+            <code class="constant">GL_DITHER</code> and <code class="constant">GL_MULTISAMPLE</code> is <code class="constant">GL_TRUE</code>.
+        </p><p>
+            Both <code class="function">glEnable</code> and <a class="citerefentry" href="glDisable.html"><span class="citerefentry"><span class="refentrytitle">glDisable</a> take a single argument, <em class="parameter"><code>cap</code></em>,
+            which can assume one of the following values:
+        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="constant">GL_ALPHA_TEST</code></dt><dd><p>
+			  </p><p>
+                        If enabled,
+                        do alpha testing. See
+                        <a class="citerefentry" href="glAlphaFunc.html"><span class="citerefentry"><span class="refentrytitle">glAlphaFunc</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_AUTO_NORMAL</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        generate normal vectors when either
+                        <code class="constant">GL_MAP2_VERTEX_3</code> or
+                        <code class="constant">GL_MAP2_VERTEX_4</code> is used to generate vertices.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_BLEND</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        blend the computed fragment color values with the values in the color
+                        buffers. See <a class="citerefentry" href="glBlendFunc.html"><span class="citerefentry"><span class="refentrytitle">glBlendFunc</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_CLIP_PLANE</code><span class="emphasis"><em>i</em></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        clip geometry against user-defined clipping plane <span class="emphasis"><em>i</em>.
+                        See <a class="citerefentry" href="glClipPlane.html"><span class="citerefentry"><span class="refentrytitle">glClipPlane</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_COLOR_LOGIC_OP</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        apply the currently selected logical operation to the computed fragment
+                        color and color buffer values. See <a class="citerefentry" href="glLogicOp.html"><span class="citerefentry"><span class="refentrytitle">glLogicOp</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_COLOR_MATERIAL</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        have one or more material parameters track the current color.
+                        See <a class="citerefentry" href="glColorMaterial.html"><span class="citerefentry"><span class="refentrytitle">glColorMaterial</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_COLOR_SUM</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no fragment shader is active, 
+                        add the secondary color value to the computed fragment color.
+                        See <a class="citerefentry" href="glSecondaryColor.html"><span class="citerefentry"><span class="refentrytitle">glSecondaryColor</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_COLOR_TABLE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        perform a color table lookup on the incoming RGBA color values.
+                        See <a class="citerefentry" href="glColorTable.html"><span class="citerefentry"><span class="refentrytitle">glColorTable</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_CONVOLUTION_1D</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        perform a 1D convolution operation on incoming RGBA color values.
+                        See <a class="citerefentry" href="glConvolutionFilter1D.html"><span class="citerefentry"><span class="refentrytitle">glConvolutionFilter1D</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_CONVOLUTION_2D</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        perform a 2D convolution operation on incoming RGBA color values.
+                        See <a class="citerefentry" href="glConvolutionFilter2D.html"><span class="citerefentry"><span class="refentrytitle">glConvolutionFilter2D</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_CULL_FACE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        cull polygons based on their winding in window coordinates.
+                        See <a class="citerefentry" href="glCullFace.html"><span class="citerefentry"><span class="refentrytitle">glCullFace</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_DEPTH_TEST</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        do depth comparisons and update the depth buffer. Note that even if
+                        the depth buffer exists and the depth mask is non-zero, the
+                        depth buffer is not updated if the depth test is disabled. See
+                        <a class="citerefentry" href="glDepthFunc.html"><span class="citerefentry"><span class="refentrytitle">glDepthFunc</a> and
+                        <a class="citerefentry" href="glDepthRange.html"><span class="citerefentry"><span class="refentrytitle">glDepthRange</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_DITHER</code>	</dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        dither color components or indices before they are written to the
+                        color buffer.
+                    </p></dd><dt><span class="term"><code class="constant">GL_FOG</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no fragment shader is active,
+                        blend a fog color into the post-texturing color.
+                        See <a class="citerefentry" href="glFog.html"><span class="citerefentry"><span class="refentrytitle">glFog</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_HISTOGRAM</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        histogram incoming RGBA color values.
+                        See <a class="citerefentry" href="glHistogram.html"><span class="citerefentry"><span class="refentrytitle">glHistogram</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_INDEX_LOGIC_OP</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        apply the currently selected logical operation to the incoming index and color
+                        buffer indices.
+                        See <a class="citerefentry" href="glLogicOp.html"><span class="citerefentry"><span class="refentrytitle">glLogicOp</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_LIGHT</code><span class="emphasis"><em>i</em></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        include light <span class="emphasis"><em>i</em> in the evaluation of the lighting
+                        equation. See <a class="citerefentry" href="glLightModel.html"><span class="citerefentry"><span class="refentrytitle">glLightModel</a> and <a class="citerefentry" href="glLight.html"><span class="citerefentry"><span class="refentrytitle">glLight</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_LIGHTING</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no vertex shader is active,
+                        use the current lighting parameters to compute the vertex color or index.
+                        Otherwise, simply associate the current color or index with each
+                        vertex. See
+                        <a class="citerefentry" href="glMaterial.html"><span class="citerefentry"><span class="refentrytitle">glMaterial</a>, <a class="citerefentry" href="glLightModel.html"><span class="citerefentry"><span class="refentrytitle">glLightModel</a>, and <a class="citerefentry" href="glLight.html"><span class="citerefentry"><span class="refentrytitle">glLight</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_LINE_SMOOTH</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        draw lines with correct filtering.
+                        Otherwise,
+                        draw aliased lines.
+                        See <a class="citerefentry" href="glLineWidth.html"><span class="citerefentry"><span class="refentrytitle">glLineWidth</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_LINE_STIPPLE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        use the current line stipple pattern when drawing lines. See
+                        <a class="citerefentry" href="glLineStipple.html"><span class="citerefentry"><span class="refentrytitle">glLineStipple</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP1_COLOR_4</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord1.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord1</a>,
+                        <a class="citerefentry" href="glEvalMesh1.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh1</a>, and
+                        <a class="citerefentry" href="glEvalPoint1.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint1</a> generate RGBA values.
+                        See <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP1_INDEX</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord1.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord1</a>,
+                        <a class="citerefentry" href="glEvalMesh1.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh1</a>, and
+                        <a class="citerefentry" href="glEvalPoint1.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint1</a> generate color indices.
+                        See <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP1_NORMAL</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord1.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord1</a>,
+                        <a class="citerefentry" href="glEvalMesh1.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh1</a>, and
+                        <a class="citerefentry" href="glEvalPoint1.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint1</a> generate normals.
+                        See <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP1_TEXTURE_COORD_1</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord1.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord1</a>,
+                        <a class="citerefentry" href="glEvalMesh1.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh1</a>, and
+                        <a class="citerefentry" href="glEvalPoint1.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint1</a> generate
+                        <span class="emphasis"><em>s</em>
+                        texture coordinates.
+                        See <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP1_TEXTURE_COORD_2</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord1.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord1</a>,
+                        <a class="citerefentry" href="glEvalMesh1.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh1</a>, and
+                        <a class="citerefentry" href="glEvalPoint1.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint1</a> generate
+                        <span class="emphasis"><em>s</em> and
+                        <span class="emphasis"><em>t</em> texture coordinates.
+                        See <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP1_TEXTURE_COORD_3</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord1.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord1</a>,
+                        <a class="citerefentry" href="glEvalMesh1.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh1</a>, and
+                        <a class="citerefentry" href="glEvalPoint1.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint1</a> generate
+                        <span class="emphasis"><em>s</em>,
+                        <span class="emphasis"><em>t</em>, and
+                        <span class="emphasis"><em>r</em> texture coordinates.
+                        See <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP1_TEXTURE_COORD_4</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord1.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord1</a>,
+                        <a class="citerefentry" href="glEvalMesh1.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh1</a>, and
+                        <a class="citerefentry" href="glEvalPoint1.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint1</a> generate
+                        <span class="emphasis"><em>s</em>,
+                        <span class="emphasis"><em>t</em>,
+                        <span class="emphasis"><em>r</em>, and
+                        <span class="emphasis"><em>q</em> texture coordinates.
+                        See <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP1_VERTEX_3</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord1.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord1</a>,
+                        <a class="citerefentry" href="glEvalMesh1.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh1</a>, and
+                        <a class="citerefentry" href="glEvalPoint1.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint1</a> generate
+                        <span class="emphasis"><em>x</em>, <span class="emphasis"><em>y</em>, and <span class="emphasis"><em>z</em> vertex coordinates.
+                        See <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP1_VERTEX_4</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord1.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord1</a>,
+                        <a class="citerefentry" href="glEvalMesh1.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh1</a>, and
+                        <a class="citerefentry" href="glEvalPoint1.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint1</a> generate
+                        homogeneous
+                        <span class="emphasis"><em>x</em>,
+                        <span class="emphasis"><em>y</em>,
+                        <span class="emphasis"><em>z</em>, and
+                        <span class="emphasis"><em>w</em> vertex coordinates.
+                        See <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP2_COLOR_4</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord2.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord2</a>,
+                        <a class="citerefentry" href="glEvalMesh2.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh2</a>, and
+                        <a class="citerefentry" href="glEvalPoint2.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint2</a> generate RGBA values.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP2_INDEX</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord2.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord2</a>,
+                        <a class="citerefentry" href="glEvalMesh2.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh2</a>, and
+                        <a class="citerefentry" href="glEvalPoint2.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint2</a> generate color indices.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP2_NORMAL</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord2.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord2</a>,
+                        <a class="citerefentry" href="glEvalMesh2.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh2</a>, and
+                        <a class="citerefentry" href="glEvalPoint2.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint2</a> generate normals.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP2_TEXTURE_COORD_1</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord2.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord2</a>,
+                        <a class="citerefentry" href="glEvalMesh2.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh2</a>, and
+                        <a class="citerefentry" href="glEvalPoint2.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint2</a> generate
+                        <span class="emphasis"><em>s</em>
+                        texture coordinates.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP2_TEXTURE_COORD_2</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord2.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord2</a>,
+                        <a class="citerefentry" href="glEvalMesh2.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh2</a>, and
+                        <a class="citerefentry" href="glEvalPoint2.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint2</a> generate
+                        <span class="emphasis"><em>s</em> and
+                        <span class="emphasis"><em>t</em> texture coordinates.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP2_TEXTURE_COORD_3</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord2.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord2</a>,
+                        <a class="citerefentry" href="glEvalMesh2.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh2</a>, and
+                        <a class="citerefentry" href="glEvalPoint2.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint2</a> generate
+                        <span class="emphasis"><em>s</em>,
+                        <span class="emphasis"><em>t</em>, and
+                        <span class="emphasis"><em>r</em> texture coordinates.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP2_TEXTURE_COORD_4</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord2.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord2</a>,
+                        <a class="citerefentry" href="glEvalMesh2.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh2</a>, and
+                        <a class="citerefentry" href="glEvalPoint2.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint2</a> generate
+                        <span class="emphasis"><em>s</em>,
+                        <span class="emphasis"><em>t</em>,
+                        <span class="emphasis"><em>r</em>, and
+                        <span class="emphasis"><em>q</em> texture coordinates.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP2_VERTEX_3</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord2.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord2</a>,
+                        <a class="citerefentry" href="glEvalMesh2.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh2</a>, and
+                        <a class="citerefentry" href="glEvalPoint2.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint2</a> generate
+                        <span class="emphasis"><em>x</em>, <span class="emphasis"><em>y</em>, and <span class="emphasis"><em>z</em> vertex coordinates.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MAP2_VERTEX_4</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calls to
+                        <a class="citerefentry" href="glEvalCoord2.html"><span class="citerefentry"><span class="refentrytitle">glEvalCoord2</a>,
+                        <a class="citerefentry" href="glEvalMesh2.html"><span class="citerefentry"><span class="refentrytitle">glEvalMesh2</a>, and
+                        <a class="citerefentry" href="glEvalPoint2.html"><span class="citerefentry"><span class="refentrytitle">glEvalPoint2</a> generate
+                        homogeneous
+                        <span class="emphasis"><em>x</em>,
+                        <span class="emphasis"><em>y</em>,
+                        <span class="emphasis"><em>z</em>, and
+                        <span class="emphasis"><em>w</em> vertex coordinates.
+                        See <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MINMAX</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        compute the minimum and maximum values of incoming RGBA color values.
+                        See <a class="citerefentry" href="glMinmax.html"><span class="citerefentry"><span class="refentrytitle">glMinmax</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_MULTISAMPLE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        use multiple fragment samples in computing the final color of a pixel.
+                        See <a class="citerefentry" href="glSampleCoverage.html"><span class="citerefentry"><span class="refentrytitle">glSampleCoverage</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_NORMALIZE</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no vertex shader is active,
+                        normal vectors are normalized to unit length
+                        after transformation and before lighting.  This method is generally
+                        less efficient than <code class="constant">GL_RESCALE_NORMAL</code>. See 
+                        <a class="citerefentry" href="glNormal.html"><span class="citerefentry"><span class="refentrytitle">glNormal</a> and
+                        <a class="citerefentry" href="glNormalPointer.html"><span class="citerefentry"><span class="refentrytitle">glNormalPointer</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_POINT_SMOOTH</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        draw points with proper filtering.
+                        Otherwise,
+                        draw aliased points.
+                        See <a class="citerefentry" href="glPointSize.html"><span class="citerefentry"><span class="refentrytitle">glPointSize</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_POINT_SPRITE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        calculate texture coordinates for points based on texture
+                        environment and point parameter settings.  Otherwise texture coordinates
+                        are constant across points.
+                    </p></dd><dt><span class="term"><code class="constant">GL_POLYGON_OFFSET_FILL</code></dt><dd><p>
+		        </p><p>
+                        If enabled, and if the polygon is rendered in
+                        <code class="constant">GL_FILL</code> mode, an offset is added to depth values of a polygon's
+                        fragments before the depth comparison is performed.
+                        See <a class="citerefentry" href="glPolygonOffset.html"><span class="citerefentry"><span class="refentrytitle">glPolygonOffset</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_POLYGON_OFFSET_LINE</code></dt><dd><p>
+		        </p><p>
+                        If enabled, and if the polygon is rendered in
+                        <code class="constant">GL_LINE</code> mode, an offset is added to depth values of a polygon's
+                        fragments before the depth comparison is performed.
+                        See <a class="citerefentry" href="glPolygonOffset.html"><span class="citerefentry"><span class="refentrytitle">glPolygonOffset</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_POLYGON_OFFSET_POINT</code></dt><dd><p>
+		        </p><p>
+                        If enabled, an offset is added to depth values of a polygon's fragments
+                        before the depth comparison is performed, if the polygon is rendered in
+                        <code class="constant">GL_POINT</code> mode. See <a class="citerefentry" href="glPolygonOffset.html"><span class="citerefentry"><span class="refentrytitle">glPolygonOffset</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_POLYGON_SMOOTH</code></dt><dd><p>
+		        </p><p>
+                        If enabled, draw polygons with proper filtering.
+                        Otherwise, draw aliased polygons. For correct antialiased polygons,
+                        an alpha buffer is needed and the polygons must be sorted front to
+                        back.
+                    </p></dd><dt><span class="term"><code class="constant">GL_POLYGON_STIPPLE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        use the current polygon stipple pattern when rendering
+                        polygons. See <a class="citerefentry" href="glPolygonStipple.html"><span class="citerefentry"><span class="refentrytitle">glPolygonStipple</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_POST_COLOR_MATRIX_COLOR_TABLE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        perform a color table lookup on RGBA color values after color matrix
+                        transformation.
+                        See <a class="citerefentry" href="glColorTable.html"><span class="citerefentry"><span class="refentrytitle">glColorTable</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_POST_CONVOLUTION_COLOR_TABLE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        perform a color table lookup on RGBA color values after convolution.
+                        See <a class="citerefentry" href="glColorTable.html"><span class="citerefentry"><span class="refentrytitle">glColorTable</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_RESCALE_NORMAL</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no vertex shader is active, 
+                        normal vectors are scaled after transformation and before 
+                        lighting by a factor computed from the modelview matrix.  If the
+                        modelview matrix scales space uniformly, this has the effect of
+                        restoring the transformed normal to unit length.  This method is generally
+                        more efficient than <code class="constant">GL_NORMALIZE</code>. See 
+                        <a class="citerefentry" href="glNormal.html"><span class="citerefentry"><span class="refentrytitle">glNormal</a> and
+                        <a class="citerefentry" href="glNormalPointer.html"><span class="citerefentry"><span class="refentrytitle">glNormalPointer</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_SAMPLE_ALPHA_TO_COVERAGE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        compute a temporary coverage value where each bit is determined by the
+                        alpha value at the corresponding sample location.  The temporary coverage
+                        value is then ANDed with the fragment coverage value.
+                    </p></dd><dt><span class="term"><code class="constant">GL_SAMPLE_ALPHA_TO_ONE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        each sample alpha value is replaced by the maximum representable alpha value.
+                    </p></dd><dt><span class="term"><code class="constant">GL_SAMPLE_COVERAGE</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        the fragment's coverage is ANDed with the temporary coverage value.  If
+                        <code class="constant">GL_SAMPLE_COVERAGE_INVERT</code> is set to <code class="constant">GL_TRUE</code>, invert the coverage
+                        value.
+                        See <a class="citerefentry" href="glSampleCoverage.html"><span class="citerefentry"><span class="refentrytitle">glSampleCoverage</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_SEPARABLE_2D</code></dt><dd><p>
+		        </p><p>
+                        If enabled, perform a two-dimensional convolution operation using a separable
+                        convolution filter on incoming RGBA color values.
+                        See <a class="citerefentry" href="glSeparableFilter2D.html"><span class="citerefentry"><span class="refentrytitle">glSeparableFilter2D</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_SCISSOR_TEST</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        discard fragments that are outside the scissor rectangle.
+                        See <a class="citerefentry" href="glScissor.html"><span class="citerefentry"><span class="refentrytitle">glScissor</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_STENCIL_TEST</code></dt><dd><p>
+		        </p><p>
+                        If enabled,
+                        do stencil testing and update the stencil buffer.
+                        See <a class="citerefentry" href="glStencilFunc.html"><span class="citerefentry"><span class="refentrytitle">glStencilFunc</a> and <a class="citerefentry" href="glStencilOp.html"><span class="citerefentry"><span class="refentrytitle">glStencilOp</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_TEXTURE_1D</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no fragment shader is active, 
+                        one-dimensional texturing is performed
+                        (unless two- or three-dimensional or cube-mapped texturing is also enabled).
+                        See <a class="citerefentry" href="glTexImage1D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage1D</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_TEXTURE_2D</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no fragment shader is active, 
+                        two-dimensional texturing is performed
+                        (unless three-dimensional or cube-mapped texturing is also enabled).
+                        See <a class="citerefentry" href="glTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage2D</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_TEXTURE_3D</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no fragment shader is active, 
+                        three-dimensional texturing is performed
+                        (unless cube-mapped texturing is also enabled).
+                        See <a class="citerefentry" href="glTexImage3D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage3D</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_TEXTURE_CUBE_MAP</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no fragment shader is active, 
+                        cube-mapped texturing is performed.
+                        See <a class="citerefentry" href="glTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage2D</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_TEXTURE_GEN_Q</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no vertex shader is active,
+                        the <span class="emphasis"><em>q</em> texture coordinate is computed using
+                        the texture generation function defined with <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>.
+                        Otherwise, the current <span class="emphasis"><em>q</em> texture coordinate is used.
+                        See <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_TEXTURE_GEN_R</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no vertex shader is active,
+                        the <span class="emphasis"><em>r</em> texture coordinate is computed using
+                        the texture generation function defined with <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>.
+                        Otherwise, the current <span class="emphasis"><em>r</em> texture coordinate is used.
+                        See <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_TEXTURE_GEN_S</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no vertex shader is active,
+                        the <span class="emphasis"><em>s</em> texture coordinate is computed using
+                        the texture generation function defined with <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>.
+                        Otherwise, the current <span class="emphasis"><em>s</em> texture coordinate is used.
+                        See <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_TEXTURE_GEN_T</code></dt><dd><p>
+		        </p><p>
+                        If enabled and no vertex shader is active,
+                        the <span class="emphasis"><em>t</em> texture coordinate is computed using
+                        the texture generation function defined with <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>.
+                        Otherwise, the current <span class="emphasis"><em>t</em> texture coordinate is used.
+                        See <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>.
+                    </p></dd><dt><span class="term"><code class="constant">GL_VERTEX_PROGRAM_POINT_SIZE</code></dt><dd><p>
+		        </p><p>
+                        If enabled
+                        and a vertex shader is active, then the derived point size is taken from the (potentially clipped) shader builtin
+                        <code class="constant">gl_PointSize</code> and clamped to the implementation-dependent point size range.
+                    </p></dd><dt><span class="term"><code class="constant">GL_VERTEX_PROGRAM_TWO_SIDE</code></dt><dd><p>
+		        </p><p>
+                        If enabled
+                        and a vertex shader is active, it specifies that the GL will choose between front and back colors based on the
+                        polygon's face direction of which the vertex being shaded is a part.  It has no effect on points or lines.
+                    </p></dd></dl></div></div><div class="refsect1"><a id="notes"></a><h2>Notes</h2><p>
+            <code class="constant">GL_POLYGON_OFFSET_FILL</code>, <code class="constant">GL_POLYGON_OFFSET_LINE</code>,
+            <code class="constant">GL_POLYGON_OFFSET_POINT</code>,
+            <code class="constant">GL_COLOR_LOGIC_OP</code>, and <code class="constant">GL_INDEX_LOGIC_OP</code> are available
+            only if the GL version is 1.1 or greater.
+        </p><p>
+            <code class="constant">GL_RESCALE_NORMAL</code>, and <code class="constant">GL_TEXTURE_3D</code> are available only if the
+            GL version is 1.2 or greater.
+        </p><p>
+            <code class="constant">GL_MULTISAMPLE</code>,
+            <code class="constant">GL_SAMPLE_ALPHA_TO_COVERAGE</code>,
+            <code class="constant">GL_SAMPLE_ALPHA_TO_ONE</code>,
+            <code class="constant">GL_SAMPLE_COVERAGE</code>,
+            <code class="constant">GL_TEXTURE_CUBE_MAP</code>
+            are available only if the GL version is 1.3 or greater.
+        </p><p>
+            <code class="constant">GL_POINT_SPRITE</code>,
+            <code class="constant">GL_VERTEX_PROGRAM_POINT_SIZE</code>, and
+            <code class="constant">GL_VERTEX_PROGRAM_TWO_SIDE</code>
+            is available only if the GL version is 2.0 or greater.
+        </p><p>
+            <code class="constant">GL_COLOR_TABLE</code>, <code class="constant">GL_CONVOLUTION_1D</code>, <code class="constant">GL_CONVOLUTION_2D</code>,
+            <code class="constant">GL_HISTOGRAM</code>, <code class="constant">GL_MINMAX</code>,
+            <code class="constant">GL_POST_COLOR_MATRIX_COLOR_TABLE</code>,
+            <code class="constant">GL_POST_CONVOLUTION_COLOR_TABLE</code>, and
+            <code class="constant">GL_SEPARABLE_2D</code> are available only if <code class="code">ARB_imaging</code> is returned
+            from <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a> with an argument of <code class="constant">GL_EXTENSIONS</code>.
+        </p><p>
+            For OpenGL versions 1.3 and greater, or when <code class="code">ARB_multitexture</code> is supported, <code class="constant">GL_TEXTURE_1D</code>,
+            <code class="constant">GL_TEXTURE_2D</code>, <code class="constant">GL_TEXTURE_3D</code>, <code class="constant">GL_TEXTURE_GEN_S</code>,
+            <code class="constant">GL_TEXTURE_GEN_T</code>, <code class="constant">GL_TEXTURE_GEN_R</code>, and <code class="constant">GL_TEXTURE_GEN_Q</code>
+            enable or disable the respective state for the active texture unit
+            specified with <a class="citerefentry" href="glActiveTexture.html"><span class="citerefentry"><span class="refentrytitle">glActiveTexture</a>.
+        </p></div><div class="refsect1"><a id="errors"></a><h2>Errors</h2><p>
+            <code class="constant">GL_INVALID_ENUM</code> is generated if <em class="parameter"><code>cap</code></em> is not one of the values
+            listed previously.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if <code class="function">glEnable</code> or <a class="citerefentry" href="glDisable.html"><span class="citerefentry"><span class="refentrytitle">glDisable</a>
+            is executed between the execution of <a class="citerefentry" href="glBegin.html"><span class="citerefentry"><span class="refentrytitle">glBegin</a>
+            and the corresponding execution of <a class="citerefentry" href="glEnd.html"><span class="citerefentry"><span class="refentrytitle">glEnd</a>.
+        </p></div><div class="refsect1"><a id="associatedgets"></a><h2>Associated Gets</h2><p>
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a>
+        </p><p>
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a>
+        </p></div><div class="refsect1"><a id="seealso"></a><h2>See Also</h2><p>
+            <a class="citerefentry" href="glActiveTexture.html"><span class="citerefentry"><span class="refentrytitle">glActiveTexture</a>,
+            <a class="citerefentry" href="glAlphaFunc.html"><span class="citerefentry"><span class="refentrytitle">glAlphaFunc</a>,
+            <a class="citerefentry" href="glBlendFunc.html"><span class="citerefentry"><span class="refentrytitle">glBlendFunc</a>,
+            <a class="citerefentry" href="glClipPlane.html"><span class="citerefentry"><span class="refentrytitle">glClipPlane</a>,
+            <a class="citerefentry" href="glColorMaterial.html"><span class="citerefentry"><span class="refentrytitle">glColorMaterial</a>,
+            <a class="citerefentry" href="glCullFace.html"><span class="citerefentry"><span class="refentrytitle">glCullFace</a>,
+            <a class="citerefentry" href="glDepthFunc.html"><span class="citerefentry"><span class="refentrytitle">glDepthFunc</a>,
+            <a class="citerefentry" href="glDepthRange.html"><span class="citerefentry"><span class="refentrytitle">glDepthRange</a>,
+            <a class="citerefentry" href="glEnableClientState.html"><span class="citerefentry"><span class="refentrytitle">glEnableClientState</a>,
+            <a class="citerefentry" href="glFog.html"><span class="citerefentry"><span class="refentrytitle">glFog</a>,
+            <a class="citerefentry" href="glGet.html"><span class="citerefentry"><span class="refentrytitle">glGet</a>,
+            <a class="citerefentry" href="glIsEnabled.html"><span class="citerefentry"><span class="refentrytitle">glIsEnabled</a>,
+            <a class="citerefentry" href="glLight.html"><span class="citerefentry"><span class="refentrytitle">glLight</a>,
+            <a class="citerefentry" href="glLightModel.html"><span class="citerefentry"><span class="refentrytitle">glLightModel</a>,
+            <a class="citerefentry" href="glLineWidth.html"><span class="citerefentry"><span class="refentrytitle">glLineWidth</a>,
+            <a class="citerefentry" href="glLineStipple.html"><span class="citerefentry"><span class="refentrytitle">glLineStipple</a>,
+            <a class="citerefentry" href="glLogicOp.html"><span class="citerefentry"><span class="refentrytitle">glLogicOp</a>,
+            <a class="citerefentry" href="glMap1.html"><span class="citerefentry"><span class="refentrytitle">glMap1</a>,
+            <a class="citerefentry" href="glMap2.html"><span class="citerefentry"><span class="refentrytitle">glMap2</a>,
+            <a class="citerefentry" href="glMaterial.html"><span class="citerefentry"><span class="refentrytitle">glMaterial</a>,
+            <a class="citerefentry" href="glNormal.html"><span class="citerefentry"><span class="refentrytitle">glNormal</a>,
+            <a class="citerefentry" href="glNormalPointer.html"><span class="citerefentry"><span class="refentrytitle">glNormalPointer</a>,
+            <a class="citerefentry" href="glPointSize.html"><span class="citerefentry"><span class="refentrytitle">glPointSize</a>,
+            <a class="citerefentry" href="glPolygonMode.html"><span class="citerefentry"><span class="refentrytitle">glPolygonMode</a>,
+            <a class="citerefentry" href="glPolygonOffset.html"><span class="citerefentry"><span class="refentrytitle">glPolygonOffset</a>,
+            <a class="citerefentry" href="glPolygonStipple.html"><span class="citerefentry"><span class="refentrytitle">glPolygonStipple</a>,
+            <a class="citerefentry" href="glSampleCoverage.html"><span class="citerefentry"><span class="refentrytitle">glSampleCoverage</a>,
+            <a class="citerefentry" href="glScissor.html"><span class="citerefentry"><span class="refentrytitle">glScissor</a>,
+            <a class="citerefentry" href="glStencilFunc.html"><span class="citerefentry"><span class="refentrytitle">glStencilFunc</a>,
+            <a class="citerefentry" href="glStencilOp.html"><span class="citerefentry"><span class="refentrytitle">glStencilOp</a>,
+            <a class="citerefentry" href="glTexGen.html"><span class="citerefentry"><span class="refentrytitle">glTexGen</a>,
+            <a class="citerefentry" href="glTexImage1D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage1D</a>,
+            <a class="citerefentry" href="glTexImage2D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage2D</a>,
+            <a class="citerefentry" href="glTexImage3D.html"><span class="citerefentry"><span class="refentrytitle">glTexImage3D</a>
+        </p></div><div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2><p>
+            Copyright <span class="trademark">© 1991-2006
+            Silicon Graphics, Inc. This document is licensed under the SGI
+            Free Software B License. For details, see
+            <a class="ulink" href="https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt" target="_top">https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt</a>.
+        </p></div></div></body></html>

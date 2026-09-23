@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glClipControl</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glClipControl"></a><div class="titlepage"></div>
+    
+    
+    <div class="refnamediv"><h2>Name</h2><p>
+        glClipControl
+         — control clip coordinate to window coordinate behavior
+    </p></div>
+    <div class="refsynopsisdiv"><h2>C Specification</h2>
+        <div class="funcsynopsis">
+            <table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glClipControl</strong>(</code></td><td>GLenum <var class="pdparam">origin</var>, </td></tr><tr><td> </td><td>GLenum <var class="pdparam">depth</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div>
+        </div>
+    </div>
+    <div class="refsect1"><a id="parameters"></a><h2>Parameters</h2>
+        <div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>origin</code></em></dt><dd>
+                    <p>
+                         Specifies the clip control origin. Must be one of
+                         <code class="constant">GL_LOWER_LEFT</code> or
+                         <code class="constant">GL_UPPER_LEFT</code>.
+                    </p>
+                </dd><dt><span class="term"><em class="parameter"><code>depth</code></em></dt><dd>
+                    <p>
+                        Specifies the clip control depth mode. Must be one
+                        of <code class="constant">GL_NEGATIVE_ONE_TO_ONE</code> or
+                        <code class="constant">GL_ZERO_TO_ONE</code>.
+                    </p>
+                </dd></dl></div>
+    </div>
+    <div class="refsect1"><a id="description"></a><h2>Description</h2>
+        <p>
+            <code class="function">glClipControl</code> controls the clipping volume
+            behavior and the clip coordinate to window coordinate
+            transformation behavior.
+        </p>
+        <p>
+            The view volume is defined by
+                $$z_{min} \leq z_c \leq w_c$$
+            where $z_{min} = -w_c$ when <em class="parameter"><code>depth</code></em> is
+            <code class="constant">GL_NEGATIVE_ONE_TO_ONE</code>, and $z_{min} = 0$
+            when <em class="parameter"><code>depth</code></em> is
+            <code class="constant">GL_ZERO_TO_ONE</code>.
+        </p>
+        <p>
+            The normalized device coordinate $y_d$ is given by
+                $$y_d = { { f \times y_c } \over w_c }$$
+            where $f = 1$ when <em class="parameter"><code>origin</code></em> is
+            <code class="constant">GL_LOWER_LEFT</code>, and $f = -1$ when
+            <em class="parameter"><code>origin</code></em> is
+            <code class="constant">GL_UPPER_LEFT</code>.
+        </p>
+        <p>
+            The window coordinate $z_w$ is given by
+                $$z_w = s \times z_d + b$$
+            where $s = { { f - n } \over 2 }$ and $b = { {n + f} \over 2 }$ when
+            <em class="parameter"><code>depth</code></em> is
+            <code class="constant">GL_NEGATIVE_ONE_TO_ONE</code>, and $s = f - n$ and
+            $b = n$ when <em class="parameter"><code>depth</code></em> is
+            <code class="constant">GL_ZERO_TO_ONE</code>. $n$ and $f$ are the near
+            and far depth range values set with
+            <a class="citerefentry" href="glDepthRange.html"><span class="citerefentry"><span class="refentrytitle">glDepthRange</a>.
+        </p>
+        <p>
+            Finally, the polygon area computation defined by
+            <a class="citerefentry" href="gl_FrontFacing.html"><span class="citerefentry"><span class="refentrytitle">gl_FrontFacing</a>
+            to determine if a polygon is front- or back-facing has its sign
+            negated when <em class="parameter"><code>origin</code></em> is
+            <code class="constant">GL_UPPER_LEFT</code>.
+        </p>
+    </div>
+    <div class="refsect1"><a id="notes"></a><h2>Notes</h2>
+        <p>
+            The default GL clip volume definition is for a
+            <em class="parameter"><code>origin</code></em> of
+            <code class="constant">GL_LOWER_LEFT</code> and a
+            <em class="parameter"><code>depth</code></em> of
+            <code class="constant">GL_NEGATIVE_ONE_TO_ONE</code>.
+        </p>
+        <p>
+            An <em class="parameter"><code>origin</code></em> of
+            <code class="constant">GL_UPPER_LEFT</code> and a
+            <em class="parameter"><code>depth</code></em> of
+            <code class="constant">GL_ZERO_TO_ONE</code> corresponds to Direct3D's
+            clip volume definition.
+        </p>
+        <p>
+            An <em class="parameter"><code>origin</code></em> of
+            <code class="constant">GL_UPPER_LEFT</code> and a
+            <em class="parameter"><code>depth</code></em> of
+            <code class="constant">GL_NEGATIVE_ONE_TO_ONE</code> corresponds to the
+            upper-left origin of the window coordinate system of Microsoft
+            Windows and the X Window System.
+        </p>
+        <p>
+            There is extensive discussion of the uses and further
+            consequences of the different clip volume settings in the
+            <code class="code">GL_ARB_clip_control</code> extension specification in the
+            OpenGL Registry at URL <a class="ulink" href="http://www.opengl.org/registry/" target="_top">http://www.opengl.org/registry/</a>.
+        </p>
+    </div>
+    <div class="refsect1"><a id="errors"></a><h2>Errors</h2>
+        <p>
+            An <code class="constant">GL_INVALID_ENUM</code> error is generated if
+            <em class="parameter"><code>origin</code></em> is not
+            <code class="constant">GL_LOWER_LEFT</code> or
+            <code class="constant">GL_UPPER_LEFT</code>.
+        </p>
+        <p>
+            An <code class="constant">GL_INVALID_ENUM</code> error is generated if
+            <em class="parameter"><code>depth</code></em> is not
+            <code class="constant">GL_NEGATIVE_ONE_TO_ONE</code> or
+            <code class="constant">GL_ZERO_TO_ONE</code>.
+        </p>
+    </div>
+    <div class="refsect1"><a id="versions"></a><h2>Version Support</h2>
+        <div class="informaltable">
+            <table class="informaltable" border="1"><colgroup><col align="left" /><col align="center" class="firstvers" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" class="lastvers" /></colgroup><thead><tr><th align="left">
+                
+            </th><th colspan="12" align="center">
+                <span class="bold"><strong>OpenGL Version</strong>
+            </th></tr><tr><th align="left">
+                <span class="bold"><strong>Function / Feature Name</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.4</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.5</strong>
+            </th></tr></thead><tbody><tr><td align="left"><code class="function">glClipControl</code></td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">✔</td></tr></tbody></table>
+        </div>
+    </div>
+    <div class="refsect1"><a id="seealso"></a><h2>See Also</h2>
+        <p>
+            <a class="citerefentry" href="gl_ClipDistance.html"><span class="citerefentry"><span class="refentrytitle">gl_ClipDistance</a>,
+            <a class="citerefentry" href="gl_CullDistance.html"><span class="citerefentry"><span class="refentrytitle">gl_CullDistance</a>,
+            <a class="citerefentry" href="gl_FrontFacing.html"><span class="citerefentry"><span class="refentrytitle">gl_FrontFacing</a>,
+            <a class="citerefentry" href="glDepthRange.html"><span class="citerefentry"><span class="refentrytitle">glDepthRange</a>.
+        </p>
+    </div>
+    <div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2>
+        <p>
+            Copyright <span class="trademark">© 2014 Khronos Group.
+            This material may be distributed subject to the terms and conditions set forth in
+            the Open Publication License, v 1.0, 8 June 1999.
+            <a class="ulink" href="https://opencontent.org/openpub/" target="_top">https://opencontent.org/openpub/</a>.
+        </p>
+    </div>
+</div></body></html>

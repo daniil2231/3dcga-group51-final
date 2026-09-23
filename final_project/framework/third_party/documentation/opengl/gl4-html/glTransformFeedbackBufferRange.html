@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glTransformFeedbackBufferRange</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glTransformFeedbackBufferRange"></a><div class="titlepage"></div>
+    
+    
+    <div class="refnamediv"><h2>Name</h2><p>
+        glTransformFeedbackBufferRange
+         — bind a range within a buffer object to a transform feedback buffer object
+    </p></div>
+    <div class="refsynopsisdiv"><h2>C Specification</h2>
+        <div class="funcsynopsis">
+            <table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glTransformFeedbackBufferRange</strong>(</code></td><td>GLuint <var class="pdparam">xfb</var>, </td></tr><tr><td> </td><td>GLuint <var class="pdparam">index</var>, </td></tr><tr><td> </td><td>GLuint <var class="pdparam">buffer</var>, </td></tr><tr><td> </td><td>GLintptr <var class="pdparam">offset</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">size</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div>
+        </div>
+    </div>
+    <div class="refsect1"><a id="parameters"></a><h2>Parameters</h2>
+        <div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>xfb</code></em></dt><dd>
+                    <p>
+                        Name of the transform feedback buffer object.
+                    </p>
+                </dd><dt><span class="term"><em class="parameter"><code>index</code></em></dt><dd>
+                    <p>
+                        Index of the binding point within
+                        <em class="parameter"><code>xfb</code></em>.
+                    </p>
+                </dd><dt><span class="term"><em class="parameter"><code>buffer</code></em></dt><dd>
+                    <p>
+                        Name of the buffer object to bind to the specified
+                        binding point.
+                    </p>
+                </dd><dt><span class="term"><em class="parameter"><code>offset</code></em></dt><dd>
+                    <p>
+                        The starting offset in basic machine units into the
+                        buffer object.
+                    </p>
+                </dd><dt><span class="term"><em class="parameter"><code>size</code></em></dt><dd>
+                    <p>
+                        The amount of data in basic machine units that can
+                        be read from or written to the buffer object while
+                        used as an indexed target.
+                    </p>
+                </dd></dl></div>
+    </div>
+    <div class="refsect1"><a id="description"></a><h2>Description</h2>
+        <p>
+            <code class="function">glTransformFeedbackBufferRange</code>
+            binds a range of the buffer object <em class="parameter"><code>buffer</code></em>
+            represented by <em class="parameter"><code>offset</code></em> and
+            <em class="parameter"><code>size</code></em> to the binding point at index
+            <em class="parameter"><code>index</code></em> of the transform feedback object
+            <em class="parameter"><code>xfb</code></em>.
+        </p>
+        <p>
+            <em class="parameter"><code>offset</code></em> specifies the offset in basic
+            machine units into the buffer object
+            <em class="parameter"><code>buffer</code></em> and <em class="parameter"><code>size</code></em>
+            specifies the amount of data that can be read from the buffer
+            object while used as an indexed target.
+        </p>
+    </div>
+    <div class="refsect1"><a id="notes"></a><h2>Notes</h2>
+        <p>
+        </p>
+    </div>
+    <div class="refsect1"><a id="errors"></a><h2>Errors</h2>
+        <p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if
+            <em class="parameter"><code>xfb</code></em> is not the name of an existing
+            transform feedback object.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if in
+            <em class="parameter"><code>buffer</code></em> is not zero or the name of an
+            existing buffer object.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if
+            <em class="parameter"><code>index</code></em> is greater than or equal to the
+            number of transform feedback buffer binding points (the value of
+            <code class="constant">GL_TRANSFORM_FEEDBACK_BUFFER_BINDING</code>).
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if
+            <em class="parameter"><code>offset</code></em> is negative.
+        </p>
+        <p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if
+            <em class="parameter"><code>buffer</code></em> is non-zero and either
+            <em class="parameter"><code>size</code></em> is less than or equal to zero, or
+            <em class="parameter"><code>offset</code></em> + <em class="parameter"><code>size</code></em> is
+            greater than the value of <code class="constant">GL_BUFFER_SIZE</code>
+            for <em class="parameter"><code>buffer</code></em>.
+        </p>
+    </div>
+    <div class="refsect1"><a id="versions"></a><h2>Version Support</h2>
+        <div class="informaltable">
+            <table class="informaltable" border="1"><colgroup><col align="left" /><col align="center" class="firstvers" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" /><col align="center" class="lastvers" /></colgroup><thead><tr><th align="left">
+                
+            </th><th colspan="12" align="center">
+                <span class="bold"><strong>OpenGL Version</strong>
+            </th></tr><tr><th align="left">
+                <span class="bold"><strong>Function / Feature Name</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>2.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>3.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.0</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.1</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.2</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.3</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.4</strong>
+            </th><th align="center">
+                <span class="bold"><strong>4.5</strong>
+            </th></tr></thead><tbody><tr><td align="left"><code class="function">glTransformFeedbackBufferRange</code></td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">-</td><td align="center">✔</td></tr></tbody></table>
+        </div>
+    </div>
+    <div class="refsect1"><a id="seealso"></a><h2>See Also</h2>
+        <p>
+            <a class="citerefentry" href="glBindBufferRange.html"><span class="citerefentry"><span class="refentrytitle">glBindBufferRange</a>,
+            <a class="citerefentry" href="glBindBufferBase.html"><span class="citerefentry"><span class="refentrytitle">glBindBufferBase</a>,
+            <a class="citerefentry" href="glTransformFeedbackBufferBase.html"><span class="citerefentry"><span class="refentrytitle">glTransformFeedbackBufferBase</a>.
+        </p>
+    </div>
+    <div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2>
+        <p>
+            Copyright <span class="trademark">© 2014 Khronos Group.
+            This material may be distributed subject to the terms and conditions set forth in
+            the Open Publication License, v 1.0, 8 June 1999.
+            <a class="ulink" href="https://opencontent.org/openpub/" target="_top">https://opencontent.org/openpub/</a>.
+        </p>
+    </div>
+</div></body></html>

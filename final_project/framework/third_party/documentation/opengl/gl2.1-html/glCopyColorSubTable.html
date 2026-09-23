@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><?xml-stylesheet type="text/xsl" href="mathml.xsl"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:pref="http://www.w3.org/2002/Math/preference" pref:renderer="mathplayer-dl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="opengl-man.css" /><title>glCopyColorSubTable</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /></head><body><div class="refentry"><a id="glCopyColorSubTable"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>glCopyColorSubTable — respecify a portion of a color table</p></div><div class="refsynopsisdiv"><h2>C Specification</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <strong class="fsfunc">glCopyColorSubTable</strong>(</code></td><td>GLenum <var class="pdparam">target</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">start</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">x</var>, </td></tr><tr><td> </td><td>GLint <var class="pdparam">y</var>, </td></tr><tr><td> </td><td>GLsizei <var class="pdparam">width</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer"> </div></div></div><div class="refsect1"><a id="parameters"></a><h2>Parameters</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>target</code></em></dt><dd><p>
+                    Must be one of
+                    <code class="constant">GL_COLOR_TABLE</code>,
+                    <code class="constant">GL_POST_CONVOLUTION_COLOR_TABLE</code>, or
+                    <code class="constant">GL_POST_COLOR_MATRIX_COLOR_TABLE</code>.
+                </p></dd><dt><span class="term"><em class="parameter"><code>start</code></em></dt><dd><p>
+                    The starting index of the portion of the color table to be replaced.
+                </p></dd><dt><span class="term"><em class="parameter"><code>x</code></em>, <span class="term"><em class="parameter"><code>y</code></em></dt><dd><p>
+                    The window coordinates of the left corner of the row of pixels to be
+                    copied.
+                </p></dd><dt><span class="term"><em class="parameter"><code>width</code></em></dt><dd><p>
+                    The number of table entries to replace.
+                </p></dd></dl></div></div><div class="refsect1"><a id="description"></a><h2>Description</h2><p>
+            <code class="function">glCopyColorSubTable</code> is used to respecify a contiguous portion of a color table previously
+            defined using <a class="citerefentry" href="glColorTable.html"><span class="citerefentry"><span class="refentrytitle">glColorTable</a>.  The pixels copied from the framebuffer
+            replace the portion of the existing table from indices <em class="parameter"><code>start</code></em> to
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mrow xmlns:mml="http://www.w3.org/1998/Math/MathML">
+                    <mi mathvariant="italic">start</mi>
+                    <mo>+</mo>
+                    <mi mathvariant="italic">x</mi>
+                    <mo>-</mo>
+                    <mn>1</mn>
+                </mrow>
+            </math>,
+            inclusive.  This region may not include any
+            entries outside the range of the color table, as was originally specified.
+            It is not an error to specify a subtexture with width of 0, but such a
+            specification has no effect.
+        </p></div><div class="refsect1"><a id="notes"></a><h2>Notes</h2><p>
+            <code class="function">glCopyColorSubTable</code> is present only if <code class="code">ARB_imaging</code> is returned when <a class="citerefentry" href="glGetString.html"><span class="citerefentry"><span class="refentrytitle">glGetString</a>
+            is called with an argument of <code class="constant">GL_EXTENSIONS</code>.
+        </p></div><div class="refsect1"><a id="errors"></a><h2>Errors</h2><p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if <em class="parameter"><code>target</code></em> is not a previously defined
+            color table.
+        </p><p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if <em class="parameter"><code>target</code></em> is not one of the allowable
+            values.
+        </p><p>
+            <code class="constant">GL_INVALID_VALUE</code> is generated if 
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                
+                <mrow xmlns:mml="http://www.w3.org/1998/Math/MathML">
+                    <mrow>
+                        <mi mathvariant="italic">start</mi>
+                        <mo>+</mo>
+                        <mi mathvariant="italic">x</mi>
+                    </mrow>
+                    <mo>></mo>
+                    <mi mathvariant="italic">width</mi>
+                </mrow>
+            </math>.
+        </p><p>
+            <code class="constant">GL_INVALID_OPERATION</code> is generated if <code class="function">glCopyColorSubTable</code> is executed
+            between the execution of <a class="citerefentry" href="glBegin.html"><span class="citerefentry"><span class="refentrytitle">glBegin</a> and the corresponding
+            execution of <a class="citerefentry" href="glEnd.html"><span class="citerefentry"><span class="refentrytitle">glEnd</a>.
+        </p></div><div class="refsect1"><a id="associatedgets"></a><h2>Associated Gets</h2><p>
+            <a class="citerefentry" href="glGetColorTable.html"><span class="citerefentry"><span class="refentrytitle">glGetColorTable</a>,
+            <a class="citerefentry" href="glGetColorTableParameter.html"><span class="citerefentry"><span class="refentrytitle">glGetColorTableParameter</a>
+        </p></div><div class="refsect1"><a id="seealso"></a><h2>See Also</h2><p>
+            <a class="citerefentry" href="glColorSubTable.html"><span class="citerefentry"><span class="refentrytitle">glColorSubTable</a>,
+            <a class="citerefentry" href="glColorTableParameter.html"><span class="citerefentry"><span class="refentrytitle">glColorTableParameter</a>,
+            <a class="citerefentry" href="glCopyColorTable.html"><span class="citerefentry"><span class="refentrytitle">glCopyColorTable</a>,
+            <code class="function">glCopyColorSubTable</code>,
+            <a class="citerefentry" href="glGetColorTable.html"><span class="citerefentry"><span class="refentrytitle">glGetColorTable</a>
+        </p></div><div class="refsect1"><a id="Copyright"></a><h2>Copyright</h2><p>
+            Copyright <span class="trademark">© 1991-2006
+            Silicon Graphics, Inc. This document is licensed under the SGI
+            Free Software B License. For details, see
+            <a class="ulink" href="https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt" target="_top">https://khronos.org/registry/OpenGL-Refpages/LICENSES/LicenseRef-FreeB.txt</a>.
+        </p></div></div></body></html>
