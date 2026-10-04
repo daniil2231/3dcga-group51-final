@@ -5,6 +5,7 @@
 // Can't wait for modules to fix this stuff...
 #include <framework/disable_all_warnings.h>
 DISABLE_WARNINGS_PUSH()
+#include "camera.h"
 #include <glad/glad.h>
 // Include glad before glfw3
 #include <GLFW/glfw3.h>
@@ -71,6 +72,7 @@ public:
             // This is your game loop
             // Put your real-time logic and rendering in here
             m_window.updateInput();
+            camera.updateInput();
 
             // Use ImGui for easy input/output of ints, floats, strings, etc...
             ImGui::Begin("Window");
@@ -86,7 +88,7 @@ public:
             // ...
             glEnable(GL_DEPTH_TEST);
 
-            const glm::mat4 mvpMatrix = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
+            const glm::mat4 mvpMatrix = m_projectionMatrix * camera.viewMatrix() * m_modelMatrix;
             // Normals should be transformed differently than positions (ignoring translations + dealing with scaling):
             // https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
             const glm::mat3 normalModelMatrix = glm::inverseTranspose(glm::mat3(m_modelMatrix));
@@ -119,7 +121,32 @@ public:
     // mods - Any modifier keys pressed, like shift or control
     void onKeyPressed(int key, int mods)
     {
-        std::cout << "Key pressed: " << key << std::endl;
+        switch (key) {
+            case GLFW_KEY_1:
+                // if we are currently in cam 2
+                if (!cam1Selected) {
+                    // switch cam to cam 1's saved location
+                    oldCam1.setUserInteraction(true);
+                    camera = oldCam1;
+
+                    cam1Selected = true;
+                }
+                break;
+            case GLFW_KEY_2:
+                // opposite to code above ^
+                if (cam1Selected) {
+                    oldCam1 = camera;
+                    oldCam1.setUserInteraction(false);
+
+                    oldCam2.setUserInteraction(false);
+                    camera = oldCam2;
+
+                    cam1Selected = false;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     // In here you can handle key releases
@@ -154,6 +181,13 @@ public:
 
 private:
     Window m_window;
+    // free-moving cam
+    Camera camera{ &m_window, glm::vec3(1.2f, 1.1f, 0.9f), -glm::vec3(1.2f, 1.1f, 0.9f) };
+    Camera oldCam1{ &m_window, glm::vec3(1.2f, 1.1f, 0.9f), -glm::vec3(1.2f, 1.1f, 0.9f) };
+    
+    // top-down cam (immovable)
+    Camera oldCam2{ &m_window, glm::vec3(0.0f, 4.0f, 0.5f), -glm::vec3(0.0f, 4.0f, 0.5f) };
+    bool cam1Selected = true;
 
     // Shader for default rendering and for depth rendering
     Shader m_defaultShader;
@@ -165,7 +199,6 @@ private:
 
     // Projection and view matrices for you to fill in and use
     glm::mat4 m_projectionMatrix = glm::perspective(glm::radians(80.0f), 1.0f, 0.1f, 30.0f);
-    glm::mat4 m_viewMatrix = glm::lookAt(glm::vec3(-1, 1, -1), glm::vec3(0), glm::vec3(0, 1, 0));
     glm::mat4 m_modelMatrix { 1.0f };
 };
 
