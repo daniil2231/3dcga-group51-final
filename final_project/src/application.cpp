@@ -21,6 +21,7 @@ DISABLE_WARNINGS_POP()
 #include <functional>
 #include <iostream>
 #include <vector>
+#include <optional>
 
 class Application {
 public:
@@ -42,13 +43,41 @@ public:
                 onMouseReleased(button, mods);
         });
 
-        m_meshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/dragon.obj");
+        m_meshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/model.obj");
+        m_wheelMeshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/wheel.obj");
+
+        Mesh ground;
+
+        ground.vertices = {
+            // Position             Normal             Texture coordinates
+            { {-5.0f, 0.0f, -5.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
+            { {-5.0f, 0.0f,  5.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} },
+            { { 5.0f, 0.0f,  5.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} },
+            { { 5.0f, 0.0f, -5.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} }
+        };
+        ground.triangles = {
+            {0, 1, 2},
+            {0, 2, 3}
+        };
+
+        ground.material.kd = glm::vec3(0.45f, 0.22f, 0.12f);
+        ground.material.ks = glm::vec3(0.0f);
+        ground.material.shininess = 1.0f;
+        ground.material.transparency = 1.0f;
+
+        m_groundMesh.emplace(ground);
 
         try {
             ShaderBuilder defaultBuilder;
             defaultBuilder.addStage(GL_VERTEX_SHADER, RESOURCE_ROOT "shaders/shader_vert.glsl");
             defaultBuilder.addStage(GL_FRAGMENT_SHADER, RESOURCE_ROOT "shaders/shader_frag.glsl");
             m_defaultShader = defaultBuilder.build();
+
+            ShaderBuilder markerBuilder;
+            markerBuilder.addStage(GL_VERTEX_SHADER,RESOURCE_ROOT "shaders/light_marker_vert.glsl");
+            markerBuilder.addStage(GL_FRAGMENT_SHADER,RESOURCE_ROOT "shaders/light_marker_frag.glsl");
+            m_lightMarkerShader = markerBuilder.build();
+            glGenVertexArrays(1, &m_lightMarkerVAO);
 
             ShaderBuilder shadowBuilder;
             shadowBuilder.addStage(GL_VERTEX_SHADER, RESOURCE_ROOT "shaders/shadow_vert.glsl");
@@ -64,7 +93,10 @@ public:
             std::cerr << e.what() << std::endl;
         }
     }
-
+    ~Application()
+    {
+        glDeleteVertexArrays(1, &m_lightMarkerVAO);
+    }
     void update()
     {
         int dummyInteger = 0; // Initialized to 0
@@ -79,6 +111,10 @@ public:
             ImGui::InputInt("This is an integer input", &dummyInteger); // Use ImGui::DragInt or ImGui::DragFloat for larger range of numbers.
             ImGui::Text("Value is: %i", dummyInteger); // Use C printf formatting rules (%i is a signed integer)
             ImGui::Checkbox("Use material if no texture", &m_useMaterial);
+
+            //angle slider for wheel test
+            ImGui::SliderFloat("Wheel angle", &m_wheelAngleDegrees, 0.0f, 360.0f);
+
             ImGui::End();
 
             // Clear the screen
@@ -95,9 +131,19 @@ public:
 
             for (GPUMesh& mesh : m_meshes) {
                 m_defaultShader.bind();
+                //sun bindings
+                glUniform3fv(m_defaultShader.getUniformLocation("sunDirection"), 1,glm::value_ptr(m_sunDirection));
+                glUniform3fv(m_defaultShader.getUniformLocation("sunColor"), 1,glm::value_ptr(m_sunColor));
+                glUniform1f(m_defaultShader.getUniformLocation("sunIntensity"), m_sunIntensity);
+                glUniform1f(m_defaultShader.getUniformLocation("ambientStreantgh"), m_ambientStreangth);
+
+                //camera pos uniforms
+                const glm::vec3 cameraPosition = camera.cameraPos();
+                glUniform3fv(m_defaultShader.getUniformLocation("cameraPos"), 1, glm::value_ptr(cameraPosition));
+
                 glUniformMatrix4fv(m_defaultShader.getUniformLocation("mvpMatrix"), 1, GL_FALSE, glm::value_ptr(mvpMatrix));
                 //Uncomment this line when you use the modelMatrix (or fragmentPosition)
-                //glUniformMatrix4fv(m_defaultShader.getUniformLocation("modelMatrix"), 1, GL_FALSE, glm::value_ptr(m_modelMatrix));
+                glUniformMatrix4fv(m_defaultShader.getUniformLocation("modelMatrix"), 1, GL_FALSE, glm::value_ptr(m_modelMatrix));
                 glUniformMatrix3fv(m_defaultShader.getUniformLocation("normalModelMatrix"), 1, GL_FALSE, glm::value_ptr(normalModelMatrix));
                 if (mesh.hasTextureCoords()) {
                     m_texture.bind(GL_TEXTURE0);
@@ -110,6 +156,84 @@ public:
                 }
                 mesh.draw(m_defaultShader);
             }
+
+            //ground uniforms
+            const glm::mat4 groundMVP = m_projectionMatrix * camera.viewMatrix() * m_groundModelMatrix;
+            const glm::mat3 groundNormalMatrix = glm::inverseTranspose(glm::mat3(m_groundModelMatrix));
+
+            m_defaultShader.bind();
+
+            glUniformMatrix4fv(m_defaultShader.getUniformLocation("mvpMatrix"),1, GL_FALSE, glm::value_ptr(groundMVP));
+
+            glUniformMatrix4fv(m_defaultShader.getUniformLocation("modelMatrix"),1, GL_FALSE, glm::value_ptr(m_groundModelMatrix));
+
+            glUniformMatrix3fv(m_defaultShader.getUniformLocation("normalModelMatrix"),1, GL_FALSE, glm::value_ptr(groundNormalMatrix));
+
+            glUniform1i(m_defaultShader.getUniformLocation("hasTexCoords"),GL_FALSE);
+
+            glUniform1i(m_defaultShader.getUniformLocation("useMaterial"),GL_TRUE);
+
+            m_groundMesh->draw(m_defaultShader);
+
+            // wheel transformations
+
+            const glm::vec3 wheelCenter{ -0.00035345f, 0.00242475f, 0.00189170f };
+
+            const glm::vec3 wheelPosition = { 1.2f, -0.42f, 0.0f };
+            
+            const glm::mat4 wheelCentering = glm::translate(glm::mat4(1.0f), -wheelCenter);
+
+            const glm::mat4 wheelScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f));
+
+            const glm::mat4 wheelRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_wheelAngleDegrees), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            const glm::mat4 wheelPlacement = glm::translate(glm::mat4(1.0f), wheelPosition);
+
+            const glm::mat4 wheelModelMatrix = wheelPlacement * wheelRotation * wheelScale * wheelCentering;
+
+            //wheel uniforms
+
+            const glm::mat4 wheelMVP = m_projectionMatrix * camera.viewMatrix() * wheelModelMatrix;
+            const glm::mat3 wheelNormalMatrix = glm::inverseTranspose(glm::mat3(wheelModelMatrix));
+
+            m_defaultShader.bind();
+
+            glUniformMatrix4fv(m_defaultShader.getUniformLocation("mvpMatrix"), 1, GL_FALSE, glm::value_ptr(wheelMVP));
+            glUniformMatrix4fv(m_defaultShader.getUniformLocation("modelMatrix"), 1, GL_FALSE, glm::value_ptr(wheelModelMatrix));
+            glUniformMatrix3fv(m_defaultShader.getUniformLocation("normalModelMatrix"), 1, GL_FALSE, glm::value_ptr(wheelNormalMatrix));
+            glUniform1i(m_defaultShader.getUniformLocation("hasTexCoords"), GL_FALSE);
+            glUniform1i(m_defaultShader.getUniformLocation("useMaterial"),GL_TRUE);
+
+            for (GPUMesh& wheelMesh : m_wheelMeshes){
+                wheelMesh.draw(m_defaultShader);
+            }
+
+
+            const glm::vec3 referencePoint { 0.0f, 0.0f, 0.0f };
+            const float markerDistance = 1.5f;
+
+            const glm::vec3 markerPosition =
+                referencePoint
+                + glm::normalize(m_sunDirection) * markerDistance;
+
+            const glm::mat4 viewProjection =
+                m_projectionMatrix * camera.viewMatrix();
+
+            m_lightMarkerShader.bind();
+
+            glUniformMatrix4fv(
+                m_lightMarkerShader.getUniformLocation("viewProjection"),
+                1, GL_FALSE, glm::value_ptr(viewProjection));
+
+            glUniform3fv(
+                m_lightMarkerShader.getUniformLocation("markerPosition"),
+                1, glm::value_ptr(markerPosition));
+
+            glPointSize(16.0f);
+            glBindVertexArray(m_lightMarkerVAO);
+            glDrawArrays(GL_POINTS, 0, 1);
+            glBindVertexArray(0);
+            glPointSize(1.0f);
 
             // Processes input and swaps the window buffer
             m_window.swapBuffers();
@@ -189,13 +313,28 @@ private:
     Camera oldCam2{ &m_window, glm::vec3(0.0f, 4.0f, 0.5f), -glm::vec3(0.0f, 4.0f, 0.5f) };
     bool cam1Selected = true;
 
+    //sun's direction from the surface to its position
+    glm::vec3 m_sunDirection { 1.0f, 1.0f, 0.5f};
+    glm::vec3 m_sunColor { 1.0f, 0.95f, 0.85f };
+    float m_sunIntensity {1.0f};
+    float m_ambientStreangth {0.15f};
+    
     // Shader for default rendering and for depth rendering
     Shader m_defaultShader;
     Shader m_shadowShader;
 
+    Shader m_lightMarkerShader;
+    GLuint m_lightMarkerVAO { 0 };
+
     std::vector<GPUMesh> m_meshes;
     Texture m_texture;
     bool m_useMaterial { true };
+
+    std::vector<GPUMesh> m_wheelMeshes;
+    float m_wheelAngleDegrees { 0.0f };
+
+    std::optional<GPUMesh> m_groundMesh;
+    glm::mat4 m_groundModelMatrix = glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,-0.595f, 0.0f));
 
     // Projection and view matrices for you to fill in and use
     glm::mat4 m_projectionMatrix = glm::perspective(glm::radians(80.0f), 1.0f, 0.1f, 30.0f);
