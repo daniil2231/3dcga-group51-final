@@ -23,6 +23,13 @@ DISABLE_WARNINGS_POP()
 #include <vector>
 #include <optional>
 
+struct WheelAttachment{
+    glm::vec3 axlCenter;
+    glm::vec3 axlDirection;
+    float scale;
+    float spinSign;
+};
+
 class Application {
 public:
     Application()
@@ -43,8 +50,11 @@ public:
                 onMouseReleased(button, mods);
         });
 
-        m_meshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/model.obj");
+        m_meshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/rover_body.obj");
+        m_headMeshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/rover_head.obj");
         m_wheelMeshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/wheel.obj");
+
+        
 
         Mesh ground;
 
@@ -115,7 +125,32 @@ public:
             //angle slider for wheel test
             ImGui::SliderFloat("Wheel angle", &m_wheelAngleDegrees, 0.0f, 360.0f);
 
+            //rover sliders
+            ImGui::DragFloat3("Rover Position", glm::value_ptr(m_roverPosition), 0.01f);
+            ImGui::SliderFloat("Rover Heading", &m_roverYawDegrees, -180.0f, 180.0f);
+
+            //head slider
+            ImGui::SliderFloat("Head Rotation", &m_headYawDegrees, -90.0f, 90.0f);
+
+            //wheel offset
+            //ImGui::SliderFloat("Wheel outward offset", &m_wheelOutwardOffset, 0.0f, 0.25f);
+
             ImGui::End();
+
+            const glm::vec3 worldUp { 0.0f, 1.0f, 0.0f };
+
+            const glm::mat4 roverRotation = glm::rotate(
+            glm::mat4(1.0f),
+            glm::radians(m_roverYawDegrees),
+            worldUp);
+
+        // User-controlled position, applied last.
+        const glm::mat4 roverTranslation = glm::translate(
+            glm::mat4(1.0f),
+            m_roverPosition);
+
+            m_modelMatrix =roverTranslation * roverRotation * m_roverBaseRotation;
+
 
             // Clear the screen
             glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -175,40 +210,77 @@ public:
 
             m_groundMesh->draw(m_defaultShader);
 
-            // wheel transformations
-
-            const glm::vec3 wheelCenter{ -0.00035345f, 0.00242475f, 0.00189170f };
-
-            const glm::vec3 wheelPosition = { 1.2f, -0.42f, 0.0f };
             
+            const glm::vec3 wheelCenter = {-0.00035345f, 0.00242475f, 0.00189170f};
+            const glm::vec3 wheelLocalAxis = {1.0f, 0.0f, 0.0f};
             const glm::mat4 wheelCentering = glm::translate(glm::mat4(1.0f), -wheelCenter);
-
-            const glm::mat4 wheelScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f));
-
-            const glm::mat4 wheelRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_wheelAngleDegrees), glm::vec3(1.0f, 0.0f, 0.0f));
-
-            const glm::mat4 wheelPlacement = glm::translate(glm::mat4(1.0f), wheelPosition);
-
-            const glm::mat4 wheelModelMatrix = wheelPlacement * wheelRotation * wheelScale * wheelCentering;
-
-            //wheel uniforms
-
-            const glm::mat4 wheelMVP = m_projectionMatrix * camera.viewMatrix() * wheelModelMatrix;
-            const glm::mat3 wheelNormalMatrix = glm::inverseTranspose(glm::mat3(wheelModelMatrix));
 
             m_defaultShader.bind();
 
-            glUniformMatrix4fv(m_defaultShader.getUniformLocation("mvpMatrix"), 1, GL_FALSE, glm::value_ptr(wheelMVP));
-            glUniformMatrix4fv(m_defaultShader.getUniformLocation("modelMatrix"), 1, GL_FALSE, glm::value_ptr(wheelModelMatrix));
-            glUniformMatrix3fv(m_defaultShader.getUniformLocation("normalModelMatrix"), 1, GL_FALSE, glm::value_ptr(wheelNormalMatrix));
             glUniform1i(m_defaultShader.getUniformLocation("hasTexCoords"), GL_FALSE);
             glUniform1i(m_defaultShader.getUniformLocation("useMaterial"),GL_TRUE);
 
-            for (GPUMesh& wheelMesh : m_wheelMeshes){
-                wheelMesh.draw(m_defaultShader);
+            for (const WheelAttachment& wheel : m_wheelAttachments )
+            {
+                //we need to turn the wheel to match the axis of the robot's axle - kind of difficult calculations
+                //we need these to rotate the wheel accurately to the axle of the rover
+                const glm::vec3 axleDirection = glm::normalize(wheel.axlDirection);
+                const glm::vec3 alignmentAxis = glm::normalize(glm::cross(wheelLocalAxis, axleDirection));
+                const float alignmentAngle = glm::acos(glm::clamp(glm::dot(wheelLocalAxis, axleDirection), -1.0f, 1.0f));
+                const glm::mat4 wheelAlignment = glm::rotate(glm::mat4(1.0f), alignmentAngle, alignmentAxis);
+                
+                const glm::vec3 attachmentPosition = wheel.axlCenter + m_wheelOutwardOffset * axleDirection;
+                const glm::mat4 wheelAttachment = glm::translate(glm::mat4(1.0f), attachmentPosition);
+
+                const glm::mat4 wheelScale = glm::scale(glm::mat4(1.0f), glm::vec3(wheel.scale));
+
+                const glm::mat4 wheelRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_wheelAngleDegrees * wheel.spinSign), wheelLocalAxis);                
+
+                const glm::mat4 wheelModelMatrix = m_modelMatrix *
+                                                wheelAttachment *
+                                                wheelAlignment *
+                                                wheelScale *
+                                                wheelRotation *
+                                                wheelCentering;
+
+                const glm::mat4 wheelMVP = m_projectionMatrix * camera.viewMatrix() * wheelModelMatrix;
+                const glm::mat3 wheelNormalMatrix = glm::inverseTranspose(glm::mat3(wheelModelMatrix));
+
+                glUniformMatrix4fv(m_defaultShader.getUniformLocation("mvpMatrix"), 1, GL_FALSE, glm::value_ptr(wheelMVP));
+                glUniformMatrix4fv(m_defaultShader.getUniformLocation("modelMatrix"), 1, GL_FALSE, glm::value_ptr(wheelModelMatrix));
+                glUniformMatrix3fv(m_defaultShader.getUniformLocation("normalModelMatrix"), 1, GL_FALSE, glm::value_ptr(wheelNormalMatrix));
+                
+                for (GPUMesh& wheelMesh : m_wheelMeshes){
+                    wheelMesh.draw(m_defaultShader);
+                }
             }
 
 
+            const glm::vec3 headPivot {0.1884334f,0.7467619f,0.0248775f};
+            const glm::vec3 headAxis = glm::normalize(glm::vec3(-0.0664598f, 0.9961538f, -0.0571030f));
+            const glm::mat4 headToOrigin = glm::translate(glm::mat4(1.0f), -headPivot);
+            const glm::mat4 headRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_headForwardDegrees + m_headYawDegrees), headAxis);
+            const glm::mat4 headBackToOrigin = glm::translate(glm::mat4(1.0f), headPivot);
+
+            const glm::mat4 headModelMatrix = m_modelMatrix * headBackToOrigin * headRotation * headToOrigin;
+
+            const glm::mat4 headMVP = m_projectionMatrix * camera.viewMatrix() * headModelMatrix;
+            const glm::mat3 headNormalMatrix  = glm::inverseTranspose(headModelMatrix);
+
+            glUniformMatrix4fv(m_defaultShader.getUniformLocation("mvpMatrix"),1, GL_FALSE, glm::value_ptr(headMVP));
+
+            glUniformMatrix4fv(m_defaultShader.getUniformLocation("modelMatrix"),1, GL_FALSE, glm::value_ptr(headModelMatrix));
+
+            glUniformMatrix3fv(m_defaultShader.getUniformLocation("normalModelMatrix"),1, GL_FALSE, glm::value_ptr(headNormalMatrix));
+
+            glUniform1i(m_defaultShader.getUniformLocation("hasTexCoords"),GL_FALSE);
+
+            glUniform1i(m_defaultShader.getUniformLocation("useMaterial"),GL_TRUE);
+
+            for(GPUMesh& headMesh : m_headMeshes){
+                headMesh.draw(m_defaultShader);
+            }
+            
             const glm::vec3 referencePoint { 0.0f, 0.0f, 0.0f };
             const float markerDistance = 1.5f;
 
@@ -332,6 +404,61 @@ private:
 
     std::vector<GPUMesh> m_wheelMeshes;
     float m_wheelAngleDegrees { 0.0f };
+
+    std::vector<GPUMesh> m_headMeshes;
+    float m_headYawDegrees {0.0f};
+    float m_headForwardDegrees {-36.22f};
+
+    // negative z for right side
+    std::vector<WheelAttachment> m_wheelAttachments 
+    {
+        {
+            {-0.53679944f, -0.50378138f, -0.56606229f},
+            {-0.00838811f, -0.01739521f, -0.99981351f},
+            0.287f,
+            1.0f
+        },
+        {
+            {-0.10203267f, -0.39659327f, -0.62283970f},
+            {-0.01852402f, -0.04827393f, -0.99866235f},
+            0.340f,
+            1.0f
+        },
+        {
+            {0.30974216f, -0.35709362f, -0.69497362f},
+            {-0.19380450f, -0.05084552f, -0.97972167f},
+            0.295f,
+            1.0f
+        },
+
+        // positive z for left side
+        {
+            {-0.33616856f, -0.45795566f, 0.69350196f},
+            {0.31860925f, 0.02903868f, 0.94744124f},
+            0.287f,
+            -1.0f
+        },
+        {
+            {0.09302840f, -0.35404204f, 0.60008422f},
+            {0.30873124f, -0.00172264f, 0.95114776f},
+            0.340f,
+            -1.0f
+        },
+        {
+            {0.50568222f, -0.31672174f, 0.53192258f},
+            {0.13688262f, -0.00283869f, 0.99058321f},
+            0.295f,
+            -1.0f
+        }
+    };
+
+    glm::vec3 m_roverPosition {0.0f, -0.035f, 0.0f};
+    glm::mat4 m_roverBaseRotation = glm::rotate(
+            glm::mat4(1.0f),
+            glm::radians(9.8051f),
+            glm::vec3(0.0416051f, 0.0f, -0.999134f));
+    float m_roverYawDegrees {0.0f};
+    float m_wheelOutwardOffset {0.1116f};
 
     std::optional<GPUMesh> m_groundMesh;
     glm::mat4 m_groundModelMatrix = glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,-0.595f, 0.0f));
