@@ -54,16 +54,14 @@ public:
         m_headMeshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/rover_head.obj");
         m_wheelMeshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/wheel.obj");
 
-        
-
         Mesh ground;
 
         ground.vertices = {
             // Position             Normal             Texture coordinates
-            { {-5.0f, 0.0f, -5.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
-            { {-5.0f, 0.0f,  5.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} },
-            { { 5.0f, 0.0f,  5.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} },
-            { { 5.0f, 0.0f, -5.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} }
+            { {-10.0f, 0.0f, -10.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
+            { {-10.0f, 0.0f,  10.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} },
+            { { 10.0f, 0.0f,  10.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} },
+            { { 10.0f, 0.0f, -10.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} }
         };
         ground.triangles = {
             {0, 1, 2},
@@ -91,8 +89,14 @@ public:
 
             ShaderBuilder shadowBuilder;
             shadowBuilder.addStage(GL_VERTEX_SHADER, RESOURCE_ROOT "shaders/shadow_vert.glsl");
-            shadowBuilder.addStage(GL_FRAGMENT_SHADER, RESOURCE_ROOT "Shaders/shadow_frag.glsl");
+            shadowBuilder.addStage(GL_FRAGMENT_SHADER, RESOURCE_ROOT "shaders/shadow_frag.glsl");
             m_shadowShader = shadowBuilder.build();
+
+            ShaderBuilder bezierBuilder;
+            bezierBuilder.addStage(GL_VERTEX_SHADER, RESOURCE_ROOT "shaders/bezier_vert.glsl");
+            bezierBuilder.addStage(GL_FRAGMENT_SHADER, RESOURCE_ROOT "shaders/bezier_frag.glsl");
+            m_bezierShader = bezierBuilder.build();
+            bezierGeometry();
 
             // Any new shaders can be added below in similar fashion.
             // ==> Don't forget to reconfigure CMake when you do!
@@ -106,7 +110,81 @@ public:
     ~Application()
     {
         glDeleteVertexArrays(1, &m_lightMarkerVAO);
+        glDeleteBuffers(1, &m_bezierVBO);
+        glDeleteVertexArrays(1, &m_bezierVAO);
     }
+
+    glm::vec3 bezier(float t, glm::vec3 P0, glm::vec3 P1, glm::vec3 P2, glm::vec3 P3) {
+        return ((1.0f - t) * (1.0f - t) * (1.0f - t)) * P0 + (3.0f * (1.0f - t) * (1.0f - t) * t) * P1 + (3.0f * (1.0f - t) * t * t) * P2 + (t * t * t) * P3;
+    }
+
+    void bezierGeometry() {
+        // 16 points along each curve
+        int segments = 16;
+        std::vector<glm::vec3> vertices;
+
+        // points on 1st bezier curve
+        for (int i = 0; i <= segments; i++) {
+            float t = static_cast<float>(i) / segments;
+
+            glm::vec3 point = bezier(
+                t,
+                bezierC1P0,
+                bezierC1P1,
+                bezierC1P2,
+                bezierC1P3
+            );
+
+            vertices.push_back(point);
+        }
+
+        // points on 2nd bezier curve
+        for (int i = 0; i <= segments; i++) {
+            float t = static_cast<float>(i) / segments;
+
+            glm::vec3 point = bezier(
+                t,
+                bezierC2P0,
+                bezierC2P1,
+                bezierC2P2,
+                bezierC2P3
+            );
+
+            vertices.push_back(point);
+        }
+
+        // points on 3rd bezier curve
+        for (int i = 0; i <= segments; i++) {
+            float t = static_cast<float>(i) / segments;
+
+            glm::vec3 point = bezier(
+                t,
+                bezierC3P0,
+                bezierC3P1,
+                bezierC3P2,
+                bezierC3P3
+            );
+
+            vertices.push_back(point);
+        }
+
+        m_bezierVertexCount = static_cast<GLsizei>(vertices.size());
+
+        glGenVertexArrays(1, &m_bezierVAO);
+        glGenBuffers(1, &m_bezierVBO);
+
+        glBindVertexArray(m_bezierVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_bezierVBO);
+
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
+
+        glEnableVertexAttribArray(0);
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
     void update()
     {
         int dummyInteger = 0; // Initialized to 0
@@ -132,6 +210,9 @@ public:
             //head slider
             ImGui::SliderFloat("Head Rotation", &m_headYawDegrees, -90.0f, 90.0f);
 
+            // enable drawing of bezier
+            ImGui::Checkbox("Draw Bezier curves", &drawCurve);
+
             //wheel offset
             //ImGui::SliderFloat("Wheel outward offset", &m_wheelOutwardOffset, 0.0f, 0.25f);
 
@@ -144,13 +225,41 @@ public:
             glm::radians(m_roverYawDegrees),
             worldUp);
 
-        // User-controlled position, applied last.
-        const glm::mat4 roverTranslation = glm::translate(
-            glm::mat4(1.0f),
-            m_roverPosition);
+            // User-controlled position, applied last.
+            const glm::mat4 roverTranslation = glm::translate(
+                glm::mat4(1.0f),
+                m_roverPosition
+            );
 
-            m_modelMatrix =roverTranslation * roverRotation * m_roverBaseRotation;
+            // moving model along bezier curve
+            beziert += 0.001f;
+            if (bezierCnt == 0) {
+                glm::vec3 newPosition = bezier(beziert, bezierC1P0, bezierC1P1, bezierC1P2, bezierC1P3);
+                m_roverPosition.x = newPosition.x;
+                m_roverPosition.y = newPosition.y;
+                m_roverPosition.z = newPosition.z;
+            }
+            else if (bezierCnt == 1) {
+                glm::vec3 newPosition = bezier(beziert, bezierC2P0, bezierC2P1, bezierC2P2, bezierC2P3);
+                m_roverPosition.x = newPosition.x;
+                m_roverPosition.y = newPosition.y;
+                m_roverPosition.z = newPosition.z;
+            }
+            else if (bezierCnt == 2) {
+                glm::vec3 newPosition = bezier(beziert, bezierC3P0, bezierC3P1, bezierC3P2, bezierC3P3);
+                m_roverPosition.x = newPosition.x;
+                m_roverPosition.y = newPosition.y;
+                m_roverPosition.z = newPosition.z;
+            }
+            if (beziert >= 1.0f) {
+                bezierCnt += 1;
+                if (bezierCnt == 3) {
+                    bezierCnt = 0;
+                }
+                beziert = 0.0f;
+            }
 
+            m_modelMatrix = roverTranslation * roverRotation * m_roverBaseRotation;
 
             // Clear the screen
             glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -307,6 +416,15 @@ public:
             glBindVertexArray(0);
             glPointSize(1.0f);
 
+            if (drawCurve == true) {
+                m_bezierShader.bind();
+                glUniformMatrix4fv(m_bezierShader.getUniformLocation("viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
+                glUniform3f(m_bezierShader.getUniformLocation("lineColor"), 1.0f, 0.8f, 0.0f);
+                glBindVertexArray(m_bezierVAO);
+                glDrawArrays(GL_LINE_STRIP, 0, m_bezierVertexCount);
+                glBindVertexArray(0);
+            }
+
             // Processes input and swaps the window buffer
             m_window.swapBuffers();
         }
@@ -382,7 +500,7 @@ private:
     Camera oldCam1{ &m_window, glm::vec3(1.2f, 1.1f, 0.9f), -glm::vec3(1.2f, 1.1f, 0.9f) };
     
     // top-down cam (immovable)
-    Camera oldCam2{ &m_window, glm::vec3(0.0f, 4.0f, 0.5f), -glm::vec3(0.0f, 4.0f, 0.5f) };
+    Camera oldCam2{ &m_window, glm::vec3(0.0f, 14.0f, 0.5f), -glm::vec3(0.0f, 14.0f, 0.5f) };
     bool cam1Selected = true;
 
     //sun's direction from the surface to its position
@@ -390,7 +508,34 @@ private:
     glm::vec3 m_sunColor { 1.0f, 0.95f, 0.85f };
     float m_sunIntensity {1.0f};
     float m_ambientStreangth {0.15f};
-    
+
+    // bezier values - curve 1
+    glm::vec3 bezierC1P0 = { 0.0f, 0.0f, 0.0f };
+    glm::vec3 bezierC1P1 = { 0.0f, 0.0f, 4.0f };
+    glm::vec3 bezierC1P2 = { 2.0f, 0.0f, 6.0f };
+    glm::vec3 bezierC1P3 = { 6.0f, 0.0f, 6.0f };
+    float beziert = 0.0f;
+    int bezierCnt = 0;
+
+    // bezier values - curve 2
+    glm::vec3 bezierC2P0 = { 6.0f, 0.0f, 6.0f };
+    glm::vec3 bezierC2P1 = { 10.0f, 0.0f, 6.0f };
+    glm::vec3 bezierC2P2 = { 12.0f, 0.0f, 4.0f };
+    glm::vec3 bezierC2P3 = { 12.0f, 0.0f, 0.0f };
+
+    // bezier values - curve 3
+    glm::vec3 bezierC3P0 = { 12.0f, 0.0f, 0.0f };
+    glm::vec3 bezierC3P1 = { 12.0f, 0.0f, -4.0f };
+    glm::vec3 bezierC3P2 = { 0.0f, 0.0f, -4.0f };
+    glm::vec3 bezierC3P3 = { 0.0f, 0.0f, 0.0f };
+
+    // bezier values - drawing the curves
+    Shader m_bezierShader;
+    GLuint m_bezierVAO{ 0 };
+    GLuint m_bezierVBO{ 0 };
+    GLsizei m_bezierVertexCount{ 0 };
+    bool drawCurve = false;
+
     // Shader for default rendering and for depth rendering
     Shader m_defaultShader;
     Shader m_shadowShader;
