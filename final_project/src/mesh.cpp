@@ -117,6 +117,12 @@ void GPUMesh::moveInto(GPUMesh&& other)
     other.m_uboMaterial = INVALID;
 }
 
+void GPUMesh::drawGeometry()
+{
+    glBindVertexArray(m_vao);
+    glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, nullptr);
+}
+
 void GPUMesh::freeGpuMemory()
 {
     if (m_vao != INVALID)
