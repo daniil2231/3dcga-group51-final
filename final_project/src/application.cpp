@@ -318,7 +318,9 @@ public:
             // This is your game loop
             // Put your real-time logic and rendering in here
             m_window.updateInput();
-            camera.updateInput();
+            if (!useRoverHeadCam) {
+                camera.updateInput();
+            }
 
             // Use ImGui for easy input/output of ints, floats, strings, etc...
             ImGui::Begin("Window");
@@ -425,6 +427,27 @@ public:
             );
 
             m_modelMatrix = roverTranslation * roverRotation * m_roverBaseRotation;
+            const glm::vec3 headPivot{ 0.1884334f,0.7467619f,0.0248775f };
+            const glm::vec3 headAxis = glm::normalize(glm::vec3(-0.0664598f, 0.9961538f, -0.0571030f));
+            const glm::mat4 headToOrigin = glm::translate(glm::mat4(1.0f), -headPivot);
+            const glm::mat4 headRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_headForwardDegrees + m_headYawDegrees), headAxis);
+            const glm::mat4 headBackToOrigin = glm::translate(glm::mat4(1.0f), headPivot);
+
+            const glm::mat4 headModelMatrix = m_modelMatrix * headBackToOrigin * headRotation * headToOrigin;
+
+            glm::mat4 viewMatrix = camera.viewMatrix();
+            glm::vec3 cameraPosition = camera.cameraPos();
+
+            if (useRoverHeadCam) {
+                // used AI to calculate the values of where the camera lens exactly is
+                glm::vec3 eye{ 0.1964f, 0.8335f, -0.1283f };
+                glm::vec3 forward{ 0.7389f, 0.0107f, -0.6737f };
+                glm::vec3 up{ -0.0665f, 0.9962f, -0.0571f };
+                cameraPosition = glm::vec3(headModelMatrix * glm::vec4(eye, 1.0f));
+                glm::vec3 headForward = glm::vec3(headModelMatrix * glm::vec4(forward, 0.0f));
+                glm::vec3 headUp = glm::vec3(headModelMatrix * glm::vec4(up, 0.0f));
+                viewMatrix = glm::lookAt(cameraPosition, cameraPosition + headForward, headUp);
+            }
 
             // Clear the screen
             glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -438,7 +461,7 @@ public:
                 glDepthMask(GL_FALSE);
                 m_skyShader.bind();
                 const glm::mat4 inverseProjection = glm::inverse(m_projectionMatrix);
-                const glm::mat3 inverseViewRotation = glm::transpose(glm::mat3(camera.viewMatrix()));
+                const glm::mat3 inverseViewRotation = glm::transpose(glm::mat3(viewMatrix));
                 glUniformMatrix4fv(m_skyShader.getUniformLocation("inverseProjection"),
                     1, GL_FALSE, glm::value_ptr(inverseProjection));
                 glUniformMatrix3fv(m_skyShader.getUniformLocation("inverseViewRotation"),
@@ -461,7 +484,7 @@ public:
                 }
             }
 
-            const glm::mat4 mvpMatrix = m_projectionMatrix * camera.viewMatrix() * m_modelMatrix;
+            const glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;
             // Normals should be transformed differently than positions (ignoring translations + dealing with scaling):
             // https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
             const glm::mat3 normalModelMatrix = glm::inverseTranspose(glm::mat3(m_modelMatrix));
@@ -528,15 +551,6 @@ public:
                 }
             }
 
-
-            const glm::vec3 headPivot {0.1884334f,0.7467619f,0.0248775f};
-            const glm::vec3 headAxis = glm::normalize(glm::vec3(-0.0664598f, 0.9961538f, -0.0571030f));
-            const glm::mat4 headToOrigin = glm::translate(glm::mat4(1.0f), -headPivot);
-            const glm::mat4 headRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_headForwardDegrees + m_headYawDegrees), headAxis);
-            const glm::mat4 headBackToOrigin = glm::translate(glm::mat4(1.0f), headPivot);
-
-            const glm::mat4 headModelMatrix = m_modelMatrix * headBackToOrigin * headRotation * headToOrigin;
-
            for (GPUMesh& headMesh : m_headMeshes) {
                 drawItems.push_back({
                     &headMesh,
@@ -548,7 +562,6 @@ public:
 
             m_defaultShader.bind();
 
-            const glm::vec3 cameraPosition = camera.cameraPos();
             const glm::vec3 lightTarget { 6.0f, -0.595f, 1.0f };
             glm::vec3 lightEye = sunPosition;
             if (!m_usePointLight) {
@@ -660,7 +673,7 @@ public:
             m_texture.bind(GL_TEXTURE0);
 
             const glm::mat4 cameraViewProjection =
-                m_projectionMatrix * camera.viewMatrix();
+                m_projectionMatrix * viewMatrix;
 
             for (const DrawItem& item : drawItems) {
                 const glm::mat4 itemMVP =
@@ -727,7 +740,7 @@ public:
             const glm::vec3 markerPosition = sunPosition;
 
             const glm::mat4 viewProjection =
-                m_projectionMatrix * camera.viewMatrix();
+                m_projectionMatrix * viewMatrix;
 
             m_lightMarkerShader.bind();
 
@@ -769,6 +782,7 @@ public:
                 // if we are currently in cam 2
                 if (!cam1Selected) {
                     // switch cam to cam 1's saved location
+                    useRoverHeadCam = false;
                     oldCam1.setUserInteraction(true);
                     camera = oldCam1;
 
@@ -778,6 +792,7 @@ public:
             case GLFW_KEY_2:
                 // opposite to code above ^
                 if (cam1Selected) {
+                    useRoverHeadCam = false;
                     oldCam1 = camera;
                     oldCam1.setUserInteraction(false);
 
@@ -785,6 +800,16 @@ public:
                     camera = oldCam2;
 
                     cam1Selected = false;
+                }
+                break;
+            case GLFW_KEY_3:
+                if (!useRoverHeadCam) {
+                    if (cam1Selected) {
+                        oldCam1 = camera;
+                        oldCam1.setUserInteraction(false);
+                    }
+                    cam1Selected = false;
+                    useRoverHeadCam = true;
                 }
                 break;
             default:
@@ -829,8 +854,11 @@ private:
     Camera oldCam1{ &m_window, glm::vec3(1.2f, 1.1f, 0.9f), -glm::vec3(1.2f, 1.1f, 0.9f) };
     
     // top-down cam (immovable)
-    Camera oldCam2{ &m_window, glm::vec3(0.0f, 14.0f, 0.5f), -glm::vec3(0.0f, 14.0f, 0.5f) };
+    Camera oldCam2{ &m_window, glm::vec3(0.0f, 30.0f, 0.5f), -glm::vec3(0.0f, 30.0f, 0.5f) };
     bool cam1Selected = true;
+
+    // rover head cam
+    bool useRoverHeadCam = false;
 
     //sun's direction from the surface to its position
     glm::vec3 m_sunDirection { 1.0f, 1.0f, 0.5f};
