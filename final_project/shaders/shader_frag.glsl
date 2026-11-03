@@ -29,6 +29,8 @@ uniform sampler2D shadowMap;
 uniform sampler2D normalMap;
 uniform bool useNormalMap;
 uniform float normalStreangth;
+uniform samplerCube environmentMap;
+uniform float reflectionStrength;
 
 in vec3 fragPosition;
 in vec3 fragNormal;
@@ -147,6 +149,13 @@ void main()
     vec3 specular = ks * sunColor * specularFactor * sunIntensity;
     float visibility = lightVisibility(fragNormal, L);
     vec3 finalColor = ambient + visibility * (diffuse + specular);
+
+    // for env mapping
+    if (reflectionStrength > 0.0) {
+        vec3 reflectionDirection = reflect(-V, N);
+        vec3 environmentColor = texture(environmentMap, reflectionDirection).rgb;
+        finalColor = mix(finalColor, environmentColor, reflectionStrength);
+    }
 
     if (enableHaze) {
         vec3 toSurface = fragPosition - cameraPos;
