@@ -50,6 +50,7 @@ public:
     Application()
         : m_window("Final Project", glm::ivec2(1024, 1024), OpenGLVersion::GL41)
         , m_texture(RESOURCE_ROOT "resources/checkerboard.png")
+        , m_baseTexture(RESOURCE_ROOT "resources/Atlas.png")
         , m_groundTexture(RESOURCE_ROOT "resources/Stylized_Sand_001_basecolor.jpg")
         , m_groundNormalTexture(RESOURCE_ROOT "resources/Stylized_Sand_001_normal.jpg")
     {
@@ -70,6 +71,13 @@ public:
         m_meshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/rover_body.obj");
         m_headMeshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/rover_head.obj");
         m_wheelMeshes = GPUMesh::loadMeshGPU(RESOURCE_ROOT "resources/wheel.obj");
+        for (Mesh& mesh : loadMesh(RESOURCE_ROOT "resources/Base_Large.obj")) {
+            // OBJ UVs start at the bottom; our image loader keeps the top row first.
+            for (Vertex& vertex : mesh.vertices) {
+                vertex.texCoord.y = 1.0f - vertex.texCoord.y;
+            }
+            m_baseMeshes.emplace_back(mesh);
+        }
 
         setupScenery();
 
@@ -244,6 +252,13 @@ public:
         return ((1.0f - t) * (1.0f - t) * (1.0f - t)) * P0 + (3.0f * (1.0f - t) * (1.0f - t) * t) * P1 + (3.0f * (1.0f - t) * t * t) * P2 + (t * t * t) * P3;
     }
 
+    glm::vec3 bezierTangent(float t, glm::vec3 P0, glm::vec3 P1, glm::vec3 P2, glm::vec3 P3)
+    {
+        const float u = 1.0f - t;
+
+        return 3.0f * u * u * (P1 - P0) + 6.0f * u * t * (P2 - P1) + 3.0f * t * t * (P3-P2);
+    }
+
     void bezierGeometry() {
         // 16 points along each curve
         int segments = 16;
@@ -311,12 +326,70 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
+    void drawSceneFromCamera(
+    const std::vector<DrawItem>& drawItems,
+    const glm::mat4& viewProjection,
+    const glm::vec3& eyePosition,
+    bool enableHaze)
+    {
+        m_defaultShader.bind();
+
+        glUniform3fv(m_defaultShader.getUniformLocation("cameraPos"), 1, glm::value_ptr(eyePosition));
+
+        glUniform1i(m_defaultShader.getUniformLocation("enableHaze"), enableHaze);
+
+        for (const DrawItem& item : drawItems) {
+            const glm::mat4 itemMVP = viewProjection * item.modelMatrix;
+
+            const glm::mat3 itemNormalMatrix = glm::inverseTranspose(glm::mat3(item.modelMatrix));
+
+            glUniformMatrix4fv(m_defaultShader.getUniformLocation("mvpMatrix"), 1, GL_FALSE, glm::value_ptr(itemMVP));
+
+            glUniformMatrix4fv(m_defaultShader.getUniformLocation("modelMatrix"), 1, GL_FALSE, glm::value_ptr(item.modelMatrix));
+
+            glUniformMatrix3fv(m_defaultShader.getUniformLocation("normalModelMatrix"), 1, GL_FALSE, glm::value_ptr(itemNormalMatrix));
+
+            const bool hasTexture = item.colorTexture != nullptr;
+
+            if (hasTexture) {
+                item.colorTexture->bind(GL_TEXTURE0);
+            }
+
+            glUniform1i(m_defaultShader.getUniformLocation("hasTexCoords"), hasTexture);
+
+            glUniform1i(m_defaultShader.getUniformLocation("useMaterial"), hasTexture ? GL_FALSE : item.useMaterial);
+
+            const bool useNormalMap = m_enableNormalMapping && item.normalTexture != nullptr;
+
+            glUniform1i(m_defaultShader.getUniformLocation("useNormalMap"), useNormalMap);
+
+            glUniform1i(m_defaultShader.getUniformLocation("normalMap"), 2);
+
+            glUniform1f(m_defaultShader.getUniformLocation("normalStreangth"), m_normalStrength);
+
+            if (useNormalMap) {
+                item.normalTexture->bind(GL_TEXTURE2);
+            }
+
+            glActiveTexture(GL_TEXTURE0);
+
+            item.mesh->draw(m_defaultShader);
+        }
+    }
+
     void update()
     {
         int dummyInteger = 0; // Initialized to 0
+        double previousTime = glfwGetTime();
+        
+
         while (!m_window.shouldClose()) {
             // This is your game loop
             // Put your real-time logic and rendering in here
+            const double currentTime = glfwGetTime();
+            const float deltaTime = glm::clamp(static_cast<float>(currentTime - previousTime), 0.0f, 0.1f);
+            previousTime = currentTime;
+
             m_window.updateInput();
             if (!useRoverHeadCam) {
                 camera.updateInput();
@@ -372,6 +445,40 @@ public:
             ImGui::Checkbox("Scenery rocks", &m_showScenery);
             ImGui::Checkbox("Procedural sky", &m_showSky);
             ImGui::Checkbox("Distance haze", &m_enableHaze);
+            ImGui::Checkbox("Animate rover", &m_animateRover);
+
+            ImGui::SliderFloat(
+                "Path parameter rate",
+                &m_bezierRate,
+                0.0f,
+                0.2f);
+
+            ImGui::SliderFloat(
+                "Wheel angle offset",
+                &m_wheelAngleDegrees,
+                0.0f,
+                360.0f);
+
+            if (!m_animateRover) {
+                ImGui::DragFloat3(
+                    "Rover Position",
+                    glm::value_ptr(m_roverPosition),
+                    0.01f);
+
+                ImGui::SliderFloat(
+                    "Rover Heading",
+                    &m_roverYawDegrees,
+                    -180.0f,
+                    180.0f);
+            }
+
+            ImGui::Checkbox("Show minimap", &m_showMinimap);
+
+            ImGui::SliderFloat(
+                "Minimap coverage",
+                &m_minimapHalfExtent,
+                8.0f,
+                30.0f);
 
             ImGui::End();
 
@@ -387,46 +494,49 @@ public:
             // Also used by the marker so it represents the actual point light.
             const glm::vec3 sunPosition =
                 glm::normalize(m_sunDirection) * m_sunDistance;
+            
+            if(m_animateRover)
+            {
+                const glm::vec3 curves[3][4] = {
+                    {bezierC1P0, bezierC1P1, bezierC1P2, bezierC1P3},
+                    {bezierC2P0, bezierC2P1, bezierC2P2, bezierC2P3},
+                    {bezierC3P0, bezierC3P1, bezierC3P2, bezierC3P3}
+                };
+
+                const glm::vec3* previousCurve = curves[bezierCnt];
+
+                const glm::vec3 previousPosition = bezier(beziert, previousCurve[0], previousCurve[1], previousCurve[2], previousCurve[3]);
+                beziert += m_bezierRate * deltaTime;
+
+                while(beziert >= 1.0f)
+                {
+                    beziert -= 1.0f;
+                    bezierCnt = (bezierCnt + 1) % 3;
+                }
+
+                const glm::vec3* curve = curves[bezierCnt];
+                const glm::vec3 newPosition = bezier(beziert, curve[0], curve[1], curve[2], curve[3]);
+                const glm::vec3 tangent = bezierTangent(beziert, curve[0], curve[1], curve[2], curve[3]);
+                m_roverPosition.x = newPosition.x;
+                m_roverPosition.z = newPosition.z;
+
+                if(tangent.x * tangent.x + tangent.z * tangent.z > 0.000001f)
+                {
+                    m_roverYawDegrees = glm::degrees(std::atan2(-tangent.z, tangent.x));
+                }
+
+                const glm::vec2 movement(newPosition.x - previousPosition.x, newPosition.z - previousPosition.z);
+
+                m_roverTravelDistance += static_cast<double>(glm::length(movement));
+            }
 
             const glm::vec3 worldUp { 0.0f, 1.0f, 0.0f };
-
-            const glm::mat4 roverRotation = glm::rotate(
-            glm::mat4(1.0f),
-            glm::radians(m_roverYawDegrees),
-            worldUp);
-
-            // moving model along bezier curve
-            beziert += 0.001f;
-            if (bezierCnt == 0) {
-                glm::vec3 newPosition = bezier(beziert, bezierC1P0, bezierC1P1, bezierC1P2, bezierC1P3);
-                m_roverPosition.x = newPosition.x;
-                m_roverPosition.z = newPosition.z;
-            }
-            else if (bezierCnt == 1) {
-                glm::vec3 newPosition = bezier(beziert, bezierC2P0, bezierC2P1, bezierC2P2, bezierC2P3);
-                m_roverPosition.x = newPosition.x;
-                m_roverPosition.z = newPosition.z;
-            }
-            else if (bezierCnt == 2) {
-                glm::vec3 newPosition = bezier(beziert, bezierC3P0, bezierC3P1, bezierC3P2, bezierC3P3);
-                m_roverPosition.x = newPosition.x;
-                m_roverPosition.z = newPosition.z;
-            }
-            if (beziert >= 1.0f) {
-                bezierCnt += 1;
-                if (bezierCnt == 3) {
-                    bezierCnt = 0;
-                }
-                beziert = 0.0f;
-            }
-
-            // User-controlled position, applied last.
-            const glm::mat4 roverTranslation = glm::translate(
-                glm::mat4(1.0f),
-                m_roverPosition
-            );
+            const glm::mat4 roverRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_roverYawDegrees),worldUp);
+            const glm::mat4 roverTranslation = glm::translate(glm::mat4(1.0f), m_roverPosition);
 
             m_modelMatrix = roverTranslation * roverRotation * m_roverBaseRotation;
+
+            
             const glm::vec3 headPivot{ 0.1884334f,0.7467619f,0.0248775f };
             const glm::vec3 headAxis = glm::normalize(glm::vec3(-0.0664598f, 0.9961538f, -0.0571030f));
             const glm::mat4 headToOrigin = glm::translate(glm::mat4(1.0f), -headPivot);
@@ -484,6 +594,10 @@ public:
                 }
             }
 
+            for (GPUMesh& mesh : m_baseMeshes) {
+                drawItems.push_back({&mesh, m_baseModelMatrix, &m_baseTexture, true});
+            }
+
             const glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;
             // Normals should be transformed differently than positions (ignoring translations + dealing with scaling):
             // https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
@@ -532,7 +646,12 @@ public:
 
                 const glm::mat4 wheelScale = glm::scale(glm::mat4(1.0f), glm::vec3(wheel.scale));
 
-                const glm::mat4 wheelRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_wheelAngleDegrees * wheel.spinSign), wheelLocalAxis);                
+                const float wheelRadius = WHEEL_MODEL_RADIUS * wheel.scale;
+                const double rollingAngle =m_roverTravelDistance / wheelRadius;
+                const float wrappedAngle = static_cast<float>(std::fmod(rollingAngle, glm::radians(360.0)));
+                const float wheelAngle = wheel.spinSign * (glm::radians(m_wheelAngleDegrees) + wrappedAngle);
+
+                const glm::mat4 wheelRotation = glm::rotate(glm::mat4(1.0f), wheelAngle, wheelLocalAxis);               
 
                 const glm::mat4 wheelModelMatrix = m_modelMatrix *
                                                 wheelAttachment *
@@ -675,67 +794,11 @@ public:
             const glm::mat4 cameraViewProjection =
                 m_projectionMatrix * viewMatrix;
 
-            for (const DrawItem& item : drawItems) {
-                const glm::mat4 itemMVP =
-                    cameraViewProjection * item.modelMatrix;
-
-                const glm::mat3 itemNormalMatrix =
-                    glm::inverseTranspose(
-                        glm::mat3(item.modelMatrix));
-
-                glUniformMatrix4fv(
-                    m_defaultShader.getUniformLocation("mvpMatrix"),
-                    1,
-                    GL_FALSE,
-                    glm::value_ptr(itemMVP));
-
-                glUniformMatrix4fv(
-                    m_defaultShader.getUniformLocation("modelMatrix"),
-                    1,
-                    GL_FALSE,
-                    glm::value_ptr(item.modelMatrix));
-
-                glUniformMatrix3fv(
-                    m_defaultShader.getUniformLocation(
-                        "normalModelMatrix"),
-                    1,
-                    GL_FALSE,
-                    glm::value_ptr(itemNormalMatrix));
-
-                const bool hasTexture =
-                    item.colorTexture != nullptr;
-
-                if (hasTexture) {
-                    item.colorTexture->bind(GL_TEXTURE0);
-                }
-
-                glUniform1i(
-                    m_defaultShader.getUniformLocation(
-                        "hasTexCoords"),
-                    hasTexture);
-
-                glUniform1i(
-                    m_defaultShader.getUniformLocation(
-                        "useMaterial"),
-                    hasTexture ? GL_FALSE : item.useMaterial);
-
-                glUniform1i(
-                m_defaultShader.getUniformLocation("useMaterial"),
-                hasTexture ? GL_FALSE : item.useMaterial);
-
-                const bool useNormalMap = m_enableNormalMapping && item.normalTexture != nullptr;
-                glUniform1i(m_defaultShader.getUniformLocation("useNormalMap"), useNormalMap);
-                glUniform1i(m_defaultShader.getUniformLocation("normalMap"), 2);
-                glUniform1f(m_defaultShader.getUniformLocation("normalStreangth"), m_normalStrength);
-                if(useNormalMap)
-                {
-                    item.normalTexture->bind(GL_TEXTURE2);
-                }
-                glActiveTexture(GL_TEXTURE0);
-
-                item.mesh->draw(m_defaultShader);
-                
-            }
+            drawSceneFromCamera(
+                drawItems,
+                cameraViewProjection,
+                cameraPosition,
+                m_showSky);
             
             const glm::vec3 markerPosition = sunPosition;
 
@@ -766,6 +829,83 @@ public:
                 glDrawArrays(GL_LINE_STRIP, 0, m_bezierVertexCount);
                 glBindVertexArray(0);
             }
+
+            if (m_showMinimap) {
+            const glm::ivec2 framebufferSize = m_window.getFrameBufferSize();
+
+            const int shortestSide = glm::min(framebufferSize.x, framebufferSize.y);
+
+            const int panelSize = static_cast<int>(static_cast<float>(shortestSide) * 0.30f);
+
+            const int margin = 12;
+            const int border = 3;
+
+            if (panelSize > 2 * border) {
+                const int panelX = framebufferSize.x - panelSize - margin;
+
+                const int panelY = margin;
+
+                GLint previousViewport[4];
+                glGetIntegerv(GL_VIEWPORT, previousViewport);
+
+                glEnable(GL_SCISSOR_TEST);
+                glScissor(panelX, panelY, panelSize, panelSize);
+
+                glDepthMask(GL_TRUE);
+                glClearColor(0.12f, 0.08f, 0.06f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                const int innerSize = panelSize - 2 * border;
+
+                glViewport(
+                    panelX + border,
+                    panelY + border,
+                    innerSize,
+                    innerSize);
+
+                glScissor(
+                    panelX + border,
+                    panelY + border,
+                    innerSize,
+                    innerSize);
+
+                glClearColor(0.60f, 0.39f, 0.25f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                const glm::vec3 minimapTarget { 6.0f, -0.595f, 1.0f };
+                const glm::vec3 minimapEye { 6.0f, 60.0f, 1.0f };
+
+                const glm::mat4 minimapView = glm::lookAt(minimapEye, minimapTarget, glm::vec3(0.0f, 0.0f, -1.0f));
+
+                const glm::mat4 minimapProjection = glm::ortho(-m_minimapHalfExtent, m_minimapHalfExtent, -m_minimapHalfExtent, m_minimapHalfExtent, 0.1f, 150.0f);
+
+                const glm::mat4 minimapViewProjection = minimapProjection * minimapView;
+
+                drawSceneFromCamera(drawItems, minimapViewProjection, minimapEye, false);
+
+                if (drawCurve) {
+                    m_bezierShader.bind();
+
+                    glUniformMatrix4fv(m_bezierShader.getUniformLocation("viewProjection"), 1, GL_FALSE, glm::value_ptr(minimapViewProjection));
+
+                    glUniform3f(m_bezierShader.getUniformLocation("lineColor"), 1.0f, 0.8f, 0.0f);
+
+                    glBindVertexArray(m_bezierVAO);
+                    glDrawArrays(GL_LINE_STRIP, 0, m_bezierVertexCount);
+                    glBindVertexArray(0);
+                }
+
+                glDisable(GL_SCISSOR_TEST);
+
+                glViewport(
+                    previousViewport[0],
+                    previousViewport[1],
+                    previousViewport[2],
+                    previousViewport[3]);
+
+                glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+            }
+        }
 
             // Processes input and swaps the window buffer
             m_window.swapBuffers();
@@ -854,8 +994,10 @@ private:
     Camera oldCam1{ &m_window, glm::vec3(1.2f, 1.1f, 0.9f), -glm::vec3(1.2f, 1.1f, 0.9f) };
     
     // top-down cam (immovable)
-    Camera oldCam2{ &m_window, glm::vec3(0.0f, 30.0f, 0.5f), -glm::vec3(0.0f, 30.0f, 0.5f) };
+    Camera oldCam2{ &m_window, glm::vec3(10.0f, 50.0f, 0.5f), -glm::vec3(10.0f, 40.0f, 0.5f) };
     bool cam1Selected = true;
+    bool m_showMinimap { true };
+    float m_minimapHalfExtent { 35.0f };
 
     // rover head cam
     bool useRoverHeadCam = false;
@@ -912,6 +1054,11 @@ private:
     std::vector<GPUMesh> m_wheelMeshes;
     float m_wheelAngleDegrees { 0.0f };
 
+    bool m_animateRover { true };
+    float m_bezierRate { 0.06f };
+    double m_roverTravelDistance { 0.0 };
+    static constexpr float WHEEL_MODEL_RADIUS = 0.570118f;
+
     std::vector<GPUMesh> m_headMeshes;
     float m_headYawDegrees {0.0f};
     float m_headForwardDegrees {-36.22f};
@@ -959,6 +1106,13 @@ private:
         }
     };
 
+    std::vector<GPUMesh> m_baseMeshes;
+    Texture m_baseTexture;
+    glm::mat4 m_baseModelMatrix =
+        glm::translate(glm::mat4(1.0f), glm::vec3(19.0f, -0.598f, 11.0f))
+        * glm::rotate(glm::mat4(1.0f), glm::radians(-25.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+        * glm::scale(glm::mat4(1.0f), glm::vec3(0.7f));
+
     std::vector<std::vector<GPUMesh>> m_sceneryMeshes;
     std::vector<SceneryInstance> m_sceneryInstances;
     bool m_showScenery { true };
@@ -994,7 +1148,7 @@ private:
     GLuint m_shadowDepthTexture { 0 };
     GLuint m_shadowFramebuffer { 0 };
     bool m_enableShadows {true};
-    float m_shadowBias { 0.00002f };
+    float m_shadowBias { 0.00005f };
 };
 
 int main()
