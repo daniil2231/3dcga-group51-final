@@ -32,6 +32,10 @@ uniform float normalStreangth;
 uniform bool usePBR;
 uniform float metallic;
 uniform float roughness;
+uniform samplerCube environmentMap;
+uniform float reflectionStrength;
+uniform bool usePBREnvironment;
+uniform float pbrEnvironmentStrength;
 
 in vec3 fragPosition;
 in vec3 fragNormal;
@@ -99,7 +103,7 @@ float geometryGGX(float NdotDirection, float r)
 {
     float alpha = pow(r, 2.0);
     float alphaSquared = pow(alpha, 2.0);
-    float root = sqrt(alphaSquared * (1.0 - alphaSquared) * pow(NdotDirection, 2.0));
+    float root = sqrt(alphaSquared + (1.0 - alphaSquared) * pow(NdotDirection, 2.0));
     float result = (2.0 * NdotDirection) / max(NdotDirection + root, 0.000001);
 
     return result;
@@ -112,6 +116,28 @@ vec3 fresnelSchlick(float VdotH, vec3 F0)
     vec3 result = F0 + difference * grazing;
 
     return result;
+}
+
+vec3 calculateEnvironmentPBR(vec3 albedo, vec3 N, vec3 V)
+{
+    float m = clamp(metallic, 0.0, 1.0);
+    float r = clamp(roughness, 0.1, 1.0);
+
+    vec3 reflectionDirection = reflect(-V,N);
+
+    float faceSize = float(textureSize(environmentMap, 0).x);
+    float maxMipLevel = floor(log2(faceSize));
+    float mipLevel = r * maxMipLevel;
+
+    vec3 environmentColor = textureLod(environmentMap, reflectionDirection, mipLevel).rgb;
+
+    vec3 environmentLinear = pow(max(environmentColor, vec3(0.0)), vec3(2.2));
+
+    float NdotV = max(dot(N,V), 0.0);
+    vec3 F0 = mix(vec3(0.04), albedo, m);
+    vec3 F = fresnelSchlick(NdotV, F0);
+
+    return environmentLinear * F * pbrEnvironmentStrength;
 }
 
 vec3 calculatePBR(vec3 albedo, vec3 N, vec3 V, vec3 L)
@@ -137,7 +163,7 @@ vec3 calculatePBR(vec3 albedo, vec3 N, vec3 V, vec3 L)
     float NdotH = max(dot(N,H), 0.0);
     float VdotH = max(dot(V,H), 0.0);
 
-    vec3 F0 = mix(vec3(0.4), albedo, m);
+    vec3 F0 = mix(vec3(0.04), albedo, m);
     vec3 F = fresnelSchlick(VdotH, F0);
     float D = distributionGGX(NdotH, r);
     float G = geometryGGX(NdotV, r) * geometryGGX(NdotL, r);
@@ -226,10 +252,22 @@ void main()
         }
         vec3 directLight = calculatePBR(albedo, N, V, L);
         vec3 indirectApprox = ambientStreantgh * albedo * (1.0 - clamp(metallic, 0.0, 1.0));
-        vec3 linearColor = indirectApprox + visibility * directLight;
+        vec3 environmentLight = vec3(0.0);
+        if (usePBREnvironment) {
+            environmentLight = calculateEnvironmentPBR(albedo, N, V);
+        }
+
+        vec3 linearColor = indirectApprox + visibility * directLight + environmentLight;
         vec3 mappedColor = linearColor / (linearColor + vec3(1.0));
 
         finalColor = pow(max(mappedColor, vec3(0.0)), vec3(1.0 / 2.2));
+    }
+
+    // for env mapping with pbr base
+    if (!usePBR && reflectionStrength > 0.0) {
+        vec3 reflectionDirection = reflect(-V, N);
+        vec3 environmentColor = texture(environmentMap, reflectionDirection).rgb;
+        finalColor = mix(finalColor, environmentColor, reflectionStrength);
     }
 
     if (enableHaze) {

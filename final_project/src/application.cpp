@@ -41,6 +41,9 @@ struct DrawItem{
     bool usePBR = false;
     float metallic = 0.0f;
     float roughness = 0.5f;
+    // for env mapping
+    bool isRover = false;
+    bool isBase = false;
 };
 
 struct SceneryInstance {
@@ -167,6 +170,7 @@ public:
             throw std::runtime_error("Shadow framebuffer is incomplete");
         }
 
+        createEnvironmentMap();
     }
     ~Application()
     {
@@ -176,6 +180,11 @@ public:
         glDeleteVertexArrays(1, &m_bezierVAO);
         glDeleteFramebuffers(1, &m_shadowFramebuffer);
         glDeleteTextures(1, &m_shadowDepthTexture);
+        glDeleteTextures(1, &m_environmentTexture);
+        glDeleteTextures(1, &m_baseEnvironmentTexture);
+        glDeleteTextures(1, &m_environmentFallbackTexture);
+        glDeleteFramebuffers(1, &m_environmentFramebuffer);
+        glDeleteRenderbuffers(1, &m_environmentDepthBuffer);
     }
 
     void setupScenery()
@@ -333,15 +342,55 @@ public:
     const std::vector<DrawItem>& drawItems,
     const glm::mat4& viewProjection,
     const glm::vec3& eyePosition,
-    bool enableHaze)
+    bool enableHaze,
+    bool environmentPass = false,
+    bool captureForBase = false)
     {
         m_defaultShader.bind();
 
+        glUniform1i(m_defaultShader.getUniformLocation("environmentMap"), 3);
+        
         glUniform3fv(m_defaultShader.getUniformLocation("cameraPos"), 1, glm::value_ptr(eyePosition));
 
         glUniform1i(m_defaultShader.getUniformLocation("enableHaze"), enableHaze);
 
         for (const DrawItem& item : drawItems) {
+            if (environmentPass) {
+                const bool isCaptureObject = captureForBase ? item.isBase : item.isRover;
+
+                if (isCaptureObject) {
+                    continue;
+                }
+            }
+
+            const bool useBaseEnvironment = m_enableEnvironmentMapping && item.isBase && item.usePBR && !environmentPass && m_baseEnvironmentStrength > 0.0f;
+
+            GLuint environmentTexture = m_environmentFallbackTexture;
+
+            if (!environmentPass && m_enableEnvironmentMapping) {
+                if (useBaseEnvironment) {
+                    environmentTexture = m_baseEnvironmentTexture;
+                } else if (item.isRover && m_reflectionStrength > 0.0f) {
+                    environmentTexture = m_environmentTexture;
+                }
+            }
+
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, environmentTexture);
+            glActiveTexture(GL_TEXTURE0);
+
+            glUniform1i(m_defaultShader.getUniformLocation("usePBREnvironment"), useBaseEnvironment);
+
+            glUniform1f(m_defaultShader.getUniformLocation("pbrEnvironmentStrength"), m_baseEnvironmentStrength);
+
+            float refl = 0.0f;
+            if (m_enableEnvironmentMapping && item.isRover && !environmentPass) {
+                refl = m_reflectionStrength;
+            }
+
+            glUniform1f(
+                m_defaultShader.getUniformLocation("reflectionStrength"), refl);
+
             const glm::mat4 itemMVP = viewProjection * item.modelMatrix;
 
             const glm::mat3 itemNormalMatrix = glm::inverseTranspose(glm::mat3(item.modelMatrix));
@@ -383,6 +432,162 @@ public:
             glUniform1f(m_defaultShader.getUniformLocation("roughness"), item.roughness);
 
             item.mesh->draw(m_defaultShader);
+        }
+    }
+
+    void createEnvironmentMap()
+    {
+        // Keep the cube sampler valid during capture without sampling the render target.
+        glGenTextures(1, &m_environmentFallbackTexture);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, m_environmentFallbackTexture);
+        const unsigned char black[] { 0, 0, 0 };
+        for (int face = 0; face < 6; face++) {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGB8,
+                1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, black);
+        }
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glGenTextures(1, &m_environmentTexture);
+        glGenTextures(1, &m_baseEnvironmentTexture);
+
+        const GLuint environmentTextures[] {
+            m_environmentTexture,
+            m_baseEnvironmentTexture
+        };
+
+        for (GLuint texture : environmentTextures) {
+            glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+
+            for (int face = 0; face < 6; face++) {
+                glTexImage2D(
+                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+                    0,
+                    GL_RGB8,
+                    ENVIRONMENT_SIZE,
+                    ENVIRONMENT_SIZE,
+                    0,
+                    GL_RGB,
+                    GL_UNSIGNED_BYTE,
+                    nullptr);
+            }
+
+            glTexParameteri(
+                GL_TEXTURE_CUBE_MAP,
+                GL_TEXTURE_MIN_FILTER,
+                texture == m_baseEnvironmentTexture
+                    ? GL_LINEAR_MIPMAP_LINEAR
+                    : GL_LINEAR);
+
+            glTexParameteri(
+                GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            glTexParameteri(
+                GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(
+                GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(
+                GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        }
+
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+        glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+        glGenFramebuffers(1, &m_environmentFramebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_environmentFramebuffer);
+        glGenRenderbuffers(1, &m_environmentDepthBuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_environmentDepthBuffer);
+
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, ENVIRONMENT_SIZE, ENVIRONMENT_SIZE);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_environmentDepthBuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, m_environmentTexture, 0);
+
+        glDrawBuffer(GL_COLOR_ATTACHMENT0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    }
+
+    void captureEnvironment(const std::vector<DrawItem>& drawItems, bool forBase = false)
+{
+    const GLuint targetTexture = forBase ? m_baseEnvironmentTexture : m_environmentTexture;
+
+    const glm::vec3 eye = forBase ? glm::vec3(m_baseModelMatrix * glm::vec4(0.0f, 2.5f, 0.0f, 1.0f)) : m_roverPosition + glm::vec3(0.0f, 0.5f, 0.0f);
+        glm::vec3 directions[6] = {
+            { 1.0f,  0.0f,  0.0f},
+            {-1.0f,  0.0f,  0.0f},
+            { 0.0f,  1.0f,  0.0f},
+            { 0.0f, -1.0f,  0.0f},
+            { 0.0f,  0.0f,  1.0f},
+            { 0.0f,  0.0f, -1.0f}
+        };
+        glm::vec3 upDirections[6] = {
+            {0.0f, -1.0f,  0.0f},
+            {0.0f, -1.0f,  0.0f},
+            {0.0f,  0.0f,  1.0f},
+            {0.0f,  0.0f, -1.0f},
+            {0.0f, -1.0f,  0.0f},
+            {0.0f, -1.0f,  0.0f}
+        };
+        
+        glm::mat4 projection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 300.0f);
+        GLint oldViewport[4];
+        GLint oldFramebuffer;
+
+        glGetIntegerv(GL_VIEWPORT, oldViewport);
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFramebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_environmentFramebuffer);
+        glViewport(0, 0, ENVIRONMENT_SIZE, ENVIRONMENT_SIZE);
+
+        for (int face = 0; face < 6; face++) {
+            glFramebufferTexture2D(
+                GL_FRAMEBUFFER,
+                GL_COLOR_ATTACHMENT0,
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+                targetTexture,
+                0
+            );
+            glDepthMask(GL_TRUE);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glm::mat4 view = glm::lookAt(eye, eye + directions[face], upDirections[face]);
+
+            if (m_showSky) {
+                glDisable(GL_DEPTH_TEST);
+                glDepthMask(GL_FALSE);
+
+                m_skyShader.bind();
+
+                glm::mat4 inverseProjection = glm::inverse(projection);
+                glm::mat3 inverseViewRotation = glm::transpose(glm::mat3(view));
+
+                glUniformMatrix4fv(m_skyShader.getUniformLocation("inverseProjection"), 1, GL_FALSE, glm::value_ptr(inverseProjection));
+                glUniformMatrix3fv(m_skyShader.getUniformLocation("inverseViewRotation"), 1, GL_FALSE, glm::value_ptr(inverseViewRotation));
+                glUniform3fv(m_skyShader.getUniformLocation("horizonColor"), 1, glm::value_ptr(m_horizonColor));
+                glUniform3fv(m_skyShader.getUniformLocation("zenithColor"), 1, glm::value_ptr(m_zenithColor));
+                glBindVertexArray(m_skyVAO);
+                glDrawArrays(GL_TRIANGLES, 0, 3);
+                glBindVertexArray(0);
+                glDepthMask(GL_TRUE);
+            }
+
+            glEnable(GL_DEPTH_TEST);
+
+            glm::mat4 viewProjection = projection * view;
+
+            drawSceneFromCamera(drawItems, viewProjection, eye, m_enableHaze && m_showSky, true, forBase);
+        }
+
+        glBindFramebuffer(GL_FRAMEBUFFER, oldFramebuffer);
+        glViewport(oldViewport[0], oldViewport[1], oldViewport[2], oldViewport[3]);
+
+        if (forBase) 
+        {
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, targetTexture);
+            glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+            glActiveTexture(GL_TEXTURE0);
         }
     }
 
@@ -502,6 +707,14 @@ public:
                 &m_baseRoughness,
                 0.1f,
                 1.0f);
+            ImGui::Checkbox("Environment mapping", &m_enableEnvironmentMapping);
+            ImGui::SliderFloat("Env mapping reflection strength", &m_reflectionStrength, 0.0f, 1.0f);
+
+            ImGui::SliderFloat(
+            "Base environment strength",
+            &m_baseEnvironmentStrength,
+            0.0f,
+            2.0f);
 
             ImGui::End();
 
@@ -618,7 +831,12 @@ public:
             }
 
             for (GPUMesh& mesh : m_baseMeshes) {
-                drawItems.push_back({&mesh, m_baseModelMatrix, &m_baseTexture, true, nullptr, m_baseUsePBR, m_baseMetallic, m_baseRoughness});
+                DrawItem item {
+                    &mesh, m_baseModelMatrix, &m_baseTexture, true, nullptr, m_baseUsePBR, m_baseMetallic, m_baseRoughness
+                };
+
+                item.isBase = true;
+                drawItems.push_back(item);
             }
 
             const glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;
@@ -630,12 +848,15 @@ public:
                 Texture* colorTexture =
                     mesh.hasTextureCoords() ? &m_texture : nullptr;
 
-                drawItems.push_back({
+                DrawItem item{
                     &mesh,
                     m_modelMatrix,
                     colorTexture,
                     m_useMaterial
-                });
+                };
+
+                item.isRover = true;
+                drawItems.push_back(item);
             }
 
 
@@ -694,12 +915,15 @@ public:
             }
 
            for (GPUMesh& headMesh : m_headMeshes) {
-                drawItems.push_back({
-                    &headMesh,
-                    headModelMatrix,
-                    nullptr,
-                    true
-                });
+               DrawItem item{
+                   &headMesh,
+                   headModelMatrix,
+                   nullptr,
+                   true
+               };
+
+               item.isRover = true;
+               drawItems.push_back(item);
             }
 
             m_defaultShader.bind();
@@ -814,6 +1038,14 @@ public:
             m_groundNormalTexture.bind(GL_TEXTURE2);
             m_texture.bind(GL_TEXTURE0);
 
+            if (m_enableEnvironmentMapping && m_reflectionStrength > 0.0f) {
+                captureEnvironment(drawItems);
+            }
+
+            if (m_enableEnvironmentMapping && m_baseUsePBR && m_baseEnvironmentStrength > 0.0f) {
+                captureEnvironment(drawItems, true);
+            }
+
             const glm::mat4 cameraViewProjection =
                 m_projectionMatrix * viewMatrix;
 
@@ -821,7 +1053,7 @@ public:
                 drawItems,
                 cameraViewProjection,
                 cameraPosition,
-                m_showSky);
+                m_enableHaze && m_showSky);
             
             const glm::vec3 markerPosition = sunPosition;
 
@@ -1177,6 +1409,17 @@ private:
     GLuint m_shadowFramebuffer { 0 };
     bool m_enableShadows {true};
     float m_shadowBias { 0.00005f };
+
+    // needed for env mapping
+    static constexpr int ENVIRONMENT_SIZE = 128;
+    GLuint m_environmentTexture { 0 };
+    GLuint m_environmentFallbackTexture { 0 };
+    GLuint m_environmentFramebuffer { 0 };
+    GLuint m_environmentDepthBuffer { 0 };
+    bool m_enableEnvironmentMapping = true;
+    float m_reflectionStrength = 0.3f;
+    GLuint m_baseEnvironmentTexture { 0 };
+    float m_baseEnvironmentStrength { 1.0f };
 };
 
 int main()
