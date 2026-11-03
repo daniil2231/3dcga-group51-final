@@ -38,6 +38,9 @@ struct DrawItem{
     Texture* colorTexture;
     bool useMaterial;
     Texture* normalTexture = nullptr;
+    bool usePBR = false;
+    float metallic = 0.0f;
+    float roughness = 0.5f;
 };
 
 struct SceneryInstance {
@@ -373,6 +376,12 @@ public:
 
             glActiveTexture(GL_TEXTURE0);
 
+            glUniform1i(m_defaultShader.getUniformLocation("usePBR"), item.usePBR);
+
+            glUniform1f(m_defaultShader.getUniformLocation("metallic"), item.metallic);
+
+            glUniform1f(m_defaultShader.getUniformLocation("roughness"), item.roughness);
+
             item.mesh->draw(m_defaultShader);
         }
     }
@@ -479,6 +488,20 @@ public:
                 &m_minimapHalfExtent,
                 8.0f,
                 30.0f);
+
+                ImGui::Checkbox("Base PBR shading", &m_baseUsePBR);
+
+            ImGui::SliderFloat(
+                "Base metallic",
+                &m_baseMetallic,
+                0.0f,
+                1.0f);
+
+            ImGui::SliderFloat(
+                "Base roughness",
+                &m_baseRoughness,
+                0.1f,
+                1.0f);
 
             ImGui::End();
 
@@ -595,7 +618,7 @@ public:
             }
 
             for (GPUMesh& mesh : m_baseMeshes) {
-                drawItems.push_back({&mesh, m_baseModelMatrix, &m_baseTexture, true});
+                drawItems.push_back({&mesh, m_baseModelMatrix, &m_baseTexture, true, nullptr, m_baseUsePBR, m_baseMetallic, m_baseRoughness});
             }
 
             const glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;
@@ -1107,6 +1130,11 @@ private:
     };
 
     std::vector<GPUMesh> m_baseMeshes;
+
+    bool m_baseUsePBR { true };
+    float m_baseMetallic { 1.0f };
+    float m_baseRoughness { 0.35f };
+
     Texture m_baseTexture;
     glm::mat4 m_baseModelMatrix =
         glm::translate(glm::mat4(1.0f), glm::vec3(19.0f, -0.598f, 11.0f))

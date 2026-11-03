@@ -3,6 +3,7 @@
 #include <framework/disable_all_warnings.h>
 DISABLE_WARNINGS_PUSH()
 #include <GLFW/glfw3.h>
+#include <imgui/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 DISABLE_WARNINGS_POP()
@@ -56,26 +57,30 @@ void Camera::updateInput()
     constexpr float lookSpeed = 0.0035f;
 
     if (m_userInteraction) {
-        glm::vec3 localMoveDelta { 0 };
-        const glm::vec3 right = glm::normalize(glm::cross(m_forward, m_up));
-        if (m_pWindow->isKeyPressed(GLFW_KEY_A))
-            m_position -= moveSpeed * right;
-        if (m_pWindow->isKeyPressed(GLFW_KEY_D))
-            m_position += moveSpeed * right;
-        if (m_pWindow->isKeyPressed(GLFW_KEY_W))
-            m_position += moveSpeed * m_forward;
-        if (m_pWindow->isKeyPressed(GLFW_KEY_S))
-            m_position -= moveSpeed * m_forward;
-        if (m_pWindow->isKeyPressed(GLFW_KEY_R))
-            m_position += moveSpeed * m_up;
-        if (m_pWindow->isKeyPressed(GLFW_KEY_F))
-            m_position -= moveSpeed * m_up;
+        const ImGuiIO& io = ImGui::GetIO();
+        // Let ImGui handle typing without moving the camera.
+        if (!io.WantCaptureKeyboard) {
+            const glm::vec3 right = glm::normalize(glm::cross(m_forward, m_up));
+            if (m_pWindow->isKeyPressed(GLFW_KEY_A))
+                m_position -= moveSpeed * right;
+            if (m_pWindow->isKeyPressed(GLFW_KEY_D))
+                m_position += moveSpeed * right;
+            if (m_pWindow->isKeyPressed(GLFW_KEY_W))
+                m_position += moveSpeed * m_forward;
+            if (m_pWindow->isKeyPressed(GLFW_KEY_S))
+                m_position -= moveSpeed * m_forward;
+            if (m_pWindow->isKeyPressed(GLFW_KEY_R))
+                m_position += moveSpeed * m_up;
+            if (m_pWindow->isKeyPressed(GLFW_KEY_F))
+                m_position -= moveSpeed * m_up;
+        }
 
+        // Track the cursor even over the UI to avoid a jump afterwards.
         const glm::dvec2 cursorPos = m_pWindow->getCursorPos();
         const glm::vec2 delta = lookSpeed * glm::vec2(cursorPos - m_prevCursorPos);
         m_prevCursorPos = cursorPos;
 
-        if (m_pWindow->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+        if (!io.WantCaptureMouse && m_pWindow->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
             if (delta.x != 0.0f)
                 rotateY(delta.x);
             if (delta.y != 0.0f)

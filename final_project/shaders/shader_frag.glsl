@@ -29,6 +29,9 @@ uniform sampler2D shadowMap;
 uniform sampler2D normalMap;
 uniform bool useNormalMap;
 uniform float normalStreangth;
+uniform bool usePBR;
+uniform float metallic;
+uniform float roughness;
 
 in vec3 fragPosition;
 in vec3 fragNormal;
@@ -72,14 +75,80 @@ float lightVisibility(vec3 geometricNormal, vec3 L)
             float nearestDepth =
                 texture(shadowMap, lightCoords.xy + offset).r;
 
-            visibility +=
-                (lightCoords.z - bias <= nearestDepth)
-                ? 1.0
-                : 0.0;
+            visibility += (lightCoords.z - bias <= nearestDepth) ? 1.0: 0.0;
         }
     }
 
     return visibility / 9.0;
+}
+
+const float PI = 3.14159265359;
+
+float distributionGGX(float NdotH, float r)
+{
+    float alpha = pow(r, 2.0);
+    float alphaSquared = pow(alpha, 2.0);
+    float denominator = pow(NdotH, 2.0) * (alphaSquared - 1.0) + 1.0;
+    float result = alphaSquared / max(PI * pow(denominator, 2.0), 0.00000001);
+
+    return result;
+}
+
+//masking function
+float geometryGGX(float NdotDirection, float r)
+{
+    float alpha = pow(r, 2.0);
+    float alphaSquared = pow(alpha, 2.0);
+    float root = sqrt(alphaSquared * (1.0 - alphaSquared) * pow(NdotDirection, 2.0));
+    float result = (2.0 * NdotDirection) / max(NdotDirection + root, 0.000001);
+
+    return result;
+}
+
+vec3 fresnelSchlick(float VdotH, vec3 F0)
+{
+    float grazing = pow(1.0 - clamp(VdotH, 0.0, 1.0), 5.0);
+    vec3 difference = vec3(1.0) - F0;
+    vec3 result = F0 + difference * grazing;
+
+    return result;
+}
+
+vec3 calculatePBR(vec3 albedo, vec3 N, vec3 V, vec3 L)
+{
+    float m = clamp(metallic, 0.0, 1.0);
+    float r = clamp(roughness, 0.1, 1.0);
+
+    float NdotL = max(dot(N,L), 0.0);
+    float NdotV = max(dot(N,V), 0.0);
+
+    if(NdotL <= 0.0 || NdotV <= 0.0)
+    {
+        return vec3(0.0);
+    }
+
+    vec3 halfway = L + V;
+    if(dot(halfway, halfway) < 0.000001)
+    {
+        return vec3(0.0);
+    }
+
+    vec3 H = normalize(halfway);
+    float NdotH = max(dot(N,H), 0.0);
+    float VdotH = max(dot(V,H), 0.0);
+
+    vec3 F0 = mix(vec3(0.4), albedo, m);
+    vec3 F = fresnelSchlick(VdotH, F0);
+    float D = distributionGGX(NdotH, r);
+    float G = geometryGGX(NdotV, r) * geometryGGX(NdotL, r);
+    
+    vec3 specularBRDF = (D*G*F) / max(4.0 * NdotV * NdotL, 0.000001);
+    vec3 diffuseWeight = (vec3(1.0) - F) * (1.0 - m);
+    vec3 diffuseBRDF = diffuseWeight * albedo / PI;
+
+    vec3 radiance = sunColor * sunIntensity;
+
+    return (diffuseBRDF + specularBRDF) * radiance * NdotL;
 }
 
 void main()
@@ -147,6 +216,21 @@ void main()
     vec3 specular = ks * sunColor * specularFactor * sunIntensity;
     float visibility = lightVisibility(fragNormal, L);
     vec3 finalColor = ambient + visibility * (diffuse + specular);
+
+    if(usePBR)
+    {
+        vec3 albedo = clamp(baseColor, vec3(0.0), vec3(1.0));
+        if(hasTexCoords)
+        {
+            albedo = pow(albedo, vec3(2.2));
+        }
+        vec3 directLight = calculatePBR(albedo, N, V, L);
+        vec3 indirectApprox = ambientStreantgh * albedo * (1.0 - clamp(metallic, 0.0, 1.0));
+        vec3 linearColor = indirectApprox + visibility * directLight;
+        vec3 mappedColor = linearColor / (linearColor + vec3(1.0));
+
+        finalColor = pow(max(mappedColor, vec3(0.0)), vec3(1.0 / 2.2));
+    }
 
     if (enableHaze) {
         vec3 toSurface = fragPosition - cameraPos;
