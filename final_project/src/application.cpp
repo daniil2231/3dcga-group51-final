@@ -24,6 +24,9 @@ DISABLE_WARNINGS_POP()
 #include <optional>
 #include <cmath>
 #include <stdexcept>
+#include <filesystem>
+#include <iomanip>
+#include <sstream>
 
 struct WheelAttachment{
     glm::vec3 axlCenter;
@@ -44,6 +47,8 @@ struct DrawItem{
     // for env mapping
     bool isRover = false;
     bool isBase = false;
+    //for the screen
+    bool unlit = false;
 };
 
 struct SceneryInstance {
@@ -83,6 +88,45 @@ public:
                 vertex.texCoord.y = 1.0f - vertex.texCoord.y;
             }
             m_baseMeshes.emplace_back(mesh);
+        }
+
+        //load screen case without normalization
+        m_displayHousingMeshes = GPUMesh::loadMeshGPU(
+            RESOURCE_ROOT "resources/mission_display_housing.obj", false
+        );
+
+        for(Mesh& mesh: loadMesh(RESOURCE_ROOT "resources/mission_display_screen.obj"))
+        {
+            for(Vertex& vertex : mesh.vertices)
+            {
+                vertex.texCoord.y = 1.0f - vertex.texCoord.y;//image orientation correction
+            }
+            m_displayScreenMeshes.emplace_back(mesh);
+        }
+
+        m_displayFrames.reserve(DISPLAY_FRAME_COUNT);//capacity for animation frames
+
+        glActiveTexture(GL_TEXTURE0);//the texture to be used for animation
+
+        //processing the frames
+        for(int i = 0; i < DISPLAY_FRAME_COUNT; i++)
+        {
+            std::ostringstream filename;
+            filename << "frame_" << std::setfill('0')  << std::setw(3) << i << ".png";
+            const std::filesystem::path framePath = std::filesystem::path(RESOURCE_ROOT "resources/mission_display") / filename.str();
+
+            if(!std::filesystem::exists(framePath))
+            {
+                throw std::runtime_error("Missing display animation frame: " + framePath.string());
+            }
+
+            //invoking the texture for the current frame
+            m_displayFrames.emplace_back(framePath);
+            m_displayFrames.back().bind(GL_TEXTURE0);
+
+            //image settings for the texture
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         }
 
         setupScenery();
@@ -481,6 +525,8 @@ public:
 
             glUniform1f(m_defaultShader.getUniformLocation("roughness"), item.roughness);
 
+            glUniform1i(m_defaultShader.getUniformLocation("unlit"), item.unlit);
+
             item.mesh->draw(m_defaultShader);
         }
     }
@@ -651,7 +697,8 @@ public:
             // This is your game loop
             // Put your real-time logic and rendering in here
             const double currentTime = glfwGetTime();
-            const float deltaTime = static_cast<float>(currentTime - previousTime);
+            const double elapsedSeconds = glm::max(currentTime - previousTime, 0.0);
+            const float deltaTime = static_cast<float>(elapsedSeconds);
             previousTime = currentTime;
 
             m_window.updateInput();
@@ -785,7 +832,42 @@ public:
                 0.0f,
                 0.70f);
 
+                ImGui::Separator();
+            ImGui::TextUnformatted("Mission display");
+
+            ImGui::Checkbox(
+                "Play display animation",
+                &m_displayPlaying);
+
+            if (ImGui::Button("Restart display animation")) {
+                m_displayAnimationTime = 0.0;
+            }
+
+            ImGui::DragFloat3(
+                "Display position",
+                glm::value_ptr(m_displayPosition),
+                0.05f);
+
+            ImGui::SliderFloat(
+                "Display heading",
+                &m_displayYawDegrees,
+                -180.0f,
+                180.0f);
+
+            ImGui::SliderFloat(
+                "Display scale",
+                &m_displayScale,
+                0.25f,
+                2.0f);
+
             ImGui::End();
+
+            const double displayDuration = static_cast<double>(m_displayFrames.size()) / DISPLAY_FPS;
+            if(m_displayPlaying)
+            {
+                m_displayAnimationTime = std::fmod(m_displayAnimationTime + elapsedSeconds, displayDuration);//advancing playback time with a loop
+            }
+            const std::size_t displayFrameIndex = static_cast<std::size_t>(std::floor(m_displayAnimationTime * DISPLAY_FPS)) % m_displayFrames.size();//create a frame index to select correct texture
 
             const float transitionStep = deltaTime / glm::max(m_dayNightDuration, 0.1f);
 
@@ -940,6 +1022,27 @@ public:
                 };
 
                 item.isBase = true;
+                drawItems.push_back(item);
+            }
+
+            const glm::mat4 displayModelMatrix = glm::translate(glm::mat4(1.0f), m_displayPosition)
+                                                * glm::rotate(glm::mat4(1.0f), glm::radians(m_displayYawDegrees), glm::vec3(0.0f, 1.0f, 0.0f))
+                                                * glm::scale(glm::mat4(1.0f), glm::vec3(m_displayScale));
+
+            for(GPUMesh& mesh : m_displayHousingMeshes)
+            {
+                drawItems.push_back({&mesh, displayModelMatrix, nullptr, true});
+            }
+
+            Texture* currentDisplayFrame = &m_displayFrames[displayFrameIndex];
+
+            //render the actual display with the appropriate chosen frame to be displayed in the texture
+            for(GPUMesh& mesh : m_displayScreenMeshes)
+            {
+                DrawItem item{
+                    &mesh, displayModelMatrix, currentDisplayFrame, true
+                };
+                item.unlit = true;
                 drawItems.push_back(item);
             }
 
@@ -1489,6 +1592,19 @@ private:
             -1.0f
         }
     };
+
+    std::vector<GPUMesh> m_displayHousingMeshes;
+    std::vector<GPUMesh> m_displayScreenMeshes;// rectangular screen for the animation 
+    std::vector<Texture> m_displayFrames;//animation textures
+
+    static constexpr int DISPLAY_FRAME_COUNT = 236;
+    static constexpr double DISPLAY_FPS = 25.0;
+
+    bool m_displayPlaying {true}; //pause/resume
+    double m_displayAnimationTime {0.0};//records animation time
+    glm::vec3 m_displayPosition { 16.4f, -0.595f, 8.4f };
+    float m_displayYawDegrees {-125.0f};
+    float m_displayScale {1.0f};
 
     std::vector<GPUMesh> m_baseMeshes;
 

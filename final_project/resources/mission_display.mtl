@@ -1,0 +1,40 @@
+# Flat colours; the animated screen texture is assigned by the application.
+newmtl housing
+Ka 0 0 0
+Kd 0.76 0.74 0.66
+Ks 0.10 0.10 0.10
+Ns 24
+d 1
+illum 2
+
+newmtl frame
+Ka 0 0 0
+Kd 0.065 0.085 0.09
+Ks 0.10 0.10 0.10
+Ns 24
+d 1
+illum 2
+
+newmtl support
+Ka 0 0 0
+Kd 0.2 0.25 0.26
+Ks 0.10 0.10 0.10
+Ns 24
+d 1
+illum 2
+
+newmtl accent
+Ka 0 0 0
+Kd 0.66 0.25 0.09
+Ks 0.10 0.10 0.10
+Ns 24
+d 1
+illum 2
+
+newmtl screen
+Ka 0 0 0
+Kd 0.025 0.36 0.43
+Ks 0.10 0.10 0.10
+Ns 24
+d 1
+illum 2

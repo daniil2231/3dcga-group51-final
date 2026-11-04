@@ -1,0 +1,12 @@
+{
+  "source": "48402c5e68b53ecd535826d1936f2f7e.gif",
+  "source_frame_count": 472,
+  "source_duration_seconds": 9.44,
+  "frame_count": 236,
+  "fps": 25,
+  "frame_duration_seconds": 0.04,
+  "playback_duration_seconds": 9.44,
+  "width": 400,
+  "height": 300,
+  "filename_pattern": "frame_{index:03d}.png"
+}

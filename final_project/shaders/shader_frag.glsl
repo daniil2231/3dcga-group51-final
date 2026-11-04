@@ -37,6 +37,7 @@ uniform samplerCube environmentMap;
 uniform float reflectionStrength;
 uniform bool usePBREnvironment;
 uniform float pbrEnvironmentStrength;
+uniform bool unlit;
 
 in vec3 fragPosition;
 in vec3 fragNormal;
@@ -269,6 +270,10 @@ void main()
         vec3 reflectionDirection = reflect(-V, N);
         vec3 environmentColor = texture(environmentMap, reflectionDirection).rgb;
         finalColor = mix(finalColor, environmentColor, reflectionStrength);
+    }
+
+    if(unlit){
+        finalColor = baseColor;
     }
 
     if (enableHaze) {
