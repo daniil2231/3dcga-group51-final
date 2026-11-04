@@ -24,6 +24,7 @@ uniform float ambientStreantgh;
 uniform vec3 ambientColor;
 uniform vec3 cameraPos;
 uniform bool enableShadows;
+uniform bool enablePCF;
 uniform float shadowBias;
 uniform mat4 lightViewProjection;
 uniform sampler2D shadowMap;
@@ -71,6 +72,11 @@ float lightVisibility(vec3 geometricNormal, vec3 L)
 
     vec2 texelSize =
         1.0 / vec2(textureSize(shadowMap, 0));
+
+    if (!enablePCF) {
+        float vis2 = (lightCoords.z - bias <= texture(shadowMap, lightCoords.xy).r) ? 1.0: 0.0;
+        return vis2;
+    }
 
     float visibility = 0.0;
 

@@ -765,6 +765,7 @@ public:
                 : "Directional: parallel light rays everywhere.");
             
             ImGui::Checkbox("Shadows", &m_enableShadows);
+            ImGui::Checkbox("PCF", &m_enablePCF);
             ImGui::SliderFloat("Shadow bias",&m_shadowBias,0.0f,0.0002f,"%.6f");
 
             ImGui::Checkbox("Ground normal mapping", &m_enableNormalMapping);
@@ -1209,8 +1210,8 @@ public:
             
             m_defaultShader.bind();
 
-            glUniform1i(
-            m_defaultShader.getUniformLocation("enableShadows"), m_enableShadows);
+            glUniform1i(m_defaultShader.getUniformLocation("enableShadows"), m_enableShadows);
+            glUniform1i(m_defaultShader.getUniformLocation("enablePCF"), m_enablePCF);
             glUniform1f(m_defaultShader.getUniformLocation("shadowBias"),m_shadowBias);
 
             glUniformMatrix4fv(m_defaultShader.getUniformLocation("lightViewProjection"),1,GL_FALSE,glm::value_ptr(lightViewProjection));
@@ -1677,6 +1678,7 @@ private:
     GLuint m_shadowDepthTexture { 0 };
     GLuint m_shadowFramebuffer { 0 };
     bool m_enableShadows {true};
+    bool m_enablePCF{true};
     float m_shadowBias { 0.00005f };
 
     // needed for env mapping
