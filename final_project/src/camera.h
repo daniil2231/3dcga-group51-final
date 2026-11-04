@@ -14,6 +14,7 @@ public:
 
     void updateInput();
     void setUserInteraction(bool enabled);
+    void setPosition(glm::vec3& position);
 
     glm::vec3 cameraPos() const;
     glm::mat4 viewMatrix() const;

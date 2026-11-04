@@ -687,6 +687,20 @@ public:
         }
     }
 
+    void keepCameraInsideSphere()
+    {
+        glm::vec3 position = camera.cameraPos();
+
+        glm::vec3 centerToCamPos = position - m_cameraCenter;
+        float distance = glm::length(centerToCamPos);
+
+        if (distance > m_cameraRadius) {
+            glm::vec3 normal = centerToCamPos / distance;
+            glm::vec3 correctedPosition = m_cameraCenter + normal * m_cameraRadius;
+            camera.setPosition(correctedPosition);
+        }
+    }
+
     void update()
     {
         int dummyInteger = 0; // Initialized to 0
@@ -704,6 +718,9 @@ public:
             m_window.updateInput();
             if (!useRoverHeadCam) {
                 camera.updateInput();
+                if (cam1Selected && m_enableCameraCollisions) {
+                    keepCameraInsideSphere();
+                }
             }
 
             // Use ImGui for easy input/output of ints, floats, strings, etc...
@@ -859,6 +876,11 @@ public:
                 &m_displayScale,
                 0.25f,
                 2.0f);
+
+            ImGui::Checkbox(
+                "Limit free camera to main area",
+                &m_enableCameraCollisions
+            );
 
             ImGui::End();
 
@@ -1475,6 +1497,11 @@ private:
 
     // rover head cam
     bool useRoverHeadCam = false;
+
+    // for camera collisions
+    glm::vec3 m_cameraCenter{ 6.0f, 0.0f, 1.0f };
+    float m_cameraRadius = 30.0f;
+    bool m_enableCameraCollisions = true;
 
     //sun's direction from the surface to its position
     glm::vec3 m_sunDirection { 1.0f, 1.0f, 0.5f};

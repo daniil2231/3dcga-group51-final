@@ -20,6 +20,11 @@ Camera::Camera(Window* pWindow, const glm::vec3& pos, const glm::vec3& forward)
 {
 }
 
+void Camera::setPosition(glm::vec3& position)
+{
+    m_position = position;
+}
+
 void Camera::setUserInteraction(bool enabled)
 {
     m_userInteraction = enabled;
