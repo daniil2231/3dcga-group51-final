@@ -993,10 +993,9 @@ public:
             glm::vec3 cameraPosition = camera.cameraPos();
 
             if (useRoverHeadCam) {
-                // used AI to calculate the values of where the camera lens exactly is
-                glm::vec3 eye{ 0.1964f, 0.8335f, -0.1283f };
-                glm::vec3 forward{ 0.7389f, 0.0107f, -0.6737f };
-                glm::vec3 up{ -0.0665f, 0.9962f, -0.0571f };
+                glm::vec3 eye{ 0.2f, 0.83f, -0.13f };
+                glm::vec3 forward{ 0.74f, 0.01f, -0.67f };
+                glm::vec3 up{ -0.067f, 0.99f, -0.057f };
                 cameraPosition = glm::vec3(headModelMatrix * glm::vec4(eye, 1.0f));
                 glm::vec3 headForward = glm::vec3(headModelMatrix * glm::vec4(forward, 0.0f));
                 glm::vec3 headUp = glm::vec3(headModelMatrix * glm::vec4(up, 0.0f));
@@ -1415,7 +1414,7 @@ public:
     {
         switch (key) {
             case GLFW_KEY_1:
-                // if we are currently in cam 2
+                // if we are currently in cam 2/3
                 if (!cam1Selected) {
                     // switch cam to cam 1's saved location
                     useRoverHeadCam = false;
@@ -1428,15 +1427,13 @@ public:
             case GLFW_KEY_2:
                 // opposite to code above ^
                 if (cam1Selected) {
-                    useRoverHeadCam = false;
                     oldCam1 = camera;
                     oldCam1.setUserInteraction(false);
-
-                    oldCam2.setUserInteraction(false);
-                    camera = oldCam2;
-
-                    cam1Selected = false;
                 }
+                cam1Selected = false;
+                useRoverHeadCam = false;
+                oldCam2.setUserInteraction(false);
+                camera = oldCam2;
                 break;
             case GLFW_KEY_3:
                 if (!useRoverHeadCam) {
