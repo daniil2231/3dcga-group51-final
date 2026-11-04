@@ -722,13 +722,55 @@ public:
                     keepCameraInsideSphere();
                 }
             }
-
             // Use ImGui for easy input/output of ints, floats, strings, etc...
             ImGui::Begin("Window");
-            ImGui::InputInt("This is an integer input", &dummyInteger); // Use ImGui::DragInt or ImGui::DragFloat for larger range of numbers.
-            ImGui::Text("Value is: %i", dummyInteger); // Use C printf formatting rules (%i is a signed integer)
             ImGui::Checkbox("Use material if no texture", &m_useMaterial);
 
+            // PBR
+            ImGui::Checkbox("Base PBR shading", &m_baseUsePBR);
+            ImGui::SliderFloat(
+                "Base metallic",
+                &m_baseMetallic,
+                0.0f,
+                1.0f);
+            ImGui::SliderFloat(
+                "Base environment strength",
+                &m_baseEnvironmentStrength,
+                0.0f,
+                2.0f);
+            
+            // material textures
+            ImGui::SliderFloat(
+                "Base roughness",
+                &m_baseRoughness,
+                0.1f,
+                1.0f);
+            
+            // normal mapping
+            ImGui::Checkbox("Ground normal mapping", &m_enableNormalMapping);
+            ImGui::SliderFloat("Ground normal streangth", &m_normalStrength, 0.0f, 2.0f);
+
+            // env mapping
+            ImGui::Checkbox("Environment mapping", &m_enableEnvironmentMapping);
+            ImGui::SliderFloat("Env mapping reflection strength", &m_reflectionStrength, 0.0f, 1.0f);
+
+            // bezier
+            ImGui::Checkbox("Draw Bezier curves", &drawCurve);
+            ImGui::SliderFloat(
+                "Rover speed in units per sec",
+                &m_roverSpeed,
+                0.0f,
+                5.0f);
+            if (ImGui::Checkbox(
+                "Constant speed Bezier",
+                &m_useConstantBezierSpeed)) {
+
+                beziert = 0.0f;
+                bezierCnt = 0;
+                m_distanceAlongPath = 0.0f;
+            }
+
+            // hierarchical
             //angle slider for wheel test
             ImGui::SliderFloat("Wheel angle", &m_wheelAngleDegrees, 0.0f, 360.0f);
 
@@ -739,48 +781,91 @@ public:
             //head slider
             ImGui::SliderFloat("Head Rotation", &m_headYawDegrees, -90.0f, 90.0f);
 
-            // enable drawing of bezier
-            ImGui::Checkbox("Draw Bezier curves", &drawCurve);
+            // minimap
+            ImGui::Checkbox("Show minimap", &m_showMinimap);
+            ImGui::SliderFloat(
+                "Minimap coverage",
+                &m_minimapHalfExtent,
+                8.0f,
+                30.0f);
+
+            // animated textures
+            ImGui::Separator();
+            ImGui::TextUnformatted("Mission display");
+            ImGui::Checkbox(
+                "Play display animation",
+                &m_displayPlaying);
+            if (ImGui::Button("Restart display animation")) {
+                m_displayAnimationTime = 0.0;
+            }
+            ImGui::DragFloat3(
+                "Display position",
+                glm::value_ptr(m_displayPosition),
+                0.05f);
+            ImGui::SliderFloat(
+                "Display heading",
+                &m_displayYawDegrees,
+                -180.0f,
+                180.0f);
+            ImGui::SliderFloat(
+                "Display scale",
+                &m_displayScale,
+                0.25f,
+                2.0f);
+
+            // day and night
+            ImGui::Separator();
+
+            if (ImGui::Button(
+                m_targetNight ? "Switch to day" : "Switch to night")) {
+                m_targetNight = !m_targetNight;
+            }
+
+            ImGui::SliderFloat(
+                "Day/night transition seconds",
+                &m_dayNightDuration,
+                1.0f,
+                8.0f);
+
+            ImGui::SliderFloat(
+                "Night ambient strength",
+                &m_nightAmbientStrength,
+                0.0f,
+                0.70f);
 
             //wheel offset
             //ImGui::SliderFloat("Wheel outward offset", &m_wheelOutwardOffset, 0.0f, 0.25f);
 
+            // shadow mapping and lighting
             ImGui::SliderFloat(
             "Sun azimuth",
             &m_sunAzimuthDegrees,
             -180.0f,
             180.0f);
-
             ImGui::SliderFloat(
             "Sun elevation",
             &m_sunElevationDegrees,
             0.0f,
             90.0f);
-
             ImGui::Checkbox("Point light (at yellow marker)", &m_usePointLight);
             ImGui::SliderFloat("Light / marker distance", &m_sunDistance, 10.0f, 120.0f);
             ImGui::SliderFloat("Light intensity", &m_sunIntensity, 0.0f, 5.0f);
             ImGui::TextUnformatted(m_usePointLight
                 ? "Point: direction varies with surface position."
                 : "Directional: parallel light rays everywhere.");
-            
             ImGui::Checkbox("Shadows", &m_enableShadows);
             ImGui::Checkbox("PCF", &m_enablePCF);
             ImGui::SliderFloat("Shadow bias",&m_shadowBias,0.0f,0.0002f,"%.6f");
 
-            ImGui::Checkbox("Ground normal mapping", &m_enableNormalMapping);
-            ImGui::SliderFloat("Ground normal streangth", &m_normalStrength, 0.0f, 2.0f);
-
             ImGui::Checkbox("Scenery rocks", &m_showScenery);
             ImGui::Checkbox("Procedural sky", &m_showSky);
             ImGui::Checkbox("Distance haze", &m_enableHaze);
-            ImGui::Checkbox("Animate rover", &m_animateRover);
 
-            ImGui::SliderFloat(
-                "Rover speed in units per sec",
-                &m_roverSpeed,
-                0.0f,
-                5.0f);
+            // camera1 collision
+            ImGui::Checkbox(
+                "Limit free camera to main area",
+                &m_enableCameraCollisions
+            );
 
             ImGui::SliderFloat(
                 "Wheel angle offset",
@@ -800,88 +885,6 @@ public:
                     -180.0f,
                     180.0f);
             }
-
-            ImGui::Checkbox("Show minimap", &m_showMinimap);
-
-            ImGui::SliderFloat(
-                "Minimap coverage",
-                &m_minimapHalfExtent,
-                8.0f,
-                30.0f);
-
-                ImGui::Checkbox("Base PBR shading", &m_baseUsePBR);
-
-            ImGui::SliderFloat(
-                "Base metallic",
-                &m_baseMetallic,
-                0.0f,
-                1.0f);
-
-            ImGui::SliderFloat(
-                "Base roughness",
-                &m_baseRoughness,
-                0.1f,
-                1.0f);
-            ImGui::Checkbox("Environment mapping", &m_enableEnvironmentMapping);
-            ImGui::SliderFloat("Env mapping reflection strength", &m_reflectionStrength, 0.0f, 1.0f);
-
-            ImGui::SliderFloat(
-            "Base environment strength",
-            &m_baseEnvironmentStrength,
-            0.0f,
-            2.0f);
-
-            ImGui::Separator();
-
-            if (ImGui::Button(
-                    m_targetNight ? "Switch to day" : "Switch to night")) {
-                m_targetNight = !m_targetNight;
-            }
-
-            ImGui::SliderFloat(
-                "Day/night transition seconds",
-                &m_dayNightDuration,
-                1.0f,
-                8.0f);
-
-            ImGui::SliderFloat(
-                "Night ambient strength",
-                &m_nightAmbientStrength,
-                0.0f,
-                0.70f);
-
-                ImGui::Separator();
-            ImGui::TextUnformatted("Mission display");
-
-            ImGui::Checkbox(
-                "Play display animation",
-                &m_displayPlaying);
-
-            if (ImGui::Button("Restart display animation")) {
-                m_displayAnimationTime = 0.0;
-            }
-
-            ImGui::DragFloat3(
-                "Display position",
-                glm::value_ptr(m_displayPosition),
-                0.05f);
-
-            ImGui::SliderFloat(
-                "Display heading",
-                &m_displayYawDegrees,
-                -180.0f,
-                180.0f);
-
-            ImGui::SliderFloat(
-                "Display scale",
-                &m_displayScale,
-                0.25f,
-                2.0f);
-
-            ImGui::Checkbox(
-                "Limit free camera to main area",
-                &m_enableCameraCollisions
-            );
 
             ImGui::End();
 
@@ -949,27 +952,79 @@ public:
                     {bezierC3P0, bezierC3P1, bezierC3P2, bezierC3P3}
                 };
 
-                float distMoved = m_roverSpeed * deltaTime;
-                m_distanceAlongPath += distMoved;
-                m_distanceAlongPath = std::fmod(m_distanceAlongPath, m_pathLength);
+                // Remember the previous position for wheel rotation.
+                const glm::vec3* previousCurve = curves[bezierCnt];
 
-                float distOnCurve = m_distanceAlongPath;
-                bezierCnt = 0;
-                while (bezierCnt < 2 && distOnCurve >= m_curveDistances[bezierCnt].back()) {
-                    distOnCurve -= m_curveDistances[bezierCnt].back();
-                    bezierCnt++;
+                glm::vec3 previousPosition = bezier(
+                    beziert,
+                    previousCurve[0],
+                    previousCurve[1],
+                    previousCurve[2],
+                    previousCurve[3]);
+
+                float distMoved = 0.0f;
+
+                if (m_useConstantBezierSpeed) {
+                    distMoved = m_roverSpeed * deltaTime;
+                    m_distanceAlongPath += distMoved;
+
+                    // robot starts over when it reaches the end
+                    m_distanceAlongPath = std::fmod(
+                        m_distanceAlongPath,
+                        m_pathLength);
+
+                    float distOnCurve = m_distanceAlongPath;
+                    bezierCnt = 0;
+
+                    while (bezierCnt < 2 && distOnCurve >= m_curveDistances[bezierCnt].back()) {
+                        distOnCurve -= m_curveDistances[bezierCnt].back();
+                        bezierCnt++;
+                    }
+
+                    beziert = bezierTFromDist(bezierCnt, distOnCurve);
                 }
-                beziert = bezierTFromDist(bezierCnt, distOnCurve);
+                else {
+                    beziert += m_bezierStep;
+
+                    // move to next curve when t is 1
+                    while (beziert >= 1.0f) {
+                        beziert -= 1.0f;
+                        bezierCnt = (bezierCnt + 1) % 3;
+                    }
+                }
+
                 const glm::vec3* curve = curves[bezierCnt];
-                glm::vec3 newPosition = bezier(beziert, curve[0], curve[1], curve[2], curve[3]);
-                glm::vec3 tangent = bezierTangent(beziert, curve[0], curve[1], curve[2], curve[3]);
+
+                glm::vec3 newPosition = bezier(
+                    beziert,
+                    curve[0],
+                    curve[1],
+                    curve[2],
+                    curve[3]);
+
+                glm::vec3 tangent = bezierTangent(
+                    beziert,
+                    curve[0],
+                    curve[1],
+                    curve[2],
+                    curve[3]);
 
                 m_roverPosition.x = newPosition.x;
                 m_roverPosition.z = newPosition.z;
-                
-                // making the robot face toward where it is going
+
+                // Face the direction of movement.
                 if (tangent.x * tangent.x + tangent.z * tangent.z > 0.000001f) {
-                    m_roverYawDegrees = glm::degrees(std::atan2(-tangent.z, tangent.x));
+                    m_roverYawDegrees = glm::degrees(
+                        std::atan2(-tangent.z, tangent.x));
+                }
+
+                // In the old mode, measure how far we moved for wheel rotation.
+                if (!m_useConstantBezierSpeed) {
+                    glm::vec2 movement(
+                        newPosition.x - previousPosition.x,
+                        newPosition.z - previousPosition.z);
+
+                    distMoved = glm::length(movement);
                 }
 
                 m_roverTravelDistance += static_cast<double>(distMoved);
@@ -1564,6 +1619,8 @@ private:
 
     bool m_animateRover { true };
     float m_roverSpeed = 1.0f;
+    bool m_useConstantBezierSpeed = true;
+    float m_bezierStep = 0.001f;
     static constexpr int BEZIER_SAMPLES = 1000;
     std::vector<float> m_curveDistances[3];
     float m_distanceAlongPath = 0.0f;
