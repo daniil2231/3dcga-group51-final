@@ -716,20 +716,76 @@ public:
             0.0f,
             2.0f);
 
+            ImGui::Separator();
+
+            if (ImGui::Button(
+                    m_targetNight ? "Switch to day" : "Switch to night")) {
+                m_targetNight = !m_targetNight;
+            }
+
+            ImGui::SliderFloat(
+                "Day/night transition seconds",
+                &m_dayNightDuration,
+                1.0f,
+                8.0f);
+
+            ImGui::SliderFloat(
+                "Night ambient strength",
+                &m_nightAmbientStrength,
+                0.0f,
+                0.70f);
+
             ImGui::End();
 
+            const float transitionStep = deltaTime / glm::max(m_dayNightDuration, 0.1f);
+
+            //select day/night state
+            if(m_targetNight)
+            {
+                m_nightAmount = glm::min(m_nightAmount + transitionStep, 1.0f);
+            } else {
+                m_nightAmount = glm::max(m_nightAmount - transitionStep, 0.0f);
+            }
+
+            // Ease the movement near the beginning and end.
+            const float nightBlend = glm::smoothstep(0.0f, 1.0f, m_nightAmount);
+
+            //Lower the sun movement bellow the horizon
+            const float currentSunElevation = glm::mix(m_sunElevationDegrees, -15.0f, nightBlend);
+
             const float azimuth = glm::radians(m_sunAzimuthDegrees);
-            const float elevation = glm::radians(m_sunElevationDegrees);
+            const float elevation = glm::radians(currentSunElevation);
 
-            m_sunDirection = glm::vec3(
-            std::cos(elevation) * std::cos(azimuth),
-            std::sin(elevation),
-            std::cos(elevation) * std::sin(azimuth));
+            m_sunDirection = glm::vec3(std::cos(elevation) * std::cos(azimuth),
+                                        std::cos(elevation),
+                                        std::cos(elevation) * std::sin(azimuth));
 
-            // World-space light position, independent of the rover transform.
-            // Also used by the marker so it represents the actual point light.
-            const glm::vec3 sunPosition =
-                glm::normalize(m_sunDirection) * m_sunDistance;
+            
+            //Calculate the position of the sun
+            const glm::vec3 sunPosition = glm::normalize(m_sunDirection) * m_sunDistance;
+
+            //Fade the sunlight while the sun is setting
+            const float sunVisibility = glm::smoothstep(0.0f, 8.0f, currentSunElevation);
+
+            const float currentSunIntensity = m_sunIntensity * sunVisibility;
+
+            //simulate the sun color getting warmer
+            const float sunsetAmount = 1.0f - glm::smoothstep(0.0f, 15.0f, currentSunElevation);
+            
+            //interpolating the values to find the sun color
+            const glm::vec3 currentSunColor = glm::mix(m_sunColor, glm::vec3(1.0f, 0.32f, 0.10f), sunsetAmount);
+
+            //interpolate the ambient haze while the night arises
+            const float currentAmbientStreangth = glm::mix(m_ambientStreangth, m_nightAmbientStrength, nightBlend);
+
+            //calculate the color with the interpolated ambient factor
+            const glm::vec3 currentAmbientColor = glm::mix(glm::vec3(1.0f), m_nightAmbientColor, nightBlend);
+
+            m_horizonColor = glm::mix(m_dayHorizonColor, m_nightHorizonColor, nightBlend);
+            m_zenithColor = glm::mix(m_dayZenithColor, m_nightZenithColor, nightBlend);
+            
+
+
             
             if(m_animateRover)
             {
@@ -796,7 +852,7 @@ public:
             }
 
             // Clear the screen
-            glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+            glClearColor(m_horizonColor.r, m_horizonColor.g, m_horizonColor.b, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // ...
@@ -944,7 +1000,7 @@ public:
             lightProjection = glm::perspective(glm::radians(70.0f), 1.0f, 1.0f, 200.0f);
             } else {
             lightProjection = glm::ortho(-24.0f, 24.0f, -24.0f, 24.0f, 1.0f, 200.0f);
-}
+            }
             const glm::mat4 lightViewProjection = lightProjection * lightView; 
 
             
@@ -1016,15 +1072,20 @@ public:
             glUniform3fv(
                 m_defaultShader.getUniformLocation("sunColor"),
                 1,
-                glm::value_ptr(m_sunColor));
+                glm::value_ptr(currentSunColor));
 
             glUniform1f(
                 m_defaultShader.getUniformLocation("sunIntensity"),
-                m_sunIntensity);
+                currentSunIntensity);
 
             glUniform1f(
                 m_defaultShader.getUniformLocation("ambientStreantgh"),
-                m_ambientStreangth);
+                currentAmbientStreangth);
+
+            glUniform3fv(
+                m_defaultShader.getUniformLocation("ambientColor"),
+                1,
+                glm::value_ptr(currentAmbientColor));
 
             glUniform1i(
                 m_defaultShader.getUniformLocation("colorMap"),
@@ -1068,7 +1129,14 @@ public:
 
             glUniform3fv(
                 m_lightMarkerShader.getUniformLocation("markerPosition"),
-                1, glm::value_ptr(markerPosition));
+                1, glm::value_ptr(sunPosition));
+            
+            const glm::vec3 markerColor = currentSunColor * sunVisibility;
+
+            glUniform3fv(
+                m_lightMarkerShader.getUniformLocation("markerColor"),
+                1,
+                glm::value_ptr(markerColor));
 
             glPointSize(16.0f);
             glBindVertexArray(m_lightMarkerVAO);
@@ -1124,7 +1192,7 @@ public:
                     innerSize,
                     innerSize);
 
-                glClearColor(0.60f, 0.39f, 0.25f, 1.0f);
+                glClearColor(m_horizonColor.r, m_horizonColor.g, m_horizonColor.b, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                 const glm::vec3 minimapTarget { 6.0f, -0.595f, 1.0f };
@@ -1158,7 +1226,7 @@ public:
                     previousViewport[2],
                     previousViewport[3]);
 
-                glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+                glClearColor(m_horizonColor.r, m_horizonColor.g, m_horizonColor.b, 1.0f);
             }
         }
 
@@ -1261,6 +1329,15 @@ private:
     glm::vec3 m_sunDirection { 1.0f, 1.0f, 0.5f};
     glm::vec3 m_sunColor { 1.0f, 0.95f, 0.85f };
     float m_sunIntensity { 0.9f };
+    bool m_targetNight { false };
+    float m_nightAmount { 0.0f };
+    float m_nightAmbientStrength { 0.5f };
+    glm::vec3 m_nightAmbientColor { 0.40f, 0.55f, 0.85f };
+    glm::vec3 m_dayHorizonColor { 0.86f, 0.65f, 0.46f };
+    glm::vec3 m_dayZenithColor { 0.42f, 0.24f, 0.19f };
+    glm::vec3 m_nightHorizonColor { 0.035f, 0.045f, 0.075f };
+    glm::vec3 m_nightZenithColor { 0.008f, 0.012f, 0.030f };
+    float m_dayNightDuration { 4.0f };
     bool m_usePointLight { true };
     float m_sunDistance { 60.0f };
     float m_ambientStreangth {0.15f};
