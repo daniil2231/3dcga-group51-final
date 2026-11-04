@@ -171,6 +171,7 @@ public:
         }
 
         createEnvironmentMap();
+        bezierDistTables();
     }
     ~Application()
     {
@@ -269,6 +270,55 @@ public:
         const float u = 1.0f - t;
 
         return 3.0f * u * u * (P1 - P0) + 6.0f * u * t * (P2 - P1) + 3.0f * t * t * (P3-P2);
+    }
+
+    void bezierDistTables() {
+        glm::vec3 curves[3][4] = {
+            {bezierC1P0, bezierC1P1, bezierC1P2, bezierC1P3},
+            {bezierC2P0, bezierC2P1, bezierC2P2, bezierC2P3},
+            {bezierC3P0, bezierC3P1, bezierC3P2, bezierC3P3}
+        };
+
+        m_pathLength = 0.0f;
+        for (int curve = 0; curve < 3; curve++) {
+            m_curveDistances[curve].clear();
+            m_curveDistances[curve].push_back(0.0f);
+
+            float dist = 0.0f;
+            glm::vec3 previousPoint = curves[curve][0];
+            for (int i = 1; i <= BEZIER_SAMPLES; i++) {
+                float t = static_cast<float>(i) / BEZIER_SAMPLES;
+                glm::vec3 point = bezier(t, curves[curve][0], curves[curve][1], curves[curve][2], curves[curve][3]);
+                glm::vec2 movement = glm::vec2(point.x - previousPoint.x, point.z - previousPoint.z);
+                dist += glm::length(movement);
+                m_curveDistances[curve].push_back(dist);
+                previousPoint = point;
+            }
+
+            m_pathLength += dist;
+        }
+    }
+
+    // converting distance travelled on bezier curve into time
+    float bezierTFromDist(int curveIdx, float targetDist) {
+        const std::vector<float>& distances = m_curveDistances[curveIdx];
+
+        for (int i = 1; i <= BEZIER_SAMPLES; i++) {
+            if (targetDist <= distances[i]) {
+                float before = distances[i - 1];
+                float after = distances[i];
+                float intervalLen = after - before;
+
+                float fraction = 0.0f;
+                if (intervalLen > 0.0f) {
+                    fraction = (targetDist - before) / intervalLen;
+                }
+
+                float t = (static_cast<float>(i - 1) + fraction) / BEZIER_SAMPLES;
+                return t;
+            }
+        }
+        return 1.0f;
     }
 
     void bezierGeometry() {
@@ -601,7 +651,7 @@ public:
             // This is your game loop
             // Put your real-time logic and rendering in here
             const double currentTime = glfwGetTime();
-            const float deltaTime = glm::clamp(static_cast<float>(currentTime - previousTime), 0.0f, 0.1f);
+            const float deltaTime = static_cast<float>(currentTime - previousTime);
             previousTime = currentTime;
 
             m_window.updateInput();
@@ -662,10 +712,10 @@ public:
             ImGui::Checkbox("Animate rover", &m_animateRover);
 
             ImGui::SliderFloat(
-                "Path parameter rate",
-                &m_bezierRate,
+                "Rover speed in units per sec",
+                &m_roverSpeed,
                 0.0f,
-                0.2f);
+                5.0f);
 
             ImGui::SliderFloat(
                 "Wheel angle offset",
@@ -731,39 +781,37 @@ public:
             const glm::vec3 sunPosition =
                 glm::normalize(m_sunDirection) * m_sunDistance;
             
-            if(m_animateRover)
-            {
+            if (m_animateRover && m_pathLength > 0.0f) {
                 const glm::vec3 curves[3][4] = {
                     {bezierC1P0, bezierC1P1, bezierC1P2, bezierC1P3},
                     {bezierC2P0, bezierC2P1, bezierC2P2, bezierC2P3},
                     {bezierC3P0, bezierC3P1, bezierC3P2, bezierC3P3}
                 };
 
-                const glm::vec3* previousCurve = curves[bezierCnt];
+                float distMoved = m_roverSpeed * deltaTime;
+                m_distanceAlongPath += distMoved;
+                m_distanceAlongPath = std::fmod(m_distanceAlongPath, m_pathLength);
 
-                const glm::vec3 previousPosition = bezier(beziert, previousCurve[0], previousCurve[1], previousCurve[2], previousCurve[3]);
-                beziert += m_bezierRate * deltaTime;
-
-                while(beziert >= 1.0f)
-                {
-                    beziert -= 1.0f;
-                    bezierCnt = (bezierCnt + 1) % 3;
+                float distOnCurve = m_distanceAlongPath;
+                bezierCnt = 0;
+                while (bezierCnt < 2 && distOnCurve >= m_curveDistances[bezierCnt].back()) {
+                    distOnCurve -= m_curveDistances[bezierCnt].back();
+                    bezierCnt++;
                 }
-
+                beziert = bezierTFromDist(bezierCnt, distOnCurve);
                 const glm::vec3* curve = curves[bezierCnt];
-                const glm::vec3 newPosition = bezier(beziert, curve[0], curve[1], curve[2], curve[3]);
-                const glm::vec3 tangent = bezierTangent(beziert, curve[0], curve[1], curve[2], curve[3]);
+                glm::vec3 newPosition = bezier(beziert, curve[0], curve[1], curve[2], curve[3]);
+                glm::vec3 tangent = bezierTangent(beziert, curve[0], curve[1], curve[2], curve[3]);
+
                 m_roverPosition.x = newPosition.x;
                 m_roverPosition.z = newPosition.z;
-
-                if(tangent.x * tangent.x + tangent.z * tangent.z > 0.000001f)
-                {
+                
+                // making the robot face toward where it is going
+                if (tangent.x * tangent.x + tangent.z * tangent.z > 0.000001f) {
                     m_roverYawDegrees = glm::degrees(std::atan2(-tangent.z, tangent.x));
                 }
 
-                const glm::vec2 movement(newPosition.x - previousPosition.x, newPosition.z - previousPosition.z);
-
-                m_roverTravelDistance += static_cast<double>(glm::length(movement));
+                m_roverTravelDistance += static_cast<double>(distMoved);
             }
 
             const glm::vec3 worldUp { 0.0f, 1.0f, 0.0f };
@@ -1310,7 +1358,11 @@ private:
     float m_wheelAngleDegrees { 0.0f };
 
     bool m_animateRover { true };
-    float m_bezierRate { 0.06f };
+    float m_roverSpeed = 1.0f;
+    static constexpr int BEZIER_SAMPLES = 1000;
+    std::vector<float> m_curveDistances[3];
+    float m_distanceAlongPath = 0.0f;
+    float m_pathLength = 0.0f;
     double m_roverTravelDistance { 0.0 };
     static constexpr float WHEEL_MODEL_RADIUS = 0.570118f;
 
