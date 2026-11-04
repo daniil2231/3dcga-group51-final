@@ -21,6 +21,7 @@ uniform vec3 sunPosition;
 uniform vec3 sunColor;
 uniform float sunIntensity;
 uniform float ambientStreantgh;
+uniform vec3 ambientColor;
 uniform vec3 cameraPos;
 uniform bool enableShadows;
 uniform float shadowBias;
@@ -220,7 +221,7 @@ void main()
     vec3 L = toLight / max(length(toLight), 0.000001);
     float facingLight = max(dot(N,L), 0.0);
 
-    vec3 ambient = ambientStreantgh * baseColor;
+    vec3 ambient = ambientStreantgh * ambientColor * baseColor;
     vec3 diffuse = baseColor * sunColor * sunIntensity * facingLight;
 
     //specular calculations
@@ -251,7 +252,7 @@ void main()
             albedo = pow(albedo, vec3(2.2));
         }
         vec3 directLight = calculatePBR(albedo, N, V, L);
-        vec3 indirectApprox = ambientStreantgh * albedo * (1.0 - clamp(metallic, 0.0, 1.0));
+        vec3 indirectApprox = ambientStreantgh * ambientColor * albedo * (1.0 - clamp(metallic, 0.0, 1.0));
         vec3 environmentLight = vec3(0.0);
         if (usePBREnvironment) {
             environmentLight = calculateEnvironmentPBR(albedo, N, V);
